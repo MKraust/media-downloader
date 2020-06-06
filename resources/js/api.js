@@ -1,6 +1,6 @@
 import { requestApi } from './apiCore';
 
-const BACKEND_API = 'http://localhost:8000/api';
+const BACKEND_API = `${window.location.protocol}//${window.location.host}/api`;
 const LOAD_TRACKERS = BACKEND_API + '/trackers';
 const SEARCH_MEDIA_ITEMS = BACKEND_API + '/search';
 
