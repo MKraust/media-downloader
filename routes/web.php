@@ -2,4 +2,4 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', 'VueController@index');
+Route::get('/{any}', 'VueController@index')->where('any', '.*');

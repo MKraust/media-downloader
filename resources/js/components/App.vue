@@ -4,42 +4,27 @@
             <div class="col-8">
                 <div class="py-2">
                     <ul class="nav nav-pills justify-content-center">
-                        <li v-for="tracker in trackers" :key="tracker" class="nav-item">
-                            <a @click="switchTracker(tracker)" class="nav-link" :class="{ active: currentTracker === tracker }" style="cursor: pointer;">{{ tracker }}</a>
-                        </li>
+                        <router-link
+                            tag="li"
+                            v-for="tracker in trackers"
+                            :key="tracker.id"
+                            class="nav-item"
+                            :class="{ active: $route.params.trackerId && $route.params.trackerId === tracker.id }"
+                            :to="'/' + tracker.id"
+                        >
+                            <a class="nav-link" style="cursor: pointer;">{{ tracker.title }}</a>
+                        </router-link>
                     </ul>
                 </div>
 
-                <div class="py-2">
-                    <input
-                        v-model="searchQuery"
-                        :disabled="currentTracker === null"
-                        class="form-control"
-                        type="text"
-                        placeholder="Поиск"
-                        @keyup.enter="$event.target.blur()"
-                        @blur="search">
-                </div>
-
-                <div class="py-2">
-                    <div class="row justify-content-center">
-                        <div v-for="mediaItem in mediaItems" :key="id" class="col-xs-12 col-sm-6 col-lg-4 mb-3">
-                            <div class="card">
-                                <img :src="mediaItem.poster" class="card-img-top" style="width: 100%;">
-                                <div class="card-body">
-                                    <h5 class="card-title text-center">{{ mediaItem.title }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <router-view :key="$route.fullPath" ></router-view>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { loadTrackers, search } from '../api'
+import { loadTrackers } from '../api'
 
 export default {
     name: "App",
@@ -48,10 +33,7 @@ export default {
     },
     data() {
         return {
-            searchQuery: '',
             trackers: [],
-            currentTracker: null,
-            mediaItems: [],
         }
     },
     methods: {
@@ -61,21 +43,8 @@ export default {
             this.trackers = trackers;
         },
         switchTracker(tracker) {
-            this.mediaItems = [];
-            this.searchQuery = '';
-            this.currentTracker = tracker;
+
         },
-        async search() {
-            if (this.searchQuery === '') {
-                return;
-            }
-
-            const [ mediaItems ] = await Promise.all([
-                search(this.currentTracker, this.searchQuery)
-            ]);
-
-            this.mediaItems = mediaItems;
-        }
     }
 }
 </script>
