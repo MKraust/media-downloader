@@ -1,18 +1,22 @@
 <template>
-    <div>
+    <div class="py-3">
         <p v-if="isLoading" class="text-center">Загрузка</p>
         <p v-else-if="media === null" class="text-center">Медиа контент не найден</p>
         <div v-else>
-            <h2 class="text-center">{{ media.title }}</h2>
+            <h2 class="text-center mb-3">{{ media.title }}</h2>
             <div class="row">
-                <div class="col-xs-12 col-lg-6 justify-content-center">
+                <div class="col-xs-12 col-lg-6 justify-content-center mb-3 mb-lg-0">
                     <img :src="media.poster" style="max-width: 100%;">
                 </div>
                 <div class="col-xs-12 col-lg-6">
                     <ul class="list-group">
                         <li v-for="torrent in media.torrents" class="list-group-item">
-                            <h5>{{ torrent.name }}</h5>
-                            <a class="btn btn-sm btn-primary" href="#">Скачать</a>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">{{ torrent.name }}</h5>
+                                <div>
+                                    <a class="btn btn-sm btn-primary" href="#">Скачать</a>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>
