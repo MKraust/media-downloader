@@ -14,6 +14,9 @@ git pull origin master
 {{-- Install missing PHP dependencies --}}
 php72 ~/bin/composer install --no-interaction --no-dev --prefer-dist
 
+npm install
+npm run prod
+
 {{-- Maintenance mode OFF --}}
 php72 artisan up
 
