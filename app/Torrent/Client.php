@@ -17,7 +17,7 @@ class Client
     public function startDownload(string $fileUrl, string $contentType): void {
         $httpClient = new GuzzleHttp\Client(['base_uri' => self::BASE_URL]);
         $httpClient->post(self::START_DOWNLOAD_URL, [
-            'form_params' => [
+            'multipart' => [
                 [
                     'name' => 'urls',
                     'contents' => $fileUrl,
