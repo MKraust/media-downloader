@@ -31,7 +31,7 @@ class Engine extends Tracker\Base
 
     protected function loadTorrentFile(string $url): string
     {
-        // TODO: Implement loadTorrentFile() method.
+        return (new Requester())->loadTorrentFile($url);
     }
 
     protected function loadMediaByUrl(string $url): ?Media
