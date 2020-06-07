@@ -36,6 +36,18 @@ class Engine extends Tracker\Base
 
     protected function loadMediaByUrl(string $url): ?Media
     {
-        // TODO: Implement loadMediaByUrl() method.
+        $requester = new Requester;
+
+        $mediaHtml = $requester->loadMediaPage($url);
+        $mediaPageParser = new MediaPageParser;
+        $itemData = $mediaPageParser->parse($mediaHtml);
+
+        $torrentsHtml = $requester->loadTorrentsHtml($url);
+        $torrentsParser = new TorrentsParser;
+        $itemData['torrents'] = $torrentsParser->parse($torrentsHtml);
+
+        $itemData['url'] = $url;
+
+        return $this->createMediaFromData($itemData);
     }
 }

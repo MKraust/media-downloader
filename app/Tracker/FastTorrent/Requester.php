@@ -10,6 +10,19 @@ class Requester
 
     public function search(string $query): string {
         $url = $this->getSearchUrl($query);
+        return $this->loadHtml($url);
+    }
+
+    public function loadMediaPage(string $url): string {
+        return $this->loadHtml($url);
+    }
+
+    public function loadTorrentsHtml(string $url): string {
+        $url = str_replace('.html', '/torrents.html', $url);
+        return $this->loadHtml($url);
+    }
+
+    private function loadHtml(string $url): string {
         return $this->getClient()->get($url)->getBody()->getContents();
     }
 
