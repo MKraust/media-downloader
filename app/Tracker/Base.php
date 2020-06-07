@@ -55,4 +55,18 @@ abstract class Base
     final protected function decryptUrl(string $encryptedUrl): string {
         return decrypt($encryptedUrl);
     }
+
+    final protected function createMediaFromData(array $data): Media {
+        $media = new Media;
+
+        $url = $data['url'] ?? null;
+        $media->id = $url !== null ? $this->encryptUrl($url) : null;
+        $media->title = $data['title'] ?? null;
+        $media->poster = $data['poster'] ?? null;
+
+        $torrents = $data['torrents'] ?? collect();
+        $media->torrents = $torrents->toArray();
+
+        return $media;
+    }
 }

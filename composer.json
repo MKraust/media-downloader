@@ -14,7 +14,8 @@
         "guzzlehttp/guzzle": "^6.5",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
-        "symfony/dom-crawler": "^5.1"
+        "symfony/dom-crawler": "^5.1",
+      "ext-json": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

@@ -4,7 +4,6 @@ namespace App\Tracker\Anidub;
 
 use App\Tracker;
 use Illuminate\Support\Collection;
-use Psr\Http\Message\StreamInterface;
 
 class Engine extends Tracker\Base
 {
@@ -45,19 +44,5 @@ class Engine extends Tracker\Base
         $itemData['url'] = $url;
 
         return $this->createMediaFromData($itemData);
-    }
-
-    private function createMediaFromData(array $data): Tracker\Media {
-        $media = new Tracker\Media;
-
-        $url = $data['url'] ?? null;
-        $media->id = $url !== null ? $this->encryptUrl($url) : null;
-        $media->title = $data['title'] ?? null;
-        $media->poster = $data['poster'] ?? null;
-
-        $torrents = $data['torrents'] ?? collect();
-        $media->torrents = $torrents->toArray();
-
-        return $media;
     }
 }
