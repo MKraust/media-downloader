@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-8">
+            <div class="col-xs-12 col-md-8">
                 <div class="py-2">
                     <ul class="nav nav-pills justify-content-center">
                         <router-link
