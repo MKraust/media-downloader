@@ -4,6 +4,8 @@ namespace App\Tracker;
 
 use Illuminate\Support\Collection;
 use App;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Psr\Http\Message\StreamInterface;
 
 abstract class Base
@@ -19,9 +21,15 @@ abstract class Base
     abstract public function search(string $query): Collection;
 
     final public function startDownload(string $url, string $contentType): void {
-        $filePath = $this->loadTorrentFile($url);
+        $fileContent = $this->loadTorrentFile($url);
+
+        $fileName = Str::uuid() . '.torrent';
+        $filePath = storage_path("app/public/torrents/{$fileName}");
+        File::put($filePath, $fileContent);
+
+        $fileUrl = url("/storage/torrents/{$fileName}");
         $torrentClient = new App\Torrent\Client();
-        $torrentClient->startDownload($filePath, $contentType);
+        $torrentClient->startDownload($fileUrl, $contentType);
     }
 
     final public function serialize(): array {

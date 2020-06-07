@@ -57,12 +57,7 @@ class Requester
             'cookies' => $this->getCookies(),
         ]);
 
-        $fileContent = $response->getBody()->getContents();
-        $fileName = Str::uuid() . '.torrent';
-        $filePath = storage_path("app/public/torrents/{$fileName}");
-        File::put($filePath, $fileContent);
-
-        return url("/storage/torrents/{$fileName}");
+        return $response->getBody()->getContents();
     }
 
     private function getCookies(): GuzzleHttp\Cookie\CookieJar {
