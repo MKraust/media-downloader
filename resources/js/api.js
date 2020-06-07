@@ -14,7 +14,7 @@ export async function search(tracker, query) {
     return await requestApi({ method: 'GET', url: SEARCH_MEDIA_ITEMS, getParams: params });
 }
 
-export async function loadMedia(id) {
-    const params = { id };
+export async function loadMedia(tracker, id) {
+    const params = { tracker, id };
     return await requestApi({ method: 'GET', url: LOAD_MEDIA, getParams: params });
 }

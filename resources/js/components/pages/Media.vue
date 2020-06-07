@@ -49,7 +49,7 @@ export default {
     methods: {
         async init() {
             this.isLoading = true;
-            const [ media ] = await Promise.all([loadMedia(this.$route.params.mediaId)]);
+            const [ media ] = await Promise.all([loadMedia(this.$route.params.trackerId, this.$route.params.mediaId)]);
             console.log(media);
             this.media = media;
             this.isLoading = false;

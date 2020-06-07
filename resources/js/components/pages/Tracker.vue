@@ -14,7 +14,7 @@
           <div class="row justify-content-center">
               <div v-for="mediaItem in mediaItems" :key="mediaItem.id" class="col-xs-12 col-sm-6 col-lg-4 mb-3">
                   <div class="card">
-                      <router-link :to="'/media/' + mediaItem.id">
+                      <router-link :to="`/${trackerId}/${mediaItem.id}`">
                           <img :src="mediaItem.poster" class="card-img-top" style="width: 100%;">
                       </router-link>
                       <div class="card-body">

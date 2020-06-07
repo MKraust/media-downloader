@@ -9,7 +9,7 @@ export default [
     },
     {
         name: 'media',
-        path: '/media/:mediaId',
+        path: '/:trackerId/:mediaId',
         component: Media,
     }
 ]

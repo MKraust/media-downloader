@@ -3,79 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Tracker;
+use Illuminate\Support\Collection;
 
 class ApiController extends Controller
 {
-    public function trackers() {
-        return [
-            ['id' => 'anidub', 'title' => 'AniDub'],
-            ['id' => 'animedia', 'title' => 'AniMedia'],
-            ['id' => 'fast_torrent', 'title' => 'Fast Torrent'],
-        ];
+    public function trackers(Tracker\Keeper $trackerKeeper): Collection {
+        return $trackerKeeper->getTrackers()->map(static function (Tracker\Base $tracker) {
+            return $tracker->serialize();
+        });
     }
 
-    public function search() {
-        $trackerName = request('tracker');
+    public function search(Tracker\Keeper $trackerKeeper): Collection {
+        $trackerId = request('tracker');
         $searchQuery = request('query');
 
-        $result = [];
-        for ($i = 1; $i <= 8; $i++) {
-            $url = "http://example.com/{$i}";
-            $result[] = [
-                'id' => encrypt($url),
-                'title' => $trackerName . ' | ' . $searchQuery,
-                'poster' => 'https://static.animedia.tv/uploads/1202111.jpg'
-            ];
-        }
+        $tracker = $trackerKeeper->getTrackerById($trackerId);
+        // TODO: throw not found exception
 
-        return $result;
+        return $tracker->search($searchQuery);
     }
 
-    public function media() {
+    public function media(Tracker\Keeper $trackerKeeper): array {
         $id = request('id');
-        $url = decrypt($id);
+        $trackerId = request('tracker');
+
+        $tracker = $trackerKeeper->getTrackerById($trackerId);
+        $media = $tracker->loadMediaById($id);
 
         return [
-            'id' => $id,
-            'title' => 'Семь смертных грехов',
-            'original_title' => 'Nanatsu no Taizai',
-            'poster' => 'https://static.animedia.tv/uploads/1202111.jpg',
-            'url' => $url,
-            'series' => null,
-            'year' => 2014,
-            'type' => 'anime',
-            'torrents' => [
-                [
-                    'id' => encrypt('https://static.animedia.tv/uploads/1202111.jpg'),
-                    'url' => 'https://static.animedia.tv/uploads/1202111.jpg',
-                    'name' => '1 сезон',
-                    'size' => '1.4 ГБ',
-                    'quality' => '720p',
-                    'voice_acting' => 'KASHI & NAZEL & OZIRIST',
-                    'season' => '1 сезон (1-5)',
-                    'content_type' => 'anime',
-                ],
-                [
-                    'id' => encrypt('https://static.animedia.tv/uploads/1202111.jpg'),
-                    'url' => 'https://static.animedia.tv/uploads/1202111.jpg',
-                    'name' => '2 сезон',
-                    'size' => '1.4 ГБ',
-                    'quality' => '720p',
-                    'voice_acting' => 'KASHI & NAZEL & OZIRIST',
-                    'season' => '2 сезон (1-5)',
-                    'content_type' => 'anime',
-                ],
-                [
-                    'id' => encrypt('https://static.animedia.tv/uploads/1202111.jpg'),
-                    'url' => 'https://static.animedia.tv/uploads/1202111.jpg',
-                    'name' => '3 сезон',
-                    'size' => '1.4 ГБ',
-                    'quality' => '720p',
-                    'voice_acting' => 'KASHI & NAZEL & OZIRIST',
-                    'season' => '3 сезон (1-5)',
-                    'content_type' => 'anime',
-                ],
-            ],
+            'id' => $media->id,
+            'title' => $media->title,
+            'poster' => $media->poster,
+            'torrents' => $media->torrents,
         ];
     }
 }
