@@ -4,6 +4,10 @@ namespace App\Tracker\Anidub;
 
 use GuzzleHttp;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Psr\Http\Message\StreamInterface;
 
 class Requester
 {
@@ -46,6 +50,19 @@ class Requester
         ]);
 
         return $response->getBody()->getContents();
+    }
+
+    public function loadTorrentFile(string $url): string {
+        $response = $this->getClient()->get($url, [
+            'cookies' => $this->getCookies(),
+        ]);
+
+        $fileContent = $response->getBody()->getContents();
+        $fileName = Str::uuid() . '.torrent';
+        $filePath = storage_path("app/public/torrents/{$fileName}");
+        File::put($filePath, $fileContent);
+
+        return url("/storage/torrents/{$fileName}");
     }
 
     private function getCookies(): GuzzleHttp\Cookie\CookieJar {

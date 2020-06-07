@@ -4,6 +4,7 @@ namespace App\Tracker\Anidub;
 
 use App\Tracker;
 use Illuminate\Support\Collection;
+use Psr\Http\Message\StreamInterface;
 
 class Engine extends Tracker\Base
 {
@@ -30,6 +31,10 @@ class Engine extends Tracker\Base
         return $itemsData->map(function (array $itemData) {
             return $this->createMediaFromData($itemData);
         });
+    }
+
+    protected function loadTorrentFile(string $url): string {
+        return (new Requester())->loadTorrentFile($url);
     }
 
     protected function loadMediaByUrl(string $url): ?Tracker\Media

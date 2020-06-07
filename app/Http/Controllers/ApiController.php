@@ -38,4 +38,15 @@ class ApiController extends Controller
             'torrents' => $media->torrents,
         ];
     }
+
+    public function download(Tracker\Keeper $trackerKeeper) {
+        $trackerId = request('tracker');
+        $url = request('url');
+        $contentType = request('type');
+
+        $tracker = $trackerKeeper->getTrackerById($trackerId);
+        $tracker->startDownload($url, $contentType);
+
+        return response()->json(['status' => 'success']);
+    }
 }

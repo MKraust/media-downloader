@@ -34,6 +34,7 @@ class MediaPageParser
             $torrent['downloads'] = (int)$tab->filter('.list.down .li_download_m')->first()->text();
 
             $torrent['voice_acting'] = $voiceActing;
+            $torrent['content_type'] = 'anime';
             $torrents->add($torrent);
         });
 

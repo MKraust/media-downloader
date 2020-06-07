@@ -14,7 +14,7 @@
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h5 class="mb-0">{{ torrent.name }}</h5>
                                 <div>
-                                    <a class="btn btn-sm btn-primary" href="#">
+                                    <a class="btn btn-sm btn-primary" href="#" @click="handleDownload(torrent)">
                                         <i class="fas fa-download"></i>
                                     </a>
                                 </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { loadMedia } from "../../api";
+import { loadMedia, startDownload } from "../../api";
 
 export default {
     name: "Media",
@@ -53,6 +53,9 @@ export default {
             console.log(media);
             this.media = media;
             this.isLoading = false;
+        },
+        handleDownload(torrent) {
+            startDownload(this.$route.params.trackerId, torrent.url, torrent.content_type);
         }
     }
 }
