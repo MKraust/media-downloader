@@ -11,12 +11,19 @@
                 <div class="col-xs-12 col-lg-6">
                     <ul class="list-group">
                         <li v-for="torrent in media.torrents" class="list-group-item">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h5 class="mb-0">{{ torrent.name }}</h5>
                                 <div>
-                                    <a class="btn btn-sm btn-primary" href="#">Скачать</a>
+                                    <a class="btn btn-sm btn-primary" href="#">
+                                        <i class="fas fa-download"></i>
+                                    </a>
                                 </div>
                             </div>
+                            <div class="mb-2">
+                                <span class="badge badge-primary"><i class="fas fa-video"></i> {{ torrent.quality }}</span>
+                                <span class="badge badge-primary"><i class="fas fa-weight-hanging"></i> {{ torrent.size }}</span>
+                            </div>
+                            <div>Перевод: {{ torrent.voice_acting }}</div>
                         </li>
                     </ul>
                 </div>
