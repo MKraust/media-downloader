@@ -65,7 +65,7 @@ abstract class Base
         $media->poster = $data['poster'] ?? null;
 
         $torrents = $data['torrents'] ?? collect();
-        $media->torrents = $torrents->toArray();
+        $media->torrents = $torrents->sortByDesc('size_int')->values()->all();
 
         return $media;
     }

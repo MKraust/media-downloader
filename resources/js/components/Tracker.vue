@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { search } from '../../api'
+import { search } from '../api'
 
 export default {
     name: "Tracker",
@@ -36,15 +36,18 @@ export default {
         return {
             trackerId: this.$route.params.trackerId,
             searchQuery: '',
-            mediaItems: [],
+        }
+    },
+    computed: {
+        mediaItems() {
+            return this.$store.getters.getSearchResults(this.trackerId);
         }
     },
     watch: {
       trackerId(val) {
           this.$router.push('/tracker/' + val);
           this.searchQuery = '';
-          this.mediaItems = [];
-      }
+      },
     },
     methods: {
         async search() {
@@ -56,7 +59,10 @@ export default {
                 search(this.trackerId, this.searchQuery)
             ]);
 
-            this.mediaItems = mediaItems;
+            this.$store.commit('saveSearch', {
+                trackerId: this.trackerId,
+                media: mediaItems,
+            });
         }
     }
 }

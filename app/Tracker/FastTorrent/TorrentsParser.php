@@ -14,11 +14,11 @@ class TorrentsParser
 
         $crawler = new Crawler($html);
         $columns = $this->getColumns($crawler);
-        $torrentNodes = $crawler->filter('.torrent-row')->each(function (Crawler $torrentNode) use ($columns, $torrents) {
+        $crawler->filter('.torrent-row')->each(function (Crawler $torrentNode) use ($columns, $torrents) {
             $torrent = [];
 
             $link = $torrentNode->filter('.torrent-info .download-event')->first();
-            $torrent['name'] = $link->text();
+            $torrent['name'] = str_replace('.torrent', '', $link->text());
             $torrent['url'] = Requester::BASE_URL . $link->attr('href');
 
             $qualityColumnClass = $columns['quality'];
@@ -34,6 +34,7 @@ class TorrentsParser
             $sizeColumnClass = $columns['size'];
             if ($sizeColumnClass !== null) {
                 $torrent['size'] = $this->parseSimpleColumn($torrentNode, $sizeColumnClass);
+                $torrent['size_int'] = (int)$torrentNode->attr('size');
             }
 
             if ($columns['downloaded'] !== null) {

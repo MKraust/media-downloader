@@ -1,23 +1,26 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xs-12 col-md-8">
-                <div class="py-2">
-                    <ul class="nav nav-pills justify-content-center">
+    <div>
+        <div class="py-2 bg-light">
+            <div class="container">
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="nav-item" v-for="tracker in trackers" :key="tracker.id">
                         <router-link
-                            tag="li"
-                            v-for="tracker in trackers"
-                            :key="tracker.id"
-                            class="nav-item"
-                            :class="{ active: $route.params.trackerId && $route.params.trackerId === tracker.id }"
                             :to="'/' + tracker.id"
+                            class="nav-link"
+                            active-class="active"
+                            style="cursor: pointer;"
                         >
-                            <a class="nav-link" style="cursor: pointer;">{{ tracker.title }}</a>
+                            {{ tracker.title }}
                         </router-link>
-                    </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container py-2">
+            <div class="row justify-content-center">
+                <div class="col-xs-12 col-md-10">
+                    <router-view :key="$route.fullPath" ></router-view>
                 </div>
-
-                <router-view :key="$route.fullPath" ></router-view>
             </div>
         </div>
     </div>

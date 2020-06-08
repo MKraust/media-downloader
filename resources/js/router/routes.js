@@ -1,5 +1,5 @@
-import Tracker from '../components/pages/Tracker'
-import Media from '../components/pages/Media'
+import Tracker from '../components/Tracker'
+import Media from '../components/Media'
 
 export default [
     {
