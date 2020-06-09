@@ -15,11 +15,13 @@ class MediaPageParser
         $result['title'] = $itemNode->filter('.story_h #news-title')->text();
         $result['poster'] = $itemNode->filter('.poster > img')->first()->attr('src');
 
+        $contentType = $this->getContentTypeByTitle($result['title']);
+
         $torrents = collect();
         $staticH = $crawler->filter('#tabs > .static_h')->first();
         $torrentTabLinks = $staticH->filter('ul > li > a');
         $voiceActing = $this->parseVoiceActing($itemNode);
-        $torrentTabLinks->each(static function (Crawler $torrentTabLink) use ($crawler, $torrents, $voiceActing) {
+        $torrentTabLinks->each(static function (Crawler $torrentTabLink) use ($crawler, $torrents, $voiceActing, $contentType) {
             $torrent = [];
 
             $tabId = $torrentTabLink->attr('href');
@@ -34,13 +36,19 @@ class MediaPageParser
             $torrent['downloads'] = (int)$tab->filter('.list.down .li_download_m')->first()->text();
 
             $torrent['voice_acting'] = $voiceActing;
-            $torrent['content_type'] = 'anime';
+            $torrent['content_type'] = $contentType;
             $torrents->add($torrent);
         });
 
         $result['torrents'] = $torrents;
 
         return $result;
+    }
+
+    private function getContentTypeByTitle(string $title): string {
+        return preg_match('/\d+ из \d+/u', $title)
+            ? 'anime'
+            : 'movie';
     }
 
     private function parseVoiceActing(Crawler $itemNode): string {
