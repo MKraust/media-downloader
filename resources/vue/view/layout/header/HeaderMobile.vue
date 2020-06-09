@@ -37,7 +37,7 @@ export default {
      * @returns {string}
      */
     headerLogo() {
-      return process.env.BASE_URL + this.layoutConfig("self.logo");
+      return BASE_URL + this.layoutConfig("self.logo");
     },
 
     /**

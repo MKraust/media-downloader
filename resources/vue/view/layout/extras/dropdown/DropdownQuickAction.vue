@@ -54,31 +54,31 @@ export default {
         {
           title: "Accounting",
           desc: "eCommerce",
-          svg: process.env.BASE_URL + "media/svg/icons/Shopping/Euro.svg"
+          svg: BASE_URL + "media/svg/icons/Shopping/Euro.svg"
         },
         {
           title: "Administration",
           desc: "Console",
           svg:
-            process.env.BASE_URL +
+            BASE_URL +
             "media/svg/icons/Communication/Mail-attachment.svg"
         },
         {
           title: "Projects",
           desc: "Pending Tasks",
-          svg: process.env.BASE_URL + "media/svg/icons/Shopping/Box2.svg"
+          svg: BASE_URL + "media/svg/icons/Shopping/Box2.svg"
         },
         {
           title: "Customers",
           desc: "Latest Cases",
-          svg: process.env.BASE_URL + "media/svg/icons/Communication/Group.svg"
+          svg: BASE_URL + "media/svg/icons/Communication/Group.svg"
         }
       ]
     };
   },
   computed: {
     backgroundImage() {
-      return process.env.BASE_URL + "media/misc/bg-1.jpg";
+      return BASE_URL + "media/misc/bg-1.jpg";
     }
   }
 };

@@ -53,25 +53,25 @@ export default {
           type: 0
         },
         {
-          svg: process.env.BASE_URL + "media/svg/files/doc.svg",
+          svg: BASE_URL + "media/svg/files/doc.svg",
           text: "AirPlus Requirements",
           desc: "by Grog John",
           type: 1
         },
         {
-          svg: process.env.BASE_URL + "media/svg/files/pdf.svg",
+          svg: BASE_URL + "media/svg/files/pdf.svg",
           text: "TechNav Documentation",
           desc: "by Mary Broun",
           type: 1
         },
         {
-          svg: process.env.BASE_URL + "media/svg/files/zip.svg",
+          svg: BASE_URL + "media/svg/files/zip.svg",
           text: "All Framework Docs",
           desc: "by Nick Stone",
           type: 1
         },
         {
-          svg: process.env.BASE_URL + "media/svg/files/xml.svg",
+          svg: BASE_URL + "media/svg/files/xml.svg",
           text: "AirPlus Requirements",
           desc: "by Tim Hardy",
           type: 1
@@ -81,25 +81,25 @@ export default {
           type: 0
         },
         {
-          img: process.env.BASE_URL + "media/users/300_12.jpg",
+          img: BASE_URL + "media/users/300_12.jpg",
           text: "Jimmy Curry",
           desc: "Software Developer",
           type: 1
         },
         {
-          img: process.env.BASE_URL + "media/users/300_13.jpg",
+          img: BASE_URL + "media/users/300_13.jpg",
           text: "Milena Gibson",
           desc: "UI Designer",
           type: 1
         },
         {
-          img: process.env.BASE_URL + "media/users/300_14.jpg",
+          img: BASE_URL + "media/users/300_14.jpg",
           text: "Stefan JohnStefan",
           desc: "Marketing Manager",
           type: 1
         },
         {
-          img: process.env.BASE_URL + "media/users/300_15.jpg",
+          img: BASE_URL + "media/users/300_15.jpg",
           text: "Anna Strong",
           desc: "Software Developer",
           type: 1

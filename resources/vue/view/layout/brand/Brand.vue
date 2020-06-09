@@ -42,7 +42,7 @@ export default {
         const logos = this.layoutConfig("self.logo");
         logo = logos[Object.keys(logos)[0]];
       }
-      return process.env.BASE_URL + logo;
+      return BASE_URL + logo;
     }
   },
   computed: {

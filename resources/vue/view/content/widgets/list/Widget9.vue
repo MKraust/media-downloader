@@ -104,12 +104,12 @@ export default {
           images: [
             {
               url: "#",
-              img: process.env.BASE_URL + "media/svg/avatars/004-boy-1.svg",
+              img: BASE_URL + "media/svg/avatars/004-boy-1.svg",
               alt: "boy"
             },
             {
               url: "#",
-              img: process.env.BASE_URL + "media/svg/avatars/002-girl.svg",
+              img: BASE_URL + "media/svg/avatars/002-girl.svg",
               alt: "girl"
             }
           ]

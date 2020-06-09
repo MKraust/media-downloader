@@ -153,34 +153,34 @@ export default {
           title: "Briviba SaaS",
           desc: "PHP, SQLite, Artisan CLIмм",
           color: "primary",
-          svg: process.env.BASE_URL + "media/svg/icons/Home/Library.svg"
+          svg: BASE_URL + "media/svg/icons/Home/Library.svg"
         },
         {
           title: "Briviba SaaS",
           desc: "PHP, SQLite, Artisan CLIмм",
           color: "warning",
-          svg: process.env.BASE_URL + "media/svg/icons/Communication/Write.svg"
+          svg: BASE_URL + "media/svg/icons/Communication/Write.svg"
         },
         {
           title: "Briviba SaaS",
           desc: "PHP, SQLite, Artisan CLIмм",
           color: "success",
           svg:
-            process.env.BASE_URL +
+            BASE_URL +
             "media/svg/icons/Communication/Group-chat.svg"
         },
         {
           title: "Briviba SaaS",
           desc: "PHP, SQLite, Artisan CLIмм",
           color: "danger",
-          svg: process.env.BASE_URL + "media/svg/icons/General/Attachment2.svg"
+          svg: BASE_URL + "media/svg/icons/General/Attachment2.svg"
         },
         {
           title: "Briviba SaaS",
           desc: "PHP, SQLite, Artisan CLIмм",
           color: "info",
           svg:
-            process.env.BASE_URL +
+            BASE_URL +
             "media/svg/icons/Communication/Shield-user.svg"
         },
         {
@@ -188,14 +188,14 @@ export default {
           desc: "PHP, SQLite, Artisan CLIмм",
           color: "info",
           svg:
-            process.env.BASE_URL +
+            BASE_URL +
             "media/svg/icons/Communication/Mail-notification.svg"
         },
         {
           title: "Briviba SaaS",
           desc: "PHP, SQLite, Artisan CLIмм",
           color: "info",
-          svg: process.env.BASE_URL + "media/svg/icons/Design/Bucket.svg"
+          svg: BASE_URL + "media/svg/icons/Design/Bucket.svg"
         }
       ],
       list2: [
@@ -280,7 +280,7 @@ export default {
   },
   computed: {
     backgroundImage() {
-      return process.env.BASE_URL + "media/misc/bg-1.jpg";
+      return BASE_URL + "media/misc/bg-1.jpg";
     }
   }
 };
