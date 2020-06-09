@@ -1,21 +1,7 @@
 <template>
     <div>
-        <div class="py-2 bg-light">
-            <div class="container">
-                <ul class="nav nav-pills justify-content-center">
-                    <li class="nav-item" v-for="tracker in trackers" :key="tracker.id">
-                        <router-link
-                            :to="'/' + tracker.id"
-                            class="nav-link"
-                            active-class="active"
-                            style="cursor: pointer;"
-                        >
-                            {{ tracker.title }}
-                        </router-link>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <navigation :trackers="trackers" />
+
         <div class="container py-2">
             <div class="row justify-content-center">
                 <div class="col-xs-12 col-md-10">
@@ -28,9 +14,13 @@
 
 <script>
 import { loadTrackers } from '../api'
+import Navigation from './Navigation'
 
 export default {
     name: "App",
+    components: {
+        Navigation,
+    },
     async created() {
         await this.init();
     },
