@@ -3,7 +3,7 @@
     <TrackerSubheader :title="tracker.title" @search="handleSearch" />
     <div class="container">
       <div class="row">
-        <div v-for="mediaItem in searchResults" :key="mediaItem.id" class="col-xs-12 col-sm-6 col-md-3 mb-3">
+        <div v-for="mediaItem in searchResults" :key="mediaItem.id" class="col-xs-12 col-sm-6 col-md-6 col-xl-4 mb-3">
           <div class="card">
             <router-link :to="`/${tracker.id}/${mediaItem.id}`">
               <img :src="mediaItem.poster" class="card-img-top" style="width: 100%;">

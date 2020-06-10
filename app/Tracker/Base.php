@@ -14,6 +14,8 @@ abstract class Base
 
     abstract public function title(): string;
 
+    abstract public function icon(): string;
+
     /**
      * @param string $query
      * @return Collection|Media[]
@@ -36,6 +38,7 @@ abstract class Base
         return [
             'id'    => $this->id(),
             'title' => $this->title(),
+            'icon'  => $this->icon(),
         ];
     }
 

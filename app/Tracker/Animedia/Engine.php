@@ -20,6 +20,11 @@ class Engine extends Tracker\Base
         return 'AniMedia';
     }
 
+    public function icon(): string
+    {
+        return '';
+    }
+
     public function search(string $query): Collection
     {
         return collect();

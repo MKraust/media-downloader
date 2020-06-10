@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 
 class Engine extends Tracker\Base
 {
-
     public function id(): string
     {
         return 'fast_torrent';
@@ -17,6 +16,10 @@ class Engine extends Tracker\Base
     public function title(): string
     {
         return 'Fast Torrent';
+    }
+
+    public function icon(): string {
+        return 'http://media7.veleto.ru/media/uploads/logo/favicon.ico';
     }
 
     public function search(string $query): Collection

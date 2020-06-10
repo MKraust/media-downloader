@@ -27,7 +27,7 @@
             >
               <span class="svg-icon svg-icon-xl">
                 <!--begin::Svg Icon-->
-                <inline-svg src="media/svg/icons/Layout/Layout-4-blocks.svg" />
+                <inline-svg src="/media/svg/icons/Layout/Layout-4-blocks.svg" />
                 <!--end::Svg Icon-->
               </span>
             </a>
@@ -55,28 +55,30 @@
             <!--begin::List-->
             <div class="list list-hover">
               <!--begin::Item-->
-              <div v-for="tracker in trackers" :key="tracker.id" class="list-item hoverable p-2 p-lg-3 mb-2">
+              <router-link
+                :to="'/' + tracker.id"
+                tag="div"
+                v-for="tracker in trackers"
+                :key="tracker.id"
+                class="list-item hoverable p-2 p-lg-3 mb-2"
+              >
                 <div class="d-flex align-items-center">
                   <!--begin::Symbol-->
                   <div class="symbol symbol-40 symbol-light mr-4">
                     <span class="symbol-label bg-hover-white">
-                      <inline-svg
-                        src="/media/svg/misc/006-plurk.svg"
-                        class="h-50 align-self-center"
-                      />
+                      <img :src="tracker.icon" class="h-50 align-self-center"/>
                     </span>
                   </div>
                   <!--end::Symbol-->
                   <!--begin::Text-->
                   <div class="d-flex flex-column flex-grow-1 mr-2">
-                    <span class="text-dark-75 font-size-h6 mb-0">{{ tracker.title }}</span>
-                    <router-link :to="'/' + tracker.id" class="text-muted text-hover-primary font-weight-bold">
+                    <span :to="'/' + tracker.id" class="text-dark-75 text-hover-primary font-size-h6 mb-0">
                       {{ tracker.title }}
-                    </router-link>
+                    </span>
                   </div>
                   <!--begin::End-->
                 </div>
-              </div>
+              </router-link>
               <!--end::Item-->
             </div>
             <!--end::List-->

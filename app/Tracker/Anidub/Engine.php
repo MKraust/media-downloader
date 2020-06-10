@@ -17,6 +17,11 @@ class Engine extends Tracker\Base
         return 'AniDub';
     }
 
+    public function icon(): string
+    {
+        return asset('/media/tracker/anidub.png');
+    }
+
     /**
      * @param string $query
      * @return Collection|Tracker\Media[]

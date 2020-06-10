@@ -10,6 +10,11 @@
       v-bind:class="{ 'container-fluid': widthFluid, container: !widthFluid }"
     >
       <div class="d-flex align-items-baseline mr-5">
+        <div>
+          <router-link :to="'/' + tracker.id" class="btn btn-sm btn-icon btn-primary mr-4">
+            <i class="fas fa-angle-left"></i>
+          </router-link>
+        </div>
         <!--begin::Page Title-->
         <h2 class="subheader-title text-dark font-weight-bold my-2 mr-3">
           {{ title }}
@@ -26,6 +31,12 @@
   export default {
     name: "MediaSubheader",
     mixins: [subheaderMixin],
+    computed: {
+      tracker() {
+        let trackerId = this.$route.params.trackerId;
+        return this.$store.getters.trackers.find(tracker => tracker.id === trackerId);
+      },
+    },
   }
 </script>
 
