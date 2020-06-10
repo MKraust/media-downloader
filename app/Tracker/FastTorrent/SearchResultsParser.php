@@ -17,7 +17,7 @@ class SearchResultsParser
             $relativeUrl = $node->children()->eq(0)->attr('href');
             $url = Requester::BASE_URL . $relativeUrl;
             $linkStyle = $node->children()->eq(0)->attr('style');
-            $poster = str_replace(['background: url(', ')'], '', $linkStyle);
+            $poster = str_replace(['background: url(', ')', '/cache', '_video_list'], '', $linkStyle);
 
             $items->add([
                 'url'    => $url,
