@@ -1,12 +1,12 @@
 <template>
-  <div class="d-flex flex-column" :class="{ 'vh-100': isLoading }">
+  <div>
     <TrackerSubheader
       :title="tracker.title"
       :disable-search="isLoading"
       @search="handleSearch"
     />
-    <div v-if="isLoading" class="d-flex justify-content-center" style="flex: 1;">
-      <div class="spinner spinner-track spinner-primary spinner-lg"></div>
+    <div v-if="isLoading" class="d-flex justify-content-center" style="height: 400px;">
+      <div class="spinner spinner-track spinner-primary spinner-lg" style="margin-left: -1rem;"></div>
     </div>
     <div v-else class="container">
       <div class="row">
