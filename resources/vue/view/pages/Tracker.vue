@@ -1,7 +1,14 @@
 <template>
-  <div>
-    <TrackerSubheader :title="tracker.title" @search="handleSearch" />
-    <div class="container">
+  <div class="d-flex flex-column vh-100">
+    <TrackerSubheader
+      :title="tracker.title"
+      @search="handleSearch"
+      disable-search="isLoading"
+    />
+    <div v-if="isLoading" class="d-flex justify-content-center" style="flex: 1;">
+      <div class="spinner spinner-track spinner-primary spinner-lg"></div>
+    </div>
+    <div v-else class="container">
       <div class="row">
         <div v-for="mediaItem in searchResults" :key="mediaItem.id" class="col-xs-12 col-sm-6 col-md-6 col-xl-4 mb-3">
           <div class="card">
@@ -20,7 +27,6 @@
 </template>
 
 <script>
-  import { mapGetters } from "vuex";
   import TrackerSubheader from "./TrackerSubheader";
   import { search } from "@/api";
 
@@ -28,6 +34,11 @@
     name: "Tracker",
     components: {
       TrackerSubheader,
+    },
+    data() {
+      return {
+        isLoading: false,
+      };
     },
     computed: {
       searchResults() {
@@ -44,6 +55,8 @@
           return;
         }
 
+        this.isLoading = true;
+
         const [ mediaItems ] = await Promise.all([
           search(this.tracker.id, searchQuery)
         ]);
@@ -52,6 +65,8 @@
           trackerId: this.tracker.id,
           media: mediaItems,
         });
+
+        this.isLoading = false;
       }
     }
   }
