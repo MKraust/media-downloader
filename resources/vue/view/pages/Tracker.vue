@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column vh-100">
+  <div class="d-flex flex-column" :class="{ 'vh-100': isLoading }">
     <TrackerSubheader
       :title="tracker.title"
       :disable-search="isLoading"
