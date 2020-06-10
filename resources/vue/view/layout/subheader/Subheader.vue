@@ -14,31 +14,6 @@
           {{ title }}
         </h2>
         <!--end::Page Title-->
-        <!--begin::Breadcrumb-->
-        <ul
-          class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-2 p-0"
-        >
-          <template v-for="(breadcrumb, i) in breadcrumbs">
-            <li :key="`${i}-${breadcrumb.id}`" class="breadcrumb-item">
-              <router-link
-                :key="`${i}-${breadcrumb.id}`"
-                v-if="breadcrumb.route"
-                :to="breadcrumb.route"
-                class="text-muted"
-              >
-                {{ breadcrumb.title }}
-              </router-link>
-              <span
-                class="text-muted"
-                :key="`${i}-${breadcrumb.id}`"
-                v-if="!breadcrumb.route"
-              >
-                {{ breadcrumb.title }}
-              </span>
-            </li>
-          </template>
-        </ul>
-        <!--end::Breadcrumb-->
       </div>
 
       <!--begin::Toolbar-->
@@ -169,43 +144,13 @@
 
 <script>
 import { mapGetters } from "vuex";
+import subheaderMixin from "./subheaderMixin";
 
 export default {
   name: "KTSubheader",
+  mixins: [subheaderMixin],
   props: {
     breadcrumbs: Array,
-    title: String
   },
-  computed: {
-    ...mapGetters(["layoutConfig"]),
-
-    /**
-     * Check if subheader width is fluid
-     */
-    widthFluid() {
-      return this.layoutConfig("subheader.width") === "fluid";
-    },
-
-    subheaderClasses() {
-      const classes = [];
-      const style = this.layoutConfig("subheader.style");
-      if (style) {
-        classes.push(style);
-
-        if (style === "solid") {
-          classes.push("bg-white");
-        }
-
-        if (this.layoutConfig("subheader.fixed")) {
-          classes.push("border-top");
-        }
-
-        if (this.layoutConfig("subheader.clear")) {
-          classes.push("mb-0");
-        }
-      }
-      return classes.join(" ");
-    }
-  }
 };
 </script>

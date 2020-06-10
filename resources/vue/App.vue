@@ -5,9 +5,20 @@
 <script>
 import { OVERRIDE_LAYOUT_CONFIG } from "@/core/services/store/config.module";
 import { mapGetters } from "vuex";
+import { loadTrackers } from "./api";
 
 export default {
   name: "MetronicVue",
+  methods: {
+    async init() {
+      const [ trackers ] = await Promise.all([loadTrackers()]);
+      console.log(trackers);
+      this.$store.commit('saveTrackers', trackers);
+    },
+  },
+  async created() {
+    await this.init();
+  },
   mounted() {
     /**
      * this is to override the layout config using saved data from localStorage

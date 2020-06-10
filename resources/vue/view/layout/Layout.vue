@@ -20,14 +20,6 @@
         >
           <!-- begin:: Content Head -->
 
-          <!-- begin:: Content Head -->
-          <KTSubheader
-            v-if="subheaderDisplay"
-            v-bind:breadcrumbs="breadcrumbs"
-            v-bind:title="pageTitle"
-          />
-          <!-- end:: Content Head -->
-
           <!-- begin:: Content Body -->
           <div class="d-flex flex-column-fluid">
             <div
@@ -142,8 +134,7 @@ export default {
      * @returns {boolean}
      */
     toolbarDisplay() {
-      // return !!this.layoutConfig("toolbar.display");
-      return true;
+      return !!this.layoutConfig("toolbar.display");
     },
 
     /**

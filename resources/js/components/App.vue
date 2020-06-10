@@ -35,9 +35,6 @@ export default {
             console.log(trackers);
             this.trackers = trackers;
         },
-        switchTracker(tracker) {
-
-        },
     }
 }
 </script>

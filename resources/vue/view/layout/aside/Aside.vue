@@ -55,7 +55,7 @@
             <!--begin::List-->
             <div class="list list-hover">
               <!--begin::Item-->
-              <div class="list-item hoverable p-2 p-lg-3 mb-2">
+              <div v-for="tracker in trackers" :key="tracker.id" class="list-item hoverable p-2 p-lg-3 mb-2">
                 <div class="d-flex align-items-center">
                   <!--begin::Symbol-->
                   <div class="symbol symbol-40 symbol-light mr-4">
@@ -69,8 +69,10 @@
                   <!--end::Symbol-->
                   <!--begin::Text-->
                   <div class="d-flex flex-column flex-grow-1 mr-2">
-                    <span class="text-dark-75 font-size-h6 mb-0">AniDub</span>
-                    <a href="#" class="text-muted text-hover-primary font-weight-bold">tr.anidub.com</a>
+                    <span class="text-dark-75 font-size-h6 mb-0">{{ tracker.title }}</span>
+                    <router-link :to="'/' + tracker.id" class="text-muted text-hover-primary font-weight-bold">
+                      {{ tracker.title }}
+                    </router-link>
                   </div>
                   <!--begin::End-->
                 </div>
@@ -113,7 +115,7 @@ export default {
     return {
       insideTm: 0,
       outsideTm: 0,
-      tabIndex: 0
+      tabIndex: 0,
     };
   },
   components: {
@@ -157,7 +159,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["layoutConfig", "getClasses"]),
+    ...mapGetters(["layoutConfig", "getClasses", 'trackers']),
 
     /**
      * Get extra classes for menu based on the options

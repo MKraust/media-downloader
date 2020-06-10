@@ -5,6 +5,7 @@ import auth from "./auth.module";
 import htmlClass from "./htmlclass.module";
 import config from "./config.module";
 import breadcrumbs from "./breadcrumbs.module";
+import trackers from './trackers.module';
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     auth,
     htmlClass,
     config,
-    breadcrumbs
+    breadcrumbs,
+    trackers,
   }
 });
