@@ -20,6 +20,7 @@ window.ClipboardJS = ClipboardJS;
 // Vue 3rd party plugins
 import i18n from "./core/plugins/vue-i18n";
 import vuetify from "./core/plugins/vuetify";
+import lodash from 'lodash';
 import "./core/plugins/portal-vue";
 import "./core/plugins/bootstrap-vue";
 import "./core/plugins/perfect-scrollbar";
@@ -47,6 +48,8 @@ router.beforeEach((to, from, next) => {
     window.scrollTo(0, 0);
   }, 100);
 });
+
+Vue.prototype.$lodash = lodash
 
 new Vue({
   router,

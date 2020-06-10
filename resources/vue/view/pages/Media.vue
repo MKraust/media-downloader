@@ -10,7 +10,22 @@
             <img :src="media.poster" class="img-thumbnail">
           </div>
           <div class="col-md-8">
-            <div v-for="torrent in media.torrents" class="mb-3">
+            <div class="input-group mb-4">
+              <b-form-select
+                v-if="isSomeSeriesTorrents"
+                v-model="sortBy"
+                :options="[
+                  { value: 'size_int', text: 'По размеру'},
+                  { value: 'season', text: 'По сезону'},
+                ]"
+              />
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button" @click="switchSortingOrder">
+                  <i class="fa" :class="{ [sortingOrderIcon]: true }"></i>
+                </button>
+              </div>
+            </div>
+            <div v-for="torrent in sortedTorrents" class="mb-3">
               <Torrent :torrent="torrent" @download="handleDownload(torrent)" />
             </div>
           </div>
@@ -35,6 +50,27 @@
       return {
         isLoading: false,
         media: null,
+        sortBy: 'size_int',
+        sortingOrder: 'desc'
+      }
+    },
+    computed: {
+      isSomeSeriesTorrents() {
+        return this.media.torrents.some(torrent => torrent.content_type === 'series');
+      },
+      sortingOrderIcon() {
+        return this.sortingOrder === 'asc' ? 'fa-sort-amount-down-alt' : 'fa-sort-amount-down';
+      },
+      sortedTorrents() {
+        if (this.sortBy === 'size_int') {
+          return this.$lodash.orderBy(this.media.torrents, ['size_int'], [this.sortingOrder]);
+        }
+
+        if (this.sortBy === 'season') {
+          return this.$lodash.orderBy(this.media.torrents, ['season', 0], [this.sortingOrder]);
+        }
+
+        return this.medis.torrents;
       }
     },
     async created() {
@@ -52,7 +88,10 @@
         if (confirm(`Скачать "${torrent.name}"?`)) {
           startDownload(this.$route.params.trackerId, torrent.url, torrent.content_type);
         }
-      }
+      },
+      switchSortingOrder() {
+        this.sortingOrder = this.sortingOrder === 'asc' ? 'desc' : 'asc';
+      },
     }
   }
 </script>
