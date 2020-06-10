@@ -51,12 +51,12 @@ class MediaPageParser
             : 'movie';
     }
 
-    private function parseVoiceActing(Crawler $itemNode): string {
+    private function parseVoiceActing(Crawler $itemNode): ?string {
         $info = $itemNode->filter('.xfinfodata')->first();
 
         $voiceActing = null;
         $info->children('b')->each(static function (Crawler $node) use (&$voiceActing) {
-           if (mb_strpos($node->text(), 'Перевод') !== false) {
+           if (mb_strpos($node->text(), 'Озвучивание') !== false) {
                $voiceActing = $node->nextAll()->text();
            }
         });

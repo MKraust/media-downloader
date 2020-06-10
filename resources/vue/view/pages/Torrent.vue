@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <p class="card-title mb-1"><strong>{{ torrent.name }}</strong></p>
             </div>
-            <div class="card-text mb-4">{{ torrent.voice_acting }}</div>
+            <div v-if="torrent.voice_acting" class="card-text mb-4">{{ torrent.voice_acting }}</div>
             <div class="d-flex">
                 <span v-if="torrent.quality" class="badge badge-primary d-inline-flex align-items-center mr-2">
                     <i class="fas fa-video text-white mr-2"></i> {{ torrent.quality }}
