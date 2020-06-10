@@ -12,11 +12,10 @@
           <div class="col-md-8">
             <div class="input-group mb-4">
               <b-form-select
-                v-if="isSomeSeriesTorrents"
                 v-model="sortBy"
                 :options="[
                   { value: 'size_int', text: 'По размеру'},
-                  { value: 'season', text: 'По сезону'},
+                  isSomeSeriesTorrents && { value: 'season', text: 'По сезону'},
                 ]"
               />
               <div class="input-group-append">
