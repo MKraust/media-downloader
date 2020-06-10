@@ -6,7 +6,7 @@
             <h2 class="text-center mb-3">{{ media.title }}</h2>
             <div class="row justify-content-center">
                 <div class="col-md-4">
-                    <img :src="media.poster" style="max-width: 100%;">
+                    <img :src="media.poster" style="width: 100%;">
                 </div>
             </div>
             <div v-for="torrent in media.torrents" class="mt-3">

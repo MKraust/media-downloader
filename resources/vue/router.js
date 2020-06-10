@@ -24,7 +24,7 @@ export default new Router({
         {
           name: 'media',
           path: '/:trackerId/:mediaId',
-          component: () => import('@/view/pages/Tracker.vue'),
+          component: () => import('@/view/pages/Media.vue'),
         }
       ]
     },
