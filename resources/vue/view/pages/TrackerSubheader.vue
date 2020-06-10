@@ -20,6 +20,7 @@
       <div class="d-flex align-items-center flex-grow-1">
         <b-form-input
           v-model="searchQuery"
+          :disabled="disableSearch"
           id="input-1"
           type="text"
           required
@@ -39,6 +40,7 @@
   export default {
     mixins: [subheaderMixin],
     name: "TrackerSubheader",
+    props: ['disableSearch'],
     data() {
       return {
         searchQuery: ''

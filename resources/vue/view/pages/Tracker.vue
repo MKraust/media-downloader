@@ -2,8 +2,8 @@
   <div class="d-flex flex-column vh-100">
     <TrackerSubheader
       :title="tracker.title"
+      :disable-search="isLoading"
       @search="handleSearch"
-      disable-search="isLoading"
     />
     <div v-if="isLoading" class="d-flex justify-content-center" style="flex: 1;">
       <div class="spinner spinner-track spinner-primary spinner-lg"></div>

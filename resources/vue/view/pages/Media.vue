@@ -1,7 +1,11 @@
 <template>
-  <div>
-    <p v-if="isLoading" class="text-center">Загрузка</p>
-    <p v-else-if="media === null" class="text-center">Медиа контент не найден</p>
+  <div class="d-flex flex-column" :class="{ 'vh-100': isLoading || media === null }">
+
+    <div v-if="isLoading || media === null" class="d-flex justify-content-center" style="flex: 1;">
+      <div v-if="isLoading" class="spinner spinner-track spinner-primary spinner-lg"></div>
+      <p v-else-if="media === null" class="text-center">Медиа контент не найден</p>
+    </div>
+
     <div v-else>
       <MediaSubheader :title="media.title" />
       <div class="container">
