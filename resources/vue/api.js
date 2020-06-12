@@ -40,12 +40,15 @@ export async function startDownload(tracker, url, type) {
         return;
     }
 
-    const file = (await axios.get(url)).data;
+    const response = await axios.get(url, { responseType: 'blob' });
+    const file = response.data;
+    console.log(file);
 
-    var body = new FormData();
+    let body = new FormData();
     body.set('tracker', tracker.id);
     body.set('type', type);
     body.append('file', file);
+
     await axios.post(START_DOWNLOAD_FROM_FILE, body, {
         headers: { 'Content-Type': 'multipart/form-data' }
     });

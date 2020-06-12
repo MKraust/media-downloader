@@ -108,7 +108,7 @@ class ApiController extends Controller
     public function downloadFromFile() {
         $trackerId = request('tracker');
         $contentType = request('type');
-        $file = request('file');
+        $file = request()->file('file')->get();
 
         $tracker = $this->trackerKeeper->getTrackerById($trackerId);
         $tracker->startDownloadFromFile($file, $contentType);
