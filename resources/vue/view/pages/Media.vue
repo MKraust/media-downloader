@@ -42,9 +42,11 @@
   import MediaSubheader from "./MediaSubheader";
   import Torrent from './Torrent';
   import { loadMedia, startDownload } from "@/api";
+  import notifyMixin from '@/mixins/notifyMixin';
 
   export default {
     name: "Media",
+    mixins: [notifyMixin],
     components: {
       MediaSubheader,
       Torrent,
@@ -90,6 +92,7 @@
       handleDownload(torrent) {
         if (confirm(`Скачать "${torrent.name}"?`)) {
           startDownload(this.$route.params.trackerId, torrent.url, torrent.content_type);
+          this.notifySuccess('Загрузка началась', torrent.name);
         }
       },
       switchSortingOrder() {
