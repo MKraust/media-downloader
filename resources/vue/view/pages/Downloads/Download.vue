@@ -11,19 +11,19 @@
         </div>
       </div>
 
-      <h5 class="flex-grow-1 mr-5 mb-0 text-truncate">{{ download.name }}</h5>
+      <h5 class="flex-grow-1 mr-3 mb-0 text-truncate">{{ download.name }}</h5>
 
-      <div class="d-flex align-items-center mr-5">
+      <div class="d-flex align-items-center mr-5" style="min-width: 100px; max-width: 100px;">
         <i class="fas fa-tachometer-alt mr-2"></i>
         <span>{{ speed }}</span>
       </div>
 
-      <div class="d-flex align-items-center mr-5">
+      <div class="d-flex align-items-center mr-3" style="min-width: 100px; max-width: 100px;">
         <i class="fas fa-clock mr-2"></i>
         <span>{{ estimate }}</span>
       </div>
 
-      <div class="w-25">
+      <div style="min-width: 300px; max-width: 300px;">
         <b-progress height="2rem" class="d-flex">
           <b-progress-bar :value="progress" />
         </b-progress>
