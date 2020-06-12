@@ -16,7 +16,7 @@ export default {
       this.$store.commit('saveTrackers', trackers);
     },
   },
-  async created() {
+  async beforeMount() {
     await this.init();
   },
   mounted() {

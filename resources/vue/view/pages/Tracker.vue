@@ -1,5 +1,9 @@
 <template>
-  <div>
+
+  <div v-if="!tracker" class="d-flex justify-content-center" style="height: 400px;">
+    <div class="spinner spinner-track spinner-primary spinner-lg" style="margin-left: -1rem;"></div>
+  </div>
+  <div v-else>
     <TrackerSubheader
       :title="tracker.title"
       :disable-search="isLoading"
@@ -28,7 +32,10 @@
 
 <script>
   import TrackerSubheader from "./TrackerSubheader";
-  import { search } from "@/api";
+  import {
+    search,
+    searchBlocked,
+  } from "@/api";
 
   export default {
     name: "Tracker",
@@ -57,9 +64,12 @@
 
         this.isLoading = true;
 
-        const [ mediaItems ] = await Promise.all([
-          search(this.tracker.id, searchQuery)
-        ]);
+        let mediaItems;
+        if (this.tracker.is_blocked) {
+          mediaItems = await searchBlocked(this.tracker.id, searchQuery);
+        } else {
+          mediaItems = await search(this.tracker.id, searchQuery);
+        }
 
         this.$store.commit('saveSearch', {
           trackerId: this.tracker.id,
@@ -67,7 +77,7 @@
         });
 
         this.isLoading = false;
-      }
+      },
     }
   }
 </script>

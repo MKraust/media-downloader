@@ -24,7 +24,10 @@ abstract class Base
 
     final public function startDownload(string $url, string $contentType): void {
         $fileContent = $this->loadTorrentFile($url);
+        $this->startDownloadFromFile($fileContent, $contentType);
+    }
 
+    final public function startDownloadFromFile(string $fileContent, $contentType): void {
         $fileName = Str::uuid() . '.torrent';
         $filePath = storage_path("app/public/torrents/{$fileName}");
         File::put($filePath, $fileContent);
@@ -36,9 +39,10 @@ abstract class Base
 
     final public function serialize(): array {
         return [
-            'id'    => $this->id(),
-            'title' => $this->title(),
-            'icon'  => $this->icon(),
+            'id'         => $this->id(),
+            'title'      => $this->title(),
+            'icon'       => $this->icon(),
+            'is_blocked' => $this instanceof BlockedTracker,
         ];
     }
 

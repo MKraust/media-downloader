@@ -30,25 +30,6 @@ import "./core/plugins/apexcharts";
 import "./core/plugins/metronic";
 import "@mdi/font/css/materialdesignicons.css";
 
-// API service init
-ApiService.init();
-
-// Remove this to disable mock API
-MockService.init();
-
-router.beforeEach((to, from, next) => {
-  // reset config to initial state
-  store.dispatch(RESET_LAYOUT_CONFIG);
-
-  // Ensure we checked auth before each page load.
-  Promise.all([store.dispatch(VERIFY_AUTH)]).then(next);
-
-  // Scroll page to top on every route change
-  setTimeout(() => {
-    window.scrollTo(0, 0);
-  }, 100);
-});
-
 Vue.prototype.$lodash = lodash
 
 new Vue({

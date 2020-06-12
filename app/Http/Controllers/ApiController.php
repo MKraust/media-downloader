@@ -8,27 +8,34 @@ use Illuminate\Support\Collection;
 
 class ApiController extends Controller
 {
-    public function trackers(Tracker\Keeper $trackerKeeper): Collection {
-        return $trackerKeeper->getTrackers()->map(static function (Tracker\Base $tracker) {
+    /** @var Tracker\Keeper */
+    private $trackerKeeper;
+
+    public function __construct(Tracker\Keeper $trackerKeeper) {
+        $this->trackerKeeper = $trackerKeeper;
+    }
+
+    public function trackers(): Collection {
+        return $this->trackerKeeper->getTrackers()->map(static function (Tracker\Base $tracker) {
             return $tracker->serialize();
         });
     }
 
-    public function search(Tracker\Keeper $trackerKeeper): Collection {
+    public function search(): Collection {
         $trackerId = request('tracker');
         $searchQuery = request('query');
 
-        $tracker = $trackerKeeper->getTrackerById($trackerId);
+        $tracker = $this->trackerKeeper->getTrackerById($trackerId);
         // TODO: throw not found exception
 
         return $tracker->search($searchQuery);
     }
 
-    public function media(Tracker\Keeper $trackerKeeper): array {
+    public function media(): array {
         $id = request('id');
         $trackerId = request('tracker');
 
-        $tracker = $trackerKeeper->getTrackerById($trackerId);
+        $tracker = $this->trackerKeeper->getTrackerById($trackerId);
         $media = $tracker->loadMediaById($id);
 
         return [
@@ -39,13 +46,72 @@ class ApiController extends Controller
         ];
     }
 
-    public function download(Tracker\Keeper $trackerKeeper) {
+    public function download() {
         $trackerId = request('tracker');
         $url = request('url');
         $contentType = request('type');
 
-        $tracker = $trackerKeeper->getTrackerById($trackerId);
+        $tracker = $this->trackerKeeper->getTrackerById($trackerId);
         $tracker->startDownload($url, $contentType);
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function getSearchUrl() {
+        $trackerId = request('tracker');
+        $query = request('query');
+
+        /** @var Tracker\BlockedTracker $tracker */
+        $tracker = $this->trackerKeeper->getTrackerById($trackerId);
+
+        return $tracker->getSearchingUrl($query);
+    }
+
+    public function parseSearchResult() {
+        $trackerId = request('tracker');
+        $html = request('html');
+
+        /** @var Tracker\BlockedTracker $tracker */
+        $tracker = $this->trackerKeeper->getTrackerById($trackerId);
+
+        return $tracker->parseSearchResults($html);
+    }
+
+    public function getMediaUrls() {
+        $trackerId = request('tracker');
+        $mediaId = request('id');
+
+        /** @var Tracker\BlockedTracker $tracker */
+        $tracker = $this->trackerKeeper->getTrackerById($trackerId);
+
+        return $tracker->getMediaUrls($mediaId);
+    }
+
+    public function parseMedia() {
+        $trackerId = request('tracker');
+        $mediaId = request('id');
+        $htmlParts = request('html');
+
+        /** @var Tracker\BlockedTracker $tracker */
+        $tracker = $this->trackerKeeper->getTrackerById($trackerId);
+
+        $media = $tracker->parseMedia($mediaId, $htmlParts);
+
+        return [
+            'id' => $media->id,
+            'title' => $media->title,
+            'poster' => $media->poster,
+            'torrents' => $media->torrents,
+        ];
+    }
+
+    public function downloadFromFile() {
+        $trackerId = request('tracker');
+        $contentType = request('type');
+        $file = request('file');
+
+        $tracker = $this->trackerKeeper->getTrackerById($trackerId);
+        $tracker->startDownloadFromFile($file, $contentType);
 
         return response()->json(['status' => 'success']);
     }

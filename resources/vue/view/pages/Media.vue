@@ -41,7 +41,7 @@
 <script>
   import MediaSubheader from "./MediaSubheader";
   import Torrent from './Torrent';
-  import { loadMedia, startDownload } from "@/api";
+  import { loadMedia, loadMediaBlocked, startDownload } from "@/api";
   import notifyMixin from '@/mixins/notifyMixin';
 
   export default {
@@ -60,6 +60,10 @@
       }
     },
     computed: {
+      tracker() {
+        let trackerId = this.$route.params.trackerId;
+        return this.$store.getters.trackers.find(tracker => tracker.id === trackerId);
+      },
       isSomeSeriesTorrents() {
         return this.media.torrents.some(torrent => torrent.content_type === 'series');
       },
@@ -78,20 +82,34 @@
         return this.medis.torrents;
       }
     },
+    watch: {
+      tracker() {
+        this.init();
+      },
+    },
     async created() {
-      await this.init();
+      if (this.tracker) {
+        await this.init();
+      }
     },
     methods: {
       async init() {
         this.isLoading = true;
-        const [ media ] = await Promise.all([loadMedia(this.$route.params.trackerId, this.$route.params.mediaId)]);
-        console.log(media);
+
+        let media;
+        if (this.tracker.is_blocked) {
+          media = await loadMediaBlocked(this.tracker.id, this.$route.params.mediaId);
+        } else {
+          media = await loadMedia(this.tracker.id, this.$route.params.mediaId);
+        }
+
         this.media = media;
+
         this.isLoading = false;
       },
       handleDownload(torrent) {
         if (confirm(`Скачать "${torrent.name}"?`)) {
-          startDownload(this.$route.params.trackerId, torrent.url, torrent.content_type);
+          startDownload(this.tracker, torrent.url, torrent.content_type);
           this.notifySuccess('Загрузка началась', torrent.name);
         }
       },

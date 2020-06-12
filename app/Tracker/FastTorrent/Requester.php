@@ -22,7 +22,7 @@ class Requester
     }
 
     public function loadTorrentsHtml(string $url): string {
-        $url = str_replace('.html', '/torrents.html', $url);
+        $url = $this->getTorrentsUrlByMediaUrl($url);
         return $this->loadContent($url);
     }
 
@@ -30,9 +30,13 @@ class Requester
         return $this->getClient()->get($url)->getBody()->getContents();
     }
 
-    private function getSearchUrl(string $query, int $page = 1): string {
+    public function getSearchUrl(string $query, int $page = 1): string {
         $query = urlencode($query);
         return self::BASE_URL . "/search/{$query}/{$page}.html";
+    }
+
+    public function getTorrentsUrlByMediaUrl(string $url): string {
+        return str_replace('.html', '/torrents.html', $url);
     }
 
     private function getClient(): GuzzleHttp\Client {

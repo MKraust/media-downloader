@@ -128,7 +128,7 @@ export function fileDownloader(res) {
 }
 
 
-export async function requestApi({ method = POST, url = '', getParams = {}, postBody = null, errorCallback = () => {}, isFormData = false, isDownloadFile = false }) {
+export async function requestApi({ method = POST, url = '', getParams = {}, postBody = null, isJson = true, errorCallback = () => {}, isFormData = false, isDownloadFile = false }) {
     url = generateUrlWithGetParams(url, getParams);
 
     const params = { method };
@@ -151,7 +151,11 @@ export async function requestApi({ method = POST, url = '', getParams = {}, post
         return;
     }
 
-    result = await response.json();
+    if (isJson) {
+        result = await response.json();
+    } else {
+        result = await response.body;
+    }
 
     return result;
 }

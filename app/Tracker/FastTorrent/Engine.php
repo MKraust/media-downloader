@@ -6,7 +6,7 @@ use App\Tracker;
 use App\Tracker\Media;
 use Illuminate\Support\Collection;
 
-class Engine extends Tracker\Base
+class Engine extends Tracker\Base implements Tracker\BlockedTracker
 {
     public function id(): string
     {
@@ -22,9 +22,41 @@ class Engine extends Tracker\Base
         return 'http://media7.veleto.ru/media/uploads/logo/favicon.ico';
     }
 
-    public function search(string $query): Collection
-    {
+    public function getSearchingUrl(string $query): string {
+        return (new Requester)->getSearchUrl($query);
+    }
+
+    public function parseSearchResults(string $html): Collection {
+        return $this->parseSearchResultsHtml($html);
+    }
+
+    public function getMediaUrls(string $mediaId): array {
+        $url = $this->decryptUrl($mediaId);
+
+        return [
+            'media'    => $url,
+            'torrents' => (new Requester)->getTorrentsUrlByMediaUrl($url),
+        ];
+    }
+
+    public function parseMedia(string $mediaId, array $htmlParts): Media {
+        $mediaPageParser = new MediaPageParser;
+        $itemData = $mediaPageParser->parse($htmlParts['media']);
+
+        $torrentsParser = new TorrentsParser;
+        $itemData['torrents'] = $torrentsParser->parse($htmlParts['torrents']);
+
+        $itemData['url'] = $this->decryptUrl($mediaId);
+
+        return $this->createMediaFromData($itemData);
+    }
+
+    public function search(string $query): Collection {
         $html = (new Requester)->search($query);
+        return $this->parseSearchResultsHtml($html);
+    }
+
+    private function parseSearchResultsHtml(string $html): Collection {
         $mediaItemsData = (new SearchResultsParser)->parse($html);
 
         return $mediaItemsData->map(function (array $mediaItemData) {
