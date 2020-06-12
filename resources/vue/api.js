@@ -13,6 +13,8 @@ const LOAD_MEDIA = BACKEND_API + '/media';
 const GET_MEDIA_URLS = LOAD_MEDIA + '/urls';
 const PARSE_MEDIA = LOAD_MEDIA + '/parse';
 
+const LOAD_DOWNLOADS = 'http://torrent.mkraust.ru/query/torrents'
+
 export async function loadTrackers() {
     const response = await axios.get(LOAD_TRACKERS);
 
@@ -71,4 +73,10 @@ export async function loadMediaBlocked(tracker, id) {
     const media = (await axios.post(PARSE_MEDIA, { tracker, id, html: { media: mediaHtml.data, torrents: torrentsHtml.data } })).data;
 
     return media;
+}
+
+export async function loadDownloads() {
+    const response = await axios.get(LOAD_DOWNLOADS);
+
+    return response.data;
 }

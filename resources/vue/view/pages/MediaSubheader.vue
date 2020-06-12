@@ -1,5 +1,4 @@
 <template>
-
   <div
     class="subheader py-3 py-lg-8 subheader-transparent"
     v-bind:class="subheaderClasses"

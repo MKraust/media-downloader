@@ -31,6 +31,7 @@
 </template>
 
 <script>
+  import asideToggleMixin from '@/mixins/asideToggleMixin';
   import TrackerSubheader from "./TrackerSubheader";
   import {
     search,
@@ -39,12 +40,14 @@
 
   export default {
     name: "Tracker",
+    mixins: [asideToggleMixin],
     components: {
       TrackerSubheader,
     },
     data() {
       return {
         isLoading: false,
+        isAsideHidden: false,
       };
     },
     computed: {

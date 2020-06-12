@@ -18,8 +18,8 @@
             data-boundary="window"
             v-b-tooltip.hover.right="'Трекеры'"
           >
-            <a
-              href="#"
+            <router-link
+              to="/dashboard"
               class="nav-link btn btn-icon btn-clean btn-lg"
               data-toggle="tab"
               v-on:click="setActiveTab"
@@ -30,7 +30,30 @@
                 <inline-svg src="/media/svg/icons/Layout/Layout-4-blocks.svg" />
                 <!--end::Svg Icon-->
               </span>
-            </a>
+            </router-link>
+          </li>
+          <!--end::Item-->
+          <!--begin::Item-->
+          <li
+            class="nav-item mb-3"
+            data-placement="right"
+            data-container="body"
+            data-boundary="window"
+            v-b-tooltip.hover.right="'Загрузки'"
+          >
+            <router-link
+              to="/downloads"
+              class="nav-link btn btn-icon btn-clean btn-lg"
+              data-toggle="tab"
+              v-on:click="setActiveTab"
+              data-tab="2"
+            >
+              <span class="svg-icon svg-icon-xl">
+                <!--begin::Svg Icon-->
+                <inline-svg src="/media/svg/icons/Media/Equalizer.svg" />
+                <!--end::Svg Icon-->
+              </span>
+            </router-link>
           </li>
           <!--end::Item-->
         </ul>
@@ -72,7 +95,7 @@
                   <!--end::Symbol-->
                   <!--begin::Text-->
                   <div class="d-flex flex-column flex-grow-1 mr-2">
-                    <span :to="'/' + tracker.id" class="text-dark-75 text-hover-primary font-size-h6 mb-0">
+                    <span class="text-dark-75 text-hover-primary font-size-h6 mb-0">
                       {{ tracker.title }}
                     </span>
                   </div>

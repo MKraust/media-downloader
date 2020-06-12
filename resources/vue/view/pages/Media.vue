@@ -17,10 +17,10 @@
             <div class="input-group mb-4">
               <b-form-select
                 v-model="sortBy"
-                :options="[
-                  { value: 'size_int', text: 'По размеру'},
-                  isSomeSeriesTorrents && { value: 'season', text: 'По сезону'},
-                ]"
+                :options="isSomeSeriesTorrents
+                  ? [{ value: 'season', text: 'По сезону'}, { value: 'size_int', text: 'По размеру'}]
+                  : [{ value: 'size_int', text: 'По размеру'}]
+                "
               />
               <div class="input-group-append">
                 <button class="btn btn-primary" type="button" @click="switchSortingOrder">
@@ -43,10 +43,11 @@
   import Torrent from './Torrent';
   import { loadMedia, loadMediaBlocked, startDownload } from "@/api";
   import notifyMixin from '@/mixins/notifyMixin';
+  import asideToggleMixin from '@/mixins/asideToggleMixin';
 
   export default {
     name: "Media",
-    mixins: [notifyMixin],
+    mixins: [notifyMixin, asideToggleMixin],
     components: {
       MediaSubheader,
       Torrent,
@@ -56,7 +57,8 @@
         isLoading: false,
         media: null,
         sortBy: 'size_int',
-        sortingOrder: 'desc'
+        sortingOrder: 'desc',
+        isAsideHidden: false,
       }
     },
     computed: {

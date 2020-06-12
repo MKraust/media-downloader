@@ -30,7 +30,7 @@ import "./core/plugins/apexcharts";
 import "./core/plugins/metronic";
 import "@mdi/font/css/materialdesignicons.css";
 
-Vue.prototype.$lodash = lodash
+Vue.prototype.$lodash = lodash;
 
 new Vue({
   router,

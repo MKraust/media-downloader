@@ -143,7 +143,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import subheaderMixin from "./subheaderMixin";
 
 export default {
