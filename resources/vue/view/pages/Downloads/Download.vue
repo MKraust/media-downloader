@@ -56,7 +56,7 @@
           </label>
         </div>
         <b-progress height="2rem" class="d-flex flex-grow-1">
-          <b-progress-bar :value="50" :variant="statusColor" />
+          <b-progress-bar :value="50" :variant="statusColor" :animated="isInProgress" />
         </b-progress>
       </div>
 
