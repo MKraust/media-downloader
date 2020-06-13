@@ -3,7 +3,7 @@
     <Subheader title="Загрузки" />
     <div class="container py-4">
       <div v-for="download in downloads" :key="download.hash" class="mb-3">
-        <Download :download="download" />
+        <Download :download="download" @delete="handleDelete(download)" />
       </div>
     </div>
   </div>
@@ -14,7 +14,7 @@
   import Subheader from './Subheader';
   import Download from './Download';
 
-  import { loadDownloads } from '@/api'
+  import { loadDownloads, deleteDownload } from '@/api'
 
   export default {
     mixins: [asideToggleMixin],
@@ -56,6 +56,12 @@
           setTimeout(() => this.runAsyncInterval(cb, interval), interval);
         }
       },
+      async handleDelete(downloadToDelete) {
+        if (confirm(`Удалить ${downloadToDelete.name}?`)) {
+          await deleteDownload(downloadToDelete.hash);
+          this.downloads = this.downloads.filter(download => download.hash !== downloadToDelete.hash);
+        }
+      }
     }
   }
 </script>

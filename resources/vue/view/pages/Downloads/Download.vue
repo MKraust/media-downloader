@@ -23,11 +23,15 @@
         <span>{{ estimate }}</span>
       </div>
 
-      <div style="min-width: 250px; max-width: 250px;">
+      <div class="mr-3" style="min-width: 250px; max-width: 250px;">
         <b-progress height="2rem" class="d-flex">
           <b-progress-bar :value="progress" :variant="statusColor" :animated="isInProgress" />
         </b-progress>
       </div>
+
+      <b-button variant="outline-danger" size="sm" class="btn-icon btn-delete" @click="$emit('delete')">
+        <i class="flaticon2-trash"></i>
+      </b-button>
 
     </div>
 
@@ -55,9 +59,13 @@
             <span></span>
           </label>
         </div>
-        <b-progress height="2rem" class="d-flex flex-grow-1">
+        <b-progress height="2rem" class="d-flex flex-grow-1 mr-4">
           <b-progress-bar :value="progress" :variant="statusColor" :animated="isInProgress" />
         </b-progress>
+
+        <b-button variant="outline-danger" size="sm" class="btn-icon btn-delete" @click="$emit('delete')">
+          <i class="flaticon2-trash"></i>
+        </b-button>
       </div>
 
     </div>
@@ -145,10 +153,17 @@
         const days = Math.floor(eta / 3600 * 24);
         return `${days} дн`;
       }
-    }
+    },
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .btn-delete {
+    height: 2rem !important;
+    width: 2rem !important;
 
+    i {
+      font-size: 1.1rem;
+    }
+  }
 </style>
