@@ -15,6 +15,7 @@ export default new Router({
     {
       path: "/",
       component: Layout,
+      redirect: '/dashboard',
       children: [
         {
           name: 'dashboard',
