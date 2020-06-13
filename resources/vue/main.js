@@ -14,12 +14,12 @@ import "popper.js";
 import "tooltip.js";
 import PerfectScrollbar from "perfect-scrollbar";
 window.PerfectScrollbar = PerfectScrollbar;
-import ClipboardJS from "clipboard";
-window.ClipboardJS = ClipboardJS;
+// import ClipboardJS from "clipboard";
+// window.ClipboardJS = ClipboardJS;
 
 // Vue 3rd party plugins
-import i18n from "./core/plugins/vue-i18n";
-import vuetify from "./core/plugins/vuetify";
+// import i18n from "./core/plugins/vue-i18n";
+// import vuetify from "./core/plugins/vuetify";
 import lodash from 'lodash';
 import "./core/plugins/portal-vue";
 import "./core/plugins/bootstrap-vue";
@@ -35,7 +35,7 @@ Vue.prototype.$lodash = lodash;
 new Vue({
   router,
   store,
-  i18n,
-  vuetify,
+  // i18n,
+  // vuetify,
   render: h => h(App)
 }).$mount("#app");

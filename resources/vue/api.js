@@ -13,7 +13,10 @@ const LOAD_MEDIA = BACKEND_API + '/media';
 const GET_MEDIA_URLS = LOAD_MEDIA + '/urls';
 const PARSE_MEDIA = LOAD_MEDIA + '/parse';
 
-const LOAD_DOWNLOADS = 'http://torrent.mkraust.ru/query/torrents'
+const TORRENT_BASE_URL = 'http://torrent.mkraust.ru';
+const LOAD_DOWNLOADS = TORRENT_BASE_URL + '/query/torrents';
+const RESUME_DOWNLOAD = TORRENT_BASE_URL + '/command/resume';
+const PAUSE_DOWNLOAD = TORRENT_BASE_URL + '/command/pause';
 
 export async function loadTrackers() {
     const response = await axios.get(LOAD_TRACKERS);
@@ -79,4 +82,16 @@ export async function loadDownloads() {
     const response = await axios.get(LOAD_DOWNLOADS);
 
     return response.data;
+}
+
+export async function resumeDownload(hash) {
+    await axios.post(RESUME_DOWNLOAD, `hash=${hash}`, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+}
+
+export async function pauseDownload(hash) {
+    await axios.post(PAUSE_DOWNLOAD, `hash=${hash}`, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
 }

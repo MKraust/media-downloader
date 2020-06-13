@@ -3,9 +3,9 @@
     <div class="d-none d-xl-flex align-items-center">
 
       <div class="mr-3">
-        <div class="switch d-flex align-items-center">
+        <div class="switch switch-outline switch-sm d-flex align-items-center" :class="{ [`switch-${statusColor}`]: true }">
           <label class="mb-0">
-            <input type="checkbox" checked="checked" name="select" />
+            <input v-model="isActive" :disabled="isChangingState" type="checkbox" />
             <span></span>
           </label>
         </div>
@@ -25,7 +25,7 @@
 
       <div style="min-width: 250px; max-width: 250px;">
         <b-progress height="2rem" class="d-flex">
-          <b-progress-bar :value="progress" />
+          <b-progress-bar :value="progress" :variant="statusColor" :animated="isInProgress" />
         </b-progress>
       </div>
 
@@ -49,14 +49,14 @@
       </div>
 
       <div class="d-flex align-items-center">
-        <div class="switch switch-sm d-flex align-items-center mr-4">
+        <div class="switch switch-outline switch-sm d-flex align-items-center mr-4" :class="{ [`switch-${statusColor}`]: true }">
           <label class="mb-0">
-            <input type="checkbox" checked="checked" name="select" />
+            <input v-model="isActive" :disabled="isChangingState" type="checkbox" />
             <span></span>
           </label>
         </div>
         <b-progress height="2rem" class="d-flex flex-grow-1">
-          <b-progress-bar :value="50" />
+          <b-progress-bar :value="50" :variant="statusColor" />
         </b-progress>
       </div>
 
@@ -67,10 +67,58 @@
 <script>
   import { humanizeBytes } from "@/helper";
 
+  import { resumeDownload, pauseDownload } from '@/api';
+
   export default {
     name: "Download",
     props: ['download'],
+    data() {
+      return {
+        isChangingState: false,
+      };
+    },
     computed: {
+      isInProgress() {
+        return ['downloading', 'uploading', 'metaDL', 'checkingDL', 'checkingUP'].includes(this.download.state);
+      },
+      statusColor() {
+        switch (this.download.state) {
+          case 'error':
+            return 'danger';
+
+          case 'stalledUP':
+          case 'stalledDL':
+            return 'warning';
+
+          default:
+            return 'primary';
+        }
+      },
+      isActive: {
+        get() {
+          switch (this.download.state) {
+            case 'error':
+            case 'pausedUP':
+            case 'pausedDL':
+              return false;
+
+            default:
+              return true;
+          }
+        },
+        async set(isActive) {
+          this.isChangingState = true;
+
+          this.download.state = 'pausedDL';
+          if (isActive) {
+            await resumeDownload(this.download.hash);
+          } else {
+            await pauseDownload(this.download.hash);
+          }
+
+          this.isChangingState = false;
+        },
+      },
       progress() {
         return this.download.progress * 100;
       },
