@@ -1,6 +1,6 @@
 <template>
   <div class="card bg-white p-4">
-    <div class="d-flex align-items-center">
+    <div class="d-none d-xl-flex align-items-center">
 
       <div class="mr-3">
         <div class="switch d-flex align-items-center">
@@ -23,9 +23,40 @@
         <span>{{ estimate }}</span>
       </div>
 
-      <div style="min-width: 300px; max-width: 300px;">
+      <div style="min-width: 250px; max-width: 250px;">
         <b-progress height="2rem" class="d-flex">
           <b-progress-bar :value="progress" />
+        </b-progress>
+      </div>
+
+    </div>
+
+    <div class="d-block d-xl-none">
+
+      <h5 class="text-truncate mb-2">{{ download.name }}</h5>
+
+      <div class="d-flex mb-3">
+
+        <div class="d-flex align-items-center mr-3" style="min-width: 100px; max-width: 100px;">
+          <i class="fas fa-tachometer-alt mr-2"></i>
+          <span>{{ speed }}</span>
+        </div>
+
+        <div class="d-flex align-items-center" style="min-width: 100px; max-width: 100px;">
+          <i class="fas fa-clock mr-2"></i>
+          <span>{{ estimate }}</span>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <div class="switch switch-sm d-flex align-items-center mr-4">
+          <label class="mb-0">
+            <input type="checkbox" checked="checked" name="select" />
+            <span></span>
+          </label>
+        </div>
+        <b-progress height="2rem" class="d-flex flex-grow-1">
+          <b-progress-bar :value="50" />
         </b-progress>
       </div>
 

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="subheader py-3 py-lg-8 subheader-transparent"
+    class="subheader py-3 subheader-transparent"
     v-bind:class="subheaderClasses"
     id="kt_subheader"
   >
