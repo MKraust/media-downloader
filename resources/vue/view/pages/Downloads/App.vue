@@ -2,8 +2,13 @@
   <div>
     <Subheader title="Загрузки" />
     <div class="container py-4">
-      <div v-for="download in downloads" :key="download.hash" class="mb-3">
-        <Download :download="download" @delete="handleDelete(download)" />
+      <div v-if="downloads.length > 0">
+        <div v-for="download in downloads" :key="download.hash" class="mb-3">
+          <Download :download="download" @delete="handleDelete(download)" />
+        </div>
+      </div>
+      <div v-else class="card bg-white p-4">
+        <h5 class="text-center py-3 mb-0">Ничего не загружается</h5>
       </div>
     </div>
   </div>

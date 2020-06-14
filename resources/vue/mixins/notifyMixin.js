@@ -11,7 +11,7 @@ export default {
         title: title,
         variant: variant,
         solid: true,
-        toaster: 'b-toaster-top-center',
+        toaster: 'b-toaster-bottom-center',
       })
     },
   }
