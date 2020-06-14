@@ -17,7 +17,7 @@ const TORRENT_BASE_URL = 'http://torrent.mkraust.ru';
 const LOAD_DOWNLOADS = TORRENT_BASE_URL + '/query/torrents';
 const RESUME_DOWNLOAD = TORRENT_BASE_URL + '/command/resume';
 const PAUSE_DOWNLOAD = TORRENT_BASE_URL + '/command/pause';
-const DELETE_DOWNLOAD = TORRENT_BASE_URL + '/command/delete';
+const DELETE_DOWNLOAD = TORRENT_BASE_URL + '/command/deletePerm';
 
 export async function loadTrackers() {
     const response = await axios.get(LOAD_TRACKERS);
