@@ -12,8 +12,8 @@ class Client
         $httpClient->get($url, [
             'query' => [
                 'chat_id'    => $this->getChatId(),
-                'parse_mode' => 'html',
-                'text'       => "<strong>Загрузка завершена</strong><br><br>{$torrentName}",
+                'parse_mode' => 'markdown',
+                'text'       => "*Загрузка завершена*\n\n`{$torrentName}`",
             ],
         ]);
     }
