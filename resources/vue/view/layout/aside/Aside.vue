@@ -24,6 +24,7 @@
               data-toggle="tab"
               v-on:click="setActiveTab"
               data-tab="0"
+              @click.native="asideOffcanvas.hide()"
             >
               <span class="svg-icon svg-icon-xl">
                 <!--begin::Svg Icon-->
@@ -47,6 +48,7 @@
               data-toggle="tab"
               v-on:click="setActiveTab"
               data-tab="2"
+              @click.native="asideOffcanvas.hide()"
             >
               <span class="svg-icon svg-icon-xl">
                 <!--begin::Svg Icon-->
@@ -84,6 +86,7 @@
                 v-for="tracker in trackers"
                 :key="tracker.id"
                 class="list-item hoverable p-2 p-lg-3 mb-2"
+                @click.native="asideOffcanvas.hide()"
               >
                 <div class="d-flex align-items-center">
                   <!--begin::Symbol-->
@@ -141,6 +144,7 @@ export default {
       insideTm: 0,
       outsideTm: 0,
       tabIndex: 0,
+      asideOffcanvas: null,
     };
   },
   components: {
@@ -154,6 +158,7 @@ export default {
     this.$nextTick(() => {
       // Init Aside
       KTLayoutAside.init(this.$refs["kt_aside"]);
+      this.asideOffcanvas = KTLayoutAside.getOffcanvas();
 
       // Init Aside Menu
       KTLayoutAsideMenu.init(this.$refs["kt_aside_menu"]);
