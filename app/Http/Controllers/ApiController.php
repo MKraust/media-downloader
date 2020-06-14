@@ -41,14 +41,7 @@ class ApiController extends Controller
         $trackerId = request('tracker');
 
         $tracker = $this->trackerKeeper->getTrackerById($trackerId);
-        $media = $tracker->loadMediaById($id);
-
-        return [
-            'id' => $media->id,
-            'title' => $media->title,
-            'poster' => $media->poster,
-            'torrents' => $media->torrents,
-        ];
+        return $tracker->loadMediaById($id);
     }
 
     public function download() {
@@ -100,14 +93,7 @@ class ApiController extends Controller
         /** @var Tracker\BlockedTracker $tracker */
         $tracker = $this->trackerKeeper->getTrackerById($trackerId);
 
-        $media = $tracker->parseMedia($mediaId, $htmlParts);
-
-        return [
-            'id' => $media->id,
-            'title' => $media->title,
-            'poster' => $media->poster,
-            'torrents' => $media->torrents,
-        ];
+        return $tracker->parseMedia($mediaId, $htmlParts);
     }
 
     public function downloadFromFile() {

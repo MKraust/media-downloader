@@ -64,16 +64,24 @@ abstract class Base
     }
 
     final protected function createMediaFromData(array $data): Media {
+        $preparedData = $this->prepareMediaData($data);
+
         $media = new Media;
 
-        $url = $data['url'] ?? null;
-        $media->id = $url !== null ? $this->encryptUrl($url) : null;
-        $media->title = $data['title'] ?? null;
-        $media->poster = $data['poster'] ?? null;
+        $url                  = $preparedData['url'] ?? null;
+        $media->id            = $url !== null ? $this->encryptUrl($url) : null;
+        $media->title         = $preparedData['title'] ?? null;
+        $media->originalTitle = $preparedData['original_title'] ?? null;
+        $media->seriesCount   = $preparedData['series_count'] ?? null;
+        $media->poster        = $preparedData['poster'] ?? null;
 
-        $torrents = $data['torrents'] ?? collect();
-        $media->torrents = $torrents->sortByDesc('size_int')->values()->all();
+        $torrents             = $preparedData['torrents'] ?? collect();
+        $media->torrents      = $torrents->sortByDesc('size_int')->values()->all();
 
         return $media;
+    }
+
+    protected function prepareMediaData(array $data): array {
+        return $data;
     }
 }
