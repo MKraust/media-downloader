@@ -1,9 +1,7 @@
 import { mapGetters } from "vuex";
 
 export default {
-  props: {
-    title: String
-  },
+  props: ['title', 'subtitle'],
   computed: {
     ...mapGetters(["layoutConfig"]),
 

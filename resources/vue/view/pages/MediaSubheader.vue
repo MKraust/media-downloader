@@ -15,7 +15,14 @@
           </router-link>
         </div>
         <!--begin::Page Title-->
-        <h2 class="subheader-title text-dark font-weight-bold my-2 mr-3 text-truncate">{{ title }}</h2>
+        <div class="div">
+          <h2 class="subheader-title text-dark font-weight-bold mr-3 mb-0 text-truncate">{{ title }}</h2>
+          <ul v-if="subtitle" class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold my-0 p-0">
+            <li class="breadcrumb-item">
+              <span class="text-muted">{{ subtitle }}</span>
+            </li>
+          </ul>
+        </div>
         <!--end::Page Title-->
       </div>
     </div>

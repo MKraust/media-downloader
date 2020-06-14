@@ -7,11 +7,16 @@
     </div>
 
     <div v-else>
-      <MediaSubheader :title="media.title" />
+      <MediaSubheader :title="media.title" :subtitle="media.original_title" />
       <div class="container">
         <div class="row">
           <div class="col-md-4 mb-4">
-            <img :src="media.poster" class="img-thumbnail">
+            <div class="card ribbon ribbon-clip ribbon-left">
+              <div v-if="media.series_count" class="ribbon-target" style="top: 12px;">
+                <span class="ribbon-inner bg-danger"></span>{{ media.series_count }}
+              </div>
+              <img :src="media.poster" class="card-img-top card-img-bottom" style="width: 100%;">
+            </div>
           </div>
           <div class="col-md-8">
             <div class="input-group mb-4">
