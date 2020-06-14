@@ -18,6 +18,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(App\Tracker\Keeper::class, function ($app) {
             return new App\Tracker\Keeper;
         });
+
+        $this->app->singleton(App\Telegram\Client::class, function ($app) {
+            return new App\Telegram\Client;
+        });
     }
 
     /**

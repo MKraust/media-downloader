@@ -16,3 +16,4 @@ Route::post('/media/parse', 'ApiController@parseMedia');
 Route::post('/download', 'ApiController@download');
 Route::get('/download', 'ApiController@download');
 Route::post('/download/file', 'ApiController@downloadFromFile');
+Route::get('/download/notify/finish', 'ApiController@notifyAboutFinishedDownload');

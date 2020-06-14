@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Tracker;
+use App\Telegram;
 use Illuminate\Support\Collection;
 
 class ApiController extends Controller
@@ -11,8 +12,12 @@ class ApiController extends Controller
     /** @var Tracker\Keeper */
     private $trackerKeeper;
 
-    public function __construct(Tracker\Keeper $trackerKeeper) {
+    /** @var Telegram\Client */
+    private $telegram;
+
+    public function __construct(Tracker\Keeper $trackerKeeper, Telegram\Client $telegram) {
         $this->trackerKeeper = $trackerKeeper;
+        $this->telegram = $telegram;
     }
 
     public function trackers(): Collection {
@@ -114,5 +119,10 @@ class ApiController extends Controller
         $tracker->startDownloadFromFile($file, $contentType);
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function notifyAboutFinishedDownload() {
+        $torrentName = request('name');
+        $this->telegram->notifyAboutFinishedDownload($torrentName);
     }
 }
