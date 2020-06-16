@@ -26,6 +26,7 @@ export async function loadTrackers() {
 }
 
 export async function search(tracker, query) {
+    console.log(query);
     const params = { tracker, query };
     const response = await axios.get(SEARCH_MEDIA_ITEMS, { params });
 
