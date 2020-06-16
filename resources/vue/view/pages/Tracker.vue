@@ -12,6 +12,14 @@
     <div v-if="isLoading" class="d-flex justify-content-center" style="height: 400px;">
       <div class="spinner spinner-track spinner-primary spinner-lg" style="margin-left: -1rem;"></div>
     </div>
+    <div v-else-if="error" class="container">
+      <div class="card bg-white p-4">
+        <h5 class="text-center py-3">Произошла ошибка. Возможно, трекер заблокирован.</h5>
+        <div class="d-flex justify-content-center">
+          <a href="App-prefs://prefs:root=General&path=VPN" class="btn btn-sm btn-primary d-inline">Включить VPN</a>
+        </div>
+      </div>
+    </div>
     <div v-else class="container">
       <div class="row">
         <div v-for="mediaItem in searchResults" :key="mediaItem.id" class="col-xs-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -52,6 +60,7 @@
       return {
         isLoading: false,
         isAsideHidden: false,
+        error: false,
       };
     },
     computed: {
@@ -70,10 +79,15 @@
         }
 
         this.isLoading = true;
+        this.error = false;
 
         let mediaItems;
         if (this.tracker.is_blocked) {
           mediaItems = await searchBlocked(this.tracker.id, searchQuery);
+          if (!mediaItems) {
+            this.error = true;
+            this.isLoading = false;
+          }
         } else {
           mediaItems = await search(this.tracker.id, searchQuery);
         }

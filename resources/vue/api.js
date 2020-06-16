@@ -61,11 +61,15 @@ export async function startDownload(tracker, url, type) {
 }
 
 export async function searchBlocked(tracker, query) {
-    const searchUrl = (await axios.get(GET_SEARCH_URL, { params: { tracker, query } })).data;
-    const html = (await axios.get(searchUrl)).data;
-    const mediaItems = (await axios.post(PARSE_SEARCH_RESULTS_HTML, { tracker, html })).data;
+    try {
+        const searchUrl = (await axios.get(GET_SEARCH_URL, { params: { tracker, query } })).data;
+        const html = (await axios.get(searchUrl)).data;
+        const mediaItems = (await axios.post(PARSE_SEARCH_RESULTS_HTML, { tracker, html })).data;
 
-    return mediaItems;
+        return mediaItems;
+    } catch (error) {
+        return false;
+    }
 }
 
 export async function loadMediaBlocked(tracker, id) {
