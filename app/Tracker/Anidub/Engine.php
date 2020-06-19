@@ -26,9 +26,12 @@ class Engine extends Tracker\Base
      * @param string $query
      * @return Collection|Tracker\Media[]
      */
-    public function search(string $query): Collection
+    public function search(string $query, int $offset): Collection
     {
-        $html = (new Requester())->search($query);
+        if ($offset % 15 > 0) {
+            return collect();
+        }
+        $html = (new Requester())->search($query, $offset);
         $parser = new SearchResultsParser();
         $itemsData = $parser->parse($html);
 
@@ -57,7 +60,7 @@ class Engine extends Tracker\Base
 
         $title = $data['title'] ?? null;
         if ($title !== null) {
-            $titleParts = explode(' / ', $data['title']);
+            $titleParts = explode('/ ', $data['title']); // fix this as in titles may be slashes
             $trimmedTitleParts = array_map('trim', $titleParts);
             $preparedData['title'] = $trimmedTitleParts[0];
             $preparedData['original_title'] = trim(preg_replace('/\[.+]/u', '', $trimmedTitleParts[1]));

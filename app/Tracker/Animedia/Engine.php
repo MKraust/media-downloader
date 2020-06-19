@@ -25,7 +25,7 @@ class Engine extends Tracker\Base
         return '';
     }
 
-    public function search(string $query): Collection
+    public function search(string $query, int $offset): Collection
     {
         return collect();
 //        $mediaListJson = (new Requester())->getMediaList();

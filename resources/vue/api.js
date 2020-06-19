@@ -25,9 +25,9 @@ export async function loadTrackers() {
     return response.data;
 }
 
-export async function search(tracker, query) {
+export async function search(tracker, query, offset) {
     console.log(query);
-    const params = { tracker, query };
+    const params = { tracker, query, offset };
     const response = await axios.get(SEARCH_MEDIA_ITEMS, { params });
 
     return response.data;
@@ -61,9 +61,9 @@ export async function startDownload(tracker, url, type) {
     });
 }
 
-export async function searchBlocked(tracker, query) {
+export async function searchBlocked(tracker, query, offset) {
     try {
-        const searchUrl = (await axios.get(GET_SEARCH_URL, { params: { tracker, query } })).data;
+        const searchUrl = (await axios.get(GET_SEARCH_URL, { params: { tracker, query, offset } })).data;
         const html = (await axios.get(searchUrl)).data;
         const mediaItems = (await axios.post(PARSE_SEARCH_RESULTS_HTML, { tracker, html })).data;
 

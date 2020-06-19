@@ -20,7 +20,7 @@ abstract class Base
      * @param string $query
      * @return Collection|Media[]
      */
-    abstract public function search(string $query): Collection;
+    abstract public function search(string $query, int $offset): Collection;
 
     final public function startDownload(string $url, string $contentType): void {
         $fileContent = $this->loadTorrentFile($url);

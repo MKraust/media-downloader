@@ -51,7 +51,7 @@ class Engine extends Tracker\Base implements Tracker\BlockedTracker
         return $this->createMediaFromData($itemData);
     }
 
-    public function search(string $query): Collection {
+    public function search(string $query, int $offset): Collection {
         $html = (new Requester)->search($query);
         return $this->parseSearchResultsHtml($html);
     }

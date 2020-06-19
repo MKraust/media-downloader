@@ -11,13 +11,14 @@ class Requester
 
     public const BASE_URL = 'https://tr.anidub.com';
 
-    public function search(string $searchQuery): string {
+    public function search(string $searchQuery, int $offset): string {
+        $page = (int)floor($offset / 15) + 1;
         $params = [
             "do" => "search",
             "subaction" => "search",
-            "search_start" => 1,
+            "search_start" => $page,
             "full_search" => 1,
-            "result_from" => 1,
+            "result_from" => $offset + 1,
             "story" => $searchQuery,
             "titleonly" => 0,
             "searchuser" => "",

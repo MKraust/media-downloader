@@ -63,7 +63,8 @@
         isLoading: false,
         isAsideHidden: false,
         error: false,
-        busy: false,
+        isEndOfResultsReached: false,
+        isLazyLoading: false,
         lastSearchQuery: '',
       };
     },
@@ -84,42 +85,52 @@
     },
     methods: {
       async handleScroll() {
-        console.log('Scrolling...');
         let scrollPos = document.documentElement.scrollHeight - window.innerHeight - document.documentElement.scrollTop;
-        if (scrollPos == 0) {
-          console.log('!!!');
-          let mediaItems;
-          if (this.tracker.is_blocked) {
-            mediaItems = await searchBlocked(this.tracker.id, this.lastSearchQuery);
-          } else {
-            console.log(this.tracker.id, this.searchQuery);
-            mediaItems = await search(this.tracker.id, this.lastSearchQuery);
-          }
-
-          const result = [...this.searchResults, ...mediaItems];
-          this.$store.commit('saveSearch', {
-            trackerId: this.tracker.id,
-            media: result,
-          });
+        if (scrollPos !== 0 || this.isEndOfResultsReached || this.isLazyLoading) {
+          return;
         }
+
+        this.isLazyLoading = true;
+
+        let mediaItems;
+        if (this.tracker.is_blocked) {
+          mediaItems = await searchBlocked(this.tracker.id, this.lastSearchQuery, this.searchResults.length);
+        } else {
+          console.log(this.tracker.id, this.searchQuery, this.searchResults.length);
+          mediaItems = await search(this.tracker.id, this.lastSearchQuery, this.searchResults.length);
+        }
+
+        if (mediaItems.length === 0) {
+          this.isEndOfResultsReached = true;
+          return;
+        }
+
+        const result = [...this.searchResults, ...mediaItems];
+        this.$store.commit('saveSearch', {
+          trackerId: this.tracker.id,
+          media: result,
+        });
+
+        this.isLazyLoading = false;
       },
       async handleSearch(searchQuery) {
         if (searchQuery === '') {
           return;
         }
 
+        this.isEndOfResultsReached = false;
         this.isLoading = true;
         this.error = false;
 
         let mediaItems;
         if (this.tracker.is_blocked) {
-          mediaItems = await searchBlocked(this.tracker.id, searchQuery);
+          mediaItems = await searchBlocked(this.tracker.id, searchQuery, this.searchResults.length);
           if (!mediaItems) {
             this.error = true;
             this.isLoading = false;
           }
         } else {
-          mediaItems = await search(this.tracker.id, searchQuery);
+          mediaItems = await search(this.tracker.id, searchQuery, this.searchResults.length);
         }
 
         this.lastSearchQuery = searchQuery;

@@ -29,11 +29,12 @@ class ApiController extends Controller
     public function search(): Collection {
         $trackerId = request('tracker');
         $searchQuery = request('query');
+        $offset = request('offset');
 
         $tracker = $this->trackerKeeper->getTrackerById($trackerId);
         // TODO: throw not found exception
 
-        return $tracker->search($searchQuery);
+        return $tracker->search($searchQuery, $offset);
     }
 
     public function media(): array {
