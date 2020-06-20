@@ -58,6 +58,30 @@
             </router-link>
           </li>
           <!--end::Item-->
+          <!--begin::Item-->
+          <li
+            class="nav-item mb-3"
+            data-placement="right"
+            data-container="body"
+            data-boundary="window"
+            v-b-tooltip.hover.right="'Загрузки'"
+          >
+            <router-link
+              to="/favorites"
+              class="nav-link btn btn-icon btn-clean btn-lg"
+              data-toggle="tab"
+              v-on:click="setActiveTab"
+              data-tab="2"
+              @click.native="asideOffcanvas.hide()"
+            >
+              <span class="svg-icon svg-icon-xl">
+                <!--begin::Svg Icon-->
+                <inline-svg src="/media/svg/icons/Home/Library.svg" />
+                <!--end::Svg Icon-->
+              </span>
+            </router-link>
+          </li>
+          <!--end::Item-->
         </ul>
         <!--end::Nav-->
       </div>

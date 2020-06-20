@@ -11,12 +11,13 @@
       <div class="container">
         <div class="row">
           <div class="col-md-4 mb-4">
-            <div class="card ribbon ribbon-clip ribbon-left">
+            <div class="card ribbon ribbon-clip ribbon-left mb-4">
               <div v-if="media.series_count" class="ribbon-target" style="top: 12px;">
                 <span class="ribbon-inner bg-danger"></span>{{ media.series_count }}
               </div>
               <img :src="media.poster" class="card-img-top card-img-bottom" style="width: 100%;">
             </div>
+            <div class="btn btn-lg w-100" :class="{ [favoriteButtonClass]: true }" @click="toggleFavorite">В избранное</div>
           </div>
           <div class="col-md-8">
             <div class="input-group mb-4">
@@ -49,6 +50,7 @@
   import { loadMedia, loadMediaBlocked, startDownload } from "@/api";
   import notifyMixin from '@/mixins/notifyMixin';
   import asideToggleMixin from '@/mixins/asideToggleMixin';
+  import { addToFavorites, removeFromFavorites } from "../../api";
 
   export default {
     name: "Media",
@@ -87,6 +89,9 @@
         }
 
         return this.medis.torrents;
+      },
+      favoriteButtonClass() {
+        return this.media.is_favored ? 'btn-outline-warning' : 'btn-warning';
       }
     },
     watch: {
@@ -100,6 +105,15 @@
       }
     },
     methods: {
+      async toggleFavorite() {
+        if (this.media.is_favored) {
+          this.media.is_favored = false;
+          await removeFromFavorites(this.tracker.id, this.media.id);
+        } else {
+          this.media.is_favored = true;
+          await addToFavorites(this.tracker.id, this.media.id);
+        }
+      },
       async init() {
         this.isLoading = true;
 

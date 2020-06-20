@@ -27,4 +27,8 @@ class FavoriteMedia extends Model
 
         return $favoriteMedia;
     }
+
+    public static function isFavored(string $url): bool {
+        return self::where('url', $url)->count() > 0;
+    }
 }

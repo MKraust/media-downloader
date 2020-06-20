@@ -13,6 +13,10 @@ const LOAD_MEDIA = BACKEND_API + '/media';
 const GET_MEDIA_URLS = LOAD_MEDIA + '/urls';
 const PARSE_MEDIA = LOAD_MEDIA + '/parse';
 
+const LOAD_FAVORITES = BACKEND_API + '/favorites/list';
+const ADD_TO_FAVORITES = BACKEND_API + '/favorites/add';
+const REMOVE_FROM_FAVORITES = BACKEND_API + '/favorites/remove';
+
 const TORRENT_BASE_URL = 'http://torrent.mkraust.ru';
 const LOAD_DOWNLOADS = TORRENT_BASE_URL + '/query/torrents';
 const RESUME_DOWNLOAD = TORRENT_BASE_URL + '/command/resume';
@@ -106,4 +110,18 @@ export async function deleteDownload(hash) {
     await axios.post(DELETE_DOWNLOAD, `hashes=${hash}`, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
+}
+
+export async function loadFavorites() {
+    const favorites = (await axios.get(LOAD_FAVORITES)).data;
+
+    return favorites;
+}
+
+export async function addToFavorites(tracker, id) {
+    await axios.post(ADD_TO_FAVORITES, { tracker, id });
+}
+
+export async function removeFromFavorites(tracker, id) {
+    await axios.post(REMOVE_FROM_FAVORITES, { tracker, id });
 }

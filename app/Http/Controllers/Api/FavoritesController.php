@@ -26,6 +26,17 @@ class FavoritesController extends Controller
         return response()->json('success');
     }
 
+    public function removeFromFavorites(Tracker\Keeper $trackerKeeper) {
+        $trackerId = request('tracker');
+        $mediaId = request('id');
+        $tracker = $trackerKeeper->getTrackerById($trackerId);
+
+        $url = $tracker->decryptUrl($mediaId);
+        FavoriteMedia::where('url', $url)->delete();
+
+        return response()->json('success');
+    }
+
     public function getFavorites() {
         $favorites = FavoriteMedia::orderByDesc('created_at')->get();
 

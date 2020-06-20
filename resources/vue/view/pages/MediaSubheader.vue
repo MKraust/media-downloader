@@ -10,9 +10,9 @@
     >
       <div class="d-flex align-items-center mw-100 mr-5">
         <div>
-          <router-link :to="'/' + tracker.id" class="btn btn-sm btn-icon btn-primary mr-4">
+          <a class="btn btn-sm btn-icon btn-primary mr-4" @click="$router.back()">
             <i class="fas fa-angle-left"></i>
-          </router-link>
+          </a>
         </div>
         <!--begin::Page Title-->
         <div class="div">

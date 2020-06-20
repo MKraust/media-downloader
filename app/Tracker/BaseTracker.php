@@ -71,11 +71,13 @@ abstract class BaseTracker
 
         $url                  = $preparedData['url'] ?? null;
         $media->id            = $url !== null ? $this->encryptUrl($url) : null;
+        $media->trackerId     = $this->id();
         $media->url           = $url;
         $media->title         = $preparedData['title'] ?? null;
         $media->originalTitle = $preparedData['original_title'] ?? null;
         $media->seriesCount   = $preparedData['series_count'] ?? null;
         $media->poster        = $preparedData['poster'] ?? null;
+        $media->isFavored     = App\Models\FavoriteMedia::isFavored($url);
 
         $torrents             = $preparedData['torrents'] ?? collect();
         $media->torrents      = $torrents->sortByDesc('size_int')->values()->all();

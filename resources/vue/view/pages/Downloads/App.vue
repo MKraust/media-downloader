@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Subheader title="Загрузки" />
+    <BasicSubheader title="Загрузки" />
     <div class="container py-4">
       <div v-if="downloads.length > 0">
         <div v-for="download in downloads" :key="download.hash" class="mb-3">
@@ -16,7 +16,7 @@
 
 <script>
   import asideToggleMixin from '@/mixins/asideToggleMixin';
-  import Subheader from './Subheader';
+  import BasicSubheader from '../components/BasicSubheader';
   import Download from './Download';
 
   import { loadDownloads, deleteDownload } from '@/api'
@@ -24,7 +24,7 @@
   export default {
     mixins: [asideToggleMixin],
     components: {
-      Subheader,
+      BasicSubheader,
       Download,
     },
     data() {
