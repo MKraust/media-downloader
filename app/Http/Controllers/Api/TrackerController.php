@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Tracker;
 use Illuminate\Support\Collection;
+use App\Http\Requests;
 
 class TrackerController extends Controller
 {
     /** @var Tracker\Base */
     private $_tracker;
 
-    public function __construct(Tracker\Keeper $trackerKeeper)
+    public function __construct(Requests\TrackerRequest $trackerRequest, Tracker\Keeper $trackerKeeper)
     {
-        $trackerId = request('tracker');
+        $trackerId = $trackerRequest->tracker;
         $this->_tracker = $trackerKeeper->getTrackerById($trackerId);
     }
 

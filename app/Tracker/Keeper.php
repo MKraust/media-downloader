@@ -22,4 +22,13 @@ class Keeper
             return $tracker->id() === $id;
         });
     }
+
+    /**
+     * @return string[]
+     */
+    public function getTrackerIds(): array {
+        return $this->getTrackers()->map(static function (Base $tracker) {
+            return $tracker->id();
+        })->toArray();
+    }
 }
