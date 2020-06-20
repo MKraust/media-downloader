@@ -17,3 +17,6 @@ Route::post('/media/parse', 'BlockedTrackerController@parseMedia');
 Route::post('/download/file', 'BlockedTrackerController@downloadFromFile');
 
 Route::get('/download/notify/finish', 'NotificationController@notifyAboutFinishedDownload');
+
+Route::post('/favorites/add', 'FavoritesController@addToFavorites');
+Route::get('/favorites/list', 'FavoritesController@getFavorites');

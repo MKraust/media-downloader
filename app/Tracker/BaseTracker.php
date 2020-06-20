@@ -56,11 +56,11 @@ abstract class BaseTracker
 
     abstract protected function loadMediaByUrl(string $url): ?Media;
 
-    final protected function encryptUrl(string $url): string {
+    final public function encryptUrl(string $url): string {
         return encrypt($url);
     }
 
-    final protected function decryptUrl(string $encryptedUrl): string {
+    final public function decryptUrl(string $encryptedUrl): string {
         return decrypt($encryptedUrl);
     }
 
@@ -71,6 +71,7 @@ abstract class BaseTracker
 
         $url                  = $preparedData['url'] ?? null;
         $media->id            = $url !== null ? $this->encryptUrl($url) : null;
+        $media->url           = $url;
         $media->title         = $preparedData['title'] ?? null;
         $media->originalTitle = $preparedData['original_title'] ?? null;
         $media->seriesCount   = $preparedData['series_count'] ?? null;

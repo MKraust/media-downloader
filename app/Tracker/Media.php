@@ -6,6 +6,8 @@ class Media implements \JsonSerializable {
 
     public $id;
 
+    public $url;
+
     public $title;
 
     public $originalTitle;
