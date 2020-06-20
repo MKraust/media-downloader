@@ -47,7 +47,12 @@ class Engine extends Tracker\BaseTracker
 
     protected function loadMediaByUrl(string $url): ?Media
     {
-        return new Media;
+        $html = (new Requester())->loadMediaPage($url);
+        $parser = new MediaPageParser;
+        $itemData = $parser->parse($html);
+        $itemData['url'] = $url;
+
+        return $this->createMediaFromData($itemData);
     }
 
     protected function prepareMediaData(array $data): array
@@ -57,7 +62,7 @@ class Engine extends Tracker\BaseTracker
         $poster = $data['poster'] ?? null;
         if ($poster !== null) {
             $posterUrlWithoutQuery = explode('?', $poster)[0];
-            $preparedData['poster'] = $posterUrlWithoutQuery . '?h=770&w=560&q=100';
+            $preparedData['poster'] = $posterUrlWithoutQuery . '?h=550&w=400&q=70';
         }
 
         return $preparedData;
