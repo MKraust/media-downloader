@@ -37,7 +37,6 @@
 
       </div>
     </div>
-    <KTStickyToolbar v-if="toolbarDisplay"></KTStickyToolbar>
     <KTScrollTop></KTScrollTop>
   </div>
 </template>
@@ -46,10 +45,8 @@
 import { mapGetters } from "vuex";
 import KTAside from "@/view/layout/aside/Aside.vue";
 import KTHeaderMobile from "@/view/layout/header/HeaderMobile.vue";
-import KTFooter from "@/view/layout/footer/Footer.vue";
 import HtmlClass from "@/core/services/htmlclass.service";
 import KTSubheader from "@/view/layout/subheader/Subheader.vue";
-import KTStickyToolbar from "@/view/layout/extras/StickyToolbar.vue";
 import KTScrollTop from "@/view/layout/extras/ScrollTop";
 import Loader from "@/view/content/Loader.vue";
 import {
@@ -62,9 +59,7 @@ export default {
   components: {
     KTAside,
     KTHeaderMobile,
-    KTFooter,
     KTSubheader,
-    KTStickyToolbar,
     KTScrollTop,
     Loader
   },

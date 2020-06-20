@@ -18,6 +18,7 @@ abstract class Base
 
     /**
      * @param string $query
+     * @param int $offset
      * @return Collection|Media[]
      */
     abstract public function search(string $query, int $offset): Collection;

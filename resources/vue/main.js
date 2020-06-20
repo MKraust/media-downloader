@@ -18,15 +18,11 @@ window.PerfectScrollbar = PerfectScrollbar;
 // window.ClipboardJS = ClipboardJS;
 
 // Vue 3rd party plugins
-// import i18n from "./core/plugins/vue-i18n";
-// import vuetify from "./core/plugins/vuetify";
 import lodash from 'lodash';
 import "./core/plugins/portal-vue";
 import "./core/plugins/bootstrap-vue";
 import "./core/plugins/perfect-scrollbar";
-import "./core/plugins/highlight-js";
 import "./core/plugins/inline-svg";
-import "./core/plugins/apexcharts";
 import "./core/plugins/metronic";
 import "@mdi/font/css/materialdesignicons.css";
 
@@ -35,7 +31,5 @@ Vue.prototype.$lodash = lodash;
 new Vue({
   router,
   store,
-  // i18n,
-  // vuetify,
   render: h => h(App)
 }).$mount("#app");

@@ -133,9 +133,6 @@ import KTLayoutAsideMenu from "@/assets/js/layout/base/aside-menu.js";
 import KTLayoutAsideToggle from "@/assets/js/layout/base/aside-toggle.js";
 import KTBrand from "@/view/layout/brand/Brand.vue";
 import KTMenu from "@/view/layout/aside/Menu.vue";
-import KTQuickActions from "@/view/layout/extras/offcanvas/QuickActions.vue";
-import KTQuickUser from "@/view/layout/extras/offcanvas/QuickUser.vue";
-import KTQuickPanel from "@/view/layout/extras/offcanvas/QuickPanel.vue";
 
 export default {
   name: "KTAside",
@@ -150,9 +147,6 @@ export default {
   components: {
     KTBrand,
     KTMenu,
-    KTQuickActions,
-    KTQuickUser,
-    KTQuickPanel
   },
   mounted() {
     this.$nextTick(() => {
