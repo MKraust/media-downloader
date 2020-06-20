@@ -124,13 +124,13 @@
 
         let mediaItems;
         if (this.tracker.is_blocked) {
-          mediaItems = await searchBlocked(this.tracker.id, searchQuery, this.searchResults.length);
+          mediaItems = await searchBlocked(this.tracker.id, searchQuery);
           if (!mediaItems) {
             this.error = true;
             this.isLoading = false;
           }
         } else {
-          mediaItems = await search(this.tracker.id, searchQuery, this.searchResults.length);
+          mediaItems = await search(this.tracker.id, searchQuery);
         }
 
         this.lastSearchQuery = searchQuery;
