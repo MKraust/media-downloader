@@ -3,17 +3,17 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/trackers', 'ApiController@trackers');
+Route::get('/trackers', 'InfoController@trackers');
 
-Route::get('/search', 'ApiController@search');
-Route::get('/search/url', 'ApiController@getSearchUrl');
-Route::post('/search/parse', 'ApiController@parseSearchResult');
+Route::get('/search', 'TrackerController@search');
+Route::get('/media', 'TrackerController@media');
+Route::post('/download', 'TrackerController@download');
+Route::get('/download', 'TrackerController@download');
 
-Route::get('/media', 'ApiController@media');
-Route::get('/media/urls', 'ApiController@getMediaUrls');
-Route::post('/media/parse', 'ApiController@parseMedia');
+Route::get('/search/url', 'BlockedTrackerController@getSearchUrl');
+Route::post('/search/parse', 'BlockedTrackerController@parseSearchResult');
+Route::get('/media/urls', 'BlockedTrackerController@getMediaUrls');
+Route::post('/media/parse', 'BlockedTrackerController@parseMedia');
+Route::post('/download/file', 'BlockedTrackerController@downloadFromFile');
 
-Route::post('/download', 'ApiController@download');
-Route::get('/download', 'ApiController@download');
-Route::post('/download/file', 'ApiController@downloadFromFile');
-Route::get('/download/notify/finish', 'ApiController@notifyAboutFinishedDownload');
+Route::get('/download/notify/finish', 'NotificationController@notifyAboutFinishedDownload');
