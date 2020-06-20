@@ -17,8 +17,8 @@ class Keeper
         ]);
     }
 
-    public function getTrackerById(string $id): ?Base {
-        return $this->getTrackers()->first(static function (Base $tracker) use ($id) {
+    public function getTrackerById(string $id): ?BaseTracker {
+        return $this->getTrackers()->first(static function (BaseTracker $tracker) use ($id) {
             return $tracker->id() === $id;
         });
     }
@@ -27,7 +27,7 @@ class Keeper
      * @return string[]
      */
     public function getTrackerIds(): array {
-        return $this->getTrackers()->map(static function (Base $tracker) {
+        return $this->getTrackers()->map(static function (BaseTracker $tracker) {
             return $tracker->id();
         })->toArray();
     }

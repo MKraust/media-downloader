@@ -9,7 +9,7 @@ use App\Http\Requests;
 
 class TrackerController extends Controller
 {
-    /** @var Tracker\Base */
+    /** @var Tracker\BaseTracker */
     private $_tracker;
 
     public function __construct(Requests\TrackerRequest $trackerRequest, Tracker\Keeper $trackerKeeper)

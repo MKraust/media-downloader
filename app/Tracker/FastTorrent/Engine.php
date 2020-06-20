@@ -6,7 +6,7 @@ use App\Tracker;
 use App\Tracker\Media;
 use Illuminate\Support\Collection;
 
-class Engine extends Tracker\Base implements Tracker\BlockedTracker
+class Engine extends Tracker\BaseTracker implements Tracker\BlockedTracker
 {
     public function id(): string
     {

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Psr\Http\Message\StreamInterface;
 
-abstract class Base
+abstract class BaseTracker
 {
     abstract public function id(): string;
 

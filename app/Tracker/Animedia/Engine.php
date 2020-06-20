@@ -7,7 +7,7 @@ use App\Tracker;
 use App\Tracker\Media;
 use Illuminate\Support\Collection;
 
-class Engine extends Tracker\Base
+class Engine extends Tracker\BaseTracker
 {
 
     public function id(): string

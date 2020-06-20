@@ -5,7 +5,7 @@ namespace App\Tracker\Anidub;
 use App\Tracker;
 use Illuminate\Support\Collection;
 
-class Engine extends Tracker\Base
+class Engine extends Tracker\BaseTracker
 {
     public function id(): string
     {

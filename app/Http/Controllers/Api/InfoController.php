@@ -17,7 +17,7 @@ class InfoController extends Controller
     }
 
     public function trackers(): Collection {
-        return $this->_trackerKeeper->getTrackers()->map(static function (Tracker\Base $tracker) {
+        return $this->_trackerKeeper->getTrackers()->map(static function (Tracker\BaseTracker $tracker) {
             return $tracker->serialize();
         });
     }
