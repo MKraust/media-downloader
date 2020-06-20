@@ -61,9 +61,5 @@ import KTLayoutSubheader from "@/assets/js/layout/base/subheader.js";
 window.KTLayoutSubheader = KTLayoutSubheader;
 
 // Metronic layout extended js
-
-import KTLayoutExamples from "@/assets/js/layout/extended/examples.js";
-window.KTLayoutExamples = KTLayoutExamples;
-
 import KTLayoutScrolltop from "@/assets/js/layout/extended/scrolltop.js";
 window.KTLayoutScrolltop = KTLayoutScrolltop;
