@@ -1,0 +1,29 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build: # Название
+    runs-on: ubuntu-latest # ОС на которой запускаемся
+    
+    steps: # Шаги выполнения
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12.x # Установим ноду
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    - name: Install, build, test # Выполняем необходимые команды
+      run: |
+        npm install
+        npm run prod
+      env: # В окружении устанавливаем CI в истину 
+        CI: true
