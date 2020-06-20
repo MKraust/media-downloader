@@ -2,31 +2,32 @@
 
 namespace App\Tracker\Animedia;
 
-use Illuminate\Support\Collection;
+use App\Tracker\BaseSearchResultsParser;
 use Symfony\Component\DomCrawler\Crawler;
 
-class SearchResultsParser
+class SearchResultsParser extends BaseSearchResultsParser
 {
-    public function parse(string $html): Collection {
-        $crawler = new Crawler($html);
-        $searchItemNodes = $crawler->filter('.ads-list__item');
+    protected function getMediaItemsNodes(Crawler $document) {
+        return $document->filter('.ads-list__item');
+    }
 
-        $items = collect();
-        $searchItemNodes->each(static function (Crawler $node) use ($items) {
-            $titleNode = $node->filter('.ads-list__item__title')->first();
-            $title = $titleNode->text();
-            $originalTitle = $node->filter('.original-title')->first()->text();
-            $url = $titleNode->attr('href');
-            $poster = $node->filter('.ads-list__item__thumb a img')->first()->attr('src');
+    protected function getTitle(Crawler $mediaNode): string {
+        return $this->getTitleNode($mediaNode)->text();
+    }
 
-            $items->add([
-                'url'            => $url,
-                'title'          => $title,
-                'poster'         => $poster,
-                'original_title' => $originalTitle,
-            ]);
-        });
+    protected function getOriginalTitle(Crawler $mediaNode): ?string {
+        return $mediaNode->filter('.original-title')->first()->text();
+    }
 
-        return $items;
+    protected function getLink(Crawler $mediaNode): string {
+        return $this->getTitleNode($mediaNode)->attr('href');
+    }
+
+    protected function getPoster(Crawler $mediaNode): string {
+        return $mediaNode->filter('.ads-list__item__thumb a img')->first()->attr('src');
+    }
+
+    private function getTitleNode(Crawler $mediaNode): Crawler {
+        return $mediaNode->filter('.ads-list__item__title')->first();
     }
 }

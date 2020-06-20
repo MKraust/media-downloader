@@ -2,39 +2,30 @@
 
 namespace App\Tracker\FastTorrent;
 
-use Illuminate\Support\Collection;
+use App\Tracker\BaseSearchResultsParser;
 use Symfony\Component\DomCrawler\Crawler;
 
-class SearchResultsParser
+class SearchResultsParser extends BaseSearchResultsParser
 {
-    public function parse(string $html): Collection {
-        $crawler = new Crawler($html);
-        $searchItemNodes = $crawler->filter('.film-list .film-item .film-image');
-
-        $items = collect();
-        $searchItemNodes->each(static function (Crawler $node) use ($items) {
-            $title = $node->attr('alt');
-            $relativeUrl = $node->children()->eq(0)->attr('href');
-            $url = Requester::BASE_URL . $relativeUrl;
-            $linkStyle = $node->children()->eq(0)->attr('style');
-            $poster = str_replace(['background: url(', ')', '/cache', '_video_list'], '', $linkStyle);
-
-            $items->add([
-                'url'    => $url,
-                'title'  => $title,
-                'poster' => $poster,
-            ]);
-        });
-
-        return $items;
+    protected function getMediaItemsNodes(Crawler $document) {
+        return $document->filter('.film-list .film-item .film-image');
     }
 
+    protected function getTitle(Crawler $mediaNode): string {
+        return $mediaNode->attr('alt');
+    }
 
-//let title = try! itemNode.attr("alt")
-//let relativeUrl = try! itemNode.child(0).attr("href")
-//let url = FastTorrent.baseUrl + relativeUrl
-//let linkStyle = try! itemNode.child(0).attr("style")
-//let posterUrl = linkStyle
-//.replacingOccurrences(of: "background: url(", with: "")
-//.replacingOccurrences(of: ")", with: "")
+    protected function getOriginalTitle(Crawler $mediaNode): ?string {
+        return null;
+    }
+
+    protected function getLink(Crawler $mediaNode): string {
+        $relativeUrl = $mediaNode->children()->eq(0)->attr('href');
+        return Requester::BASE_URL . $relativeUrl;
+    }
+
+    protected function getPoster(Crawler $mediaNode): string {
+        $linkStyle = $mediaNode->children()->eq(0)->attr('style');
+        return str_replace(['background: url(', ')', '/cache', '_video_list'], '', $linkStyle);
+    }
 }

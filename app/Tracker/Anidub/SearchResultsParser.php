@@ -2,29 +2,32 @@
 
 namespace App\Tracker\Anidub;
 
-use Illuminate\Support\Collection;
+use App\Tracker\BaseSearchResultsParser;
 use Symfony\Component\DomCrawler\Crawler;
 
-class SearchResultsParser
+class SearchResultsParser extends BaseSearchResultsParser
 {
-    public function parse(string $html): Collection {
-        $crawler = new Crawler($html);
-        $searchItemNodes = $crawler->filter('.search_post');
+    protected function getMediaItemsNodes(Crawler $document) {
+        return $document->filter('.search_post');
+    }
 
-        $items = collect();
-        $searchItemNodes->each(static function (Crawler $node) use ($items) {
-            $titleNode = $node->filter('.text > h2 > a')->first();
-            $title = $titleNode->text();
-            $url = $titleNode->attr('href');
-            $poster = $node->filter('.poster > img')->first()->attr('src');
+    protected function getTitle(Crawler $mediaNode): string {
+        return $this->getTitleNode($mediaNode)->text();
+    }
 
-            $items->add([
-                'url'    => $url,
-                'title'  => $title,
-                'poster' => $poster,
-            ]);
-        });
+    protected function getOriginalTitle(Crawler $mediaNode): ?string {
+        return null;
+    }
 
-        return $items;
+    protected function getLink(Crawler $mediaNode): string {
+        return $this->getTitleNode($mediaNode)->attr('href');
+    }
+
+    protected function getPoster(Crawler $mediaNode): string {
+        return $mediaNode->filter('.poster > img')->first()->attr('src');
+    }
+
+    private function getTitleNode(Crawler $mediaNode): Crawler {
+        return $mediaNode->filter('.text > h2 > a')->first();
     }
 }
