@@ -8,11 +8,31 @@ use Illuminate\Support\Collection;
 
 class Requester
 {
-    private const BASE_URL = 'https://tt.animedia.tv';
-    private const ANIME_LIST_URL = '/ajax/anime_list';
+    public const BASE_URL = 'https://tt.animedia.tv';
 
-    public function getMediaList(): string {
-        $response = $this->getClient()->get(self::ANIME_LIST_URL);
+    private const MEDIA_PER_PAGE = 40;
+
+    public function search(string $searchQuery, int $offset): string {
+        $page = (int)floor($offset / self::MEDIA_PER_PAGE);
+        $response = $this->getClient()->get("/ajax/search_result/P{$page}", [
+            'query' => [
+                'limit'        => self::MEDIA_PER_PAGE,
+                'keywords'     => $searchQuery,
+                'orderby_sort' => 'view_count_one|desc',
+            ],
+        ]);
+
+        return $response->getBody()->getContents();
+    }
+
+    public function loadMediaPage(string $url): string {
+        $response = $this->getClient()->post($url);
+
+        return $response->getBody()->getContents();
+    }
+
+    public function loadTorrentFile(string $url): string {
+        $response = $this->getClient()->get($url);
 
         return $response->getBody()->getContents();
     }

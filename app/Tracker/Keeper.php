@@ -12,7 +12,7 @@ class Keeper
     public function getTrackers(): Collection {
         return collect([
             new Anidub\Engine,
-//            new Animedia\Engine,
+            new Animedia\Engine,
             new FastTorrent\Engine,
         ]);
     }
