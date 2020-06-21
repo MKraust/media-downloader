@@ -3,7 +3,7 @@
 
     <div v-if="isLoading || media === null" class="d-flex justify-content-center" style="height: 400px;">
       <div v-if="isLoading" class="spinner spinner-track spinner-primary spinner-lg" style="margin-left: -1rem;"></div>
-      <p v-else-if="media === null" class="text-center">Медиа контент не найден</p>
+      <p v-else-if="media === null" class="text-center">Медиа контент не найден.</p>
     </div>
 
     <div v-else>
