@@ -2,6 +2,7 @@
 
 namespace App\Torrent;
 
+use App\Jobs\RefreshTorrentDownloads;
 use App\Models\TorrentDownload;
 use GuzzleHttp;
 use App\Telegram;
@@ -91,7 +92,7 @@ class Client
             ],
         ]);
 
-        $this->refreshDownloads();
+        RefreshTorrentDownloads::dispatch()->delay(now()->addSeconds(5));
     }
 
     public function deleteDownload(string $hash): void {
