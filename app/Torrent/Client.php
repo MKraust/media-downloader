@@ -4,6 +4,7 @@ namespace App\Torrent;
 
 use App\Models\TorrentDownload;
 use GuzzleHttp;
+use App\Telegram;
 
 class Client
 {
@@ -17,6 +18,12 @@ class Client
     private const RESUME_DOWNLOAD = '/command/resume';
 
     private const BASE_SAVE_PATH = '/home/kraust/Public/Video/';
+
+    private $_telegram;
+
+    public function __construct(Telegram\Client $telegram) {
+        $this->_telegram = $telegram;
+    }
 
     public function refreshDownloads() {
         $downloadsData = $this->_getDownloadsData();
@@ -38,7 +45,13 @@ class Client
         });
 
         $newDownloads->each->save();
-        $removedDownloads->each->delete();
+        $removedDownloads->each(function (TorrentDownload $download) {
+            if (!$download->is_deleted) {
+                $this->_telegram->notifyAboutFinishedDownload($download->name);
+            }
+
+            $download->delete();
+        });
     }
 
     public function getDownloads(): array {
