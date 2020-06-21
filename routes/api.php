@@ -24,3 +24,6 @@ Route::get('/favorites/list', 'FavoritesController@getFavorites');
 Route::post('/favorites/remove', 'FavoritesController@removeFromFavorites');
 
 Route::get('/download/list', 'DownloadsController@getDownloads');
+Route::post('/download/delete', 'DownloadsController@deleteDownload');
+Route::post('/download/pause', 'DownloadsController@pauseDownload');
+Route::post('/download/resume', 'DownloadsController@resumeDownload');

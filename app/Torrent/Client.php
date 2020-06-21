@@ -8,8 +8,13 @@ use GuzzleHttp;
 class Client
 {
     private const BASE_URL = 'http://torrent.mkraust.ru';
-    private const START_DOWNLOAD_URL = '/command/download';
+
     private const GET_TORRENTS = '/query/torrents';
+
+    private const START_DOWNLOAD_URL = '/command/download';
+    private const DELETE_DOWNLOAD = '/command/deletePerm';
+    private const PAUSE_DOWNLOAD = '/command/pause';
+    private const RESUME_DOWNLOAD = '/command/resume';
 
     private const BASE_SAVE_PATH = '/home/kraust/Public/Video/';
 
@@ -70,6 +75,36 @@ class Client
                     'name' => 'savepath',
                     'contents' => self::BASE_SAVE_PATH . $this->_getDirectoryByContentType($contentType),
                 ]
+            ],
+        ]);
+
+        $this->refreshDownloads();
+    }
+
+    public function deleteDownload(string $hash): void {
+        $download = TorrentDownload::find($hash);
+        $download->is_deleted = true;
+        $download->save();
+
+        $this->_getClient()->post(self::DELETE_DOWNLOAD, [
+            'form_params' => [
+                'hashes' => $hash,
+            ],
+        ]);
+    }
+
+    public function pauseDownload(string $hash): void {
+        $this->_getClient()->post(self::PAUSE_DOWNLOAD, [
+            'form_params' => [
+                'hash' => $hash,
+            ],
+        ]);
+    }
+
+    public function resumeDownload(string $hash): void {
+        $this->_getClient()->post(self::RESUME_DOWNLOAD, [
+            'form_params' => [
+                'hash' => $hash,
             ],
         ]);
     }

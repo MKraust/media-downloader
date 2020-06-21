@@ -17,4 +17,16 @@ class DownloadsController extends Controller
     public function getDownloads() {
         return $this->_torrentClient->getDownloads();
     }
+
+    public function deleteDownload() {
+        $this->_torrentClient->deleteDownload(request('hash'));
+    }
+
+    public function pauseDownload() {
+        $this->_torrentClient->pauseDownload(request('hash'));
+    }
+
+    public function resumeDownload() {
+        $this->_torrentClient->resumeDownload(request('hash'));
+    }
 }
