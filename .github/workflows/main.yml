@@ -31,4 +31,4 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         host: ${{ secrets.SSH_HOST }}
         password: ${{ secrets.SSH_PASSWORD }}
-        script: 'cd ${{ secrets.APP_DIR }} && php72 artisan down && git fetch origin deploy && git reset --hard origin/deploy && php72 ~/bin/composer install --no-interaction --no-dev --prefer-dist && php72 artisan migrate --force && php72 artisan up'
+        script: 'cd ${{ secrets.APP_DIR }} && php72 artisan down && git pull origin deploy && php72 ~/bin/composer install --no-interaction --no-dev --prefer-dist && php72 artisan migrate --force && php72 artisan up'
