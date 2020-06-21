@@ -17,11 +17,10 @@ const LOAD_FAVORITES = BACKEND_API + '/favorites/list';
 const ADD_TO_FAVORITES = BACKEND_API + '/favorites/add';
 const REMOVE_FROM_FAVORITES = BACKEND_API + '/favorites/remove';
 
-const TORRENT_BASE_URL = 'http://torrent.mkraust.ru';
-const LOAD_DOWNLOADS = TORRENT_BASE_URL + '/query/torrents';
-const RESUME_DOWNLOAD = TORRENT_BASE_URL + '/command/resume';
-const PAUSE_DOWNLOAD = TORRENT_BASE_URL + '/command/pause';
-const DELETE_DOWNLOAD = TORRENT_BASE_URL + '/command/deletePerm';
+const LOAD_DOWNLOADS = BACKEND_API + '/download/list';
+const RESUME_DOWNLOAD = BACKEND_API + '/download/resume';
+const PAUSE_DOWNLOAD = BACKEND_API + '/download/pause';
+const DELETE_DOWNLOAD = BACKEND_API + '/download/delete';
 
 export async function loadTrackers() {
     const response = await axios.get(LOAD_TRACKERS);
@@ -95,27 +94,19 @@ export async function loadDownloads() {
 }
 
 export async function resumeDownload(hash) {
-    await axios.post(RESUME_DOWNLOAD, `hash=${hash}`, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    });
+    await axios.post(RESUME_DOWNLOAD, { hash });
 }
 
 export async function pauseDownload(hash) {
-    await axios.post(PAUSE_DOWNLOAD, `hash=${hash}`, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    });
+    await axios.post(PAUSE_DOWNLOAD, { hash });
 }
 
 export async function deleteDownload(hash) {
-    await axios.post(DELETE_DOWNLOAD, `hashes=${hash}`, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    });
+    await axios.post(DELETE_DOWNLOAD, { hash });
 }
 
 export async function loadFavorites() {
-    const favorites = (await axios.get(LOAD_FAVORITES)).data;
-
-    return favorites;
+    return (await axios.get(LOAD_FAVORITES)).data;
 }
 
 export async function addToFavorites(tracker, id, title, original_title, poster) {
