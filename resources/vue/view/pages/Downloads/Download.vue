@@ -30,7 +30,7 @@
       </div>
 
       <b-button variant="outline-danger" size="sm" class="btn-icon btn-delete" @click="$emit('delete')">
-        <i class="flaticon2-trash"></i>
+        <i class="flaticon2-rubbish-bin-delete-button"></i>
       </b-button>
 
     </div>
@@ -64,7 +64,7 @@
         </b-progress>
 
         <b-button variant="outline-danger" size="sm" class="btn-icon btn-delete" @click="$emit('delete')">
-          <i class="flaticon2-trash"></i>
+          <i class="flaticon2-rubbish-bin-delete-button"></i>
         </b-button>
       </div>
 

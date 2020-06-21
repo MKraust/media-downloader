@@ -17,7 +17,19 @@
               </div>
               <img :src="media.poster" class="card-img-top card-img-bottom" style="width: 100%;">
             </div>
-            <div class="btn btn-lg w-100" :class="{ [favoriteButtonClass]: true }" @click="toggleFavorite">В избранное</div>
+            <button
+              class="btn btn-lg btn-shadow w-100 font-weight-bolder"
+              :class="{
+                [`btn-${favoriteButtonType}`]: true,
+                spinner: isTogglingFavorite,
+                'spinner-white': isTogglingFavorite,
+                'spinner-right': isTogglingFavorite,
+              }"
+              :disabled="isTogglingFavorite"
+              @click="toggleFavorite"
+            >
+              {{ favoriteButtonText }}
+            </button>
           </div>
           <div class="col-md-8">
             <div class="input-group mb-4">
@@ -66,6 +78,7 @@
         sortBy: 'size_int',
         sortingOrder: 'desc',
         isAsideHidden: false,
+        isTogglingFavorite: false,
       }
     },
     computed: {
@@ -90,8 +103,11 @@
 
         return this.medis.torrents;
       },
-      favoriteButtonClass() {
-        return this.media.is_favored ? 'btn-outline-warning' : 'btn-warning';
+      favoriteButtonType() {
+        return this.media.is_favored ? 'danger' : 'warning';
+      },
+      favoriteButtonText() {
+        return this.media.is_favored ? 'Удалить из избранного' : 'В избранное';
       }
     },
     watch: {
@@ -106,13 +122,17 @@
     },
     methods: {
       async toggleFavorite() {
+        this.isTogglingFavorite = true;
+
         if (this.media.is_favored) {
-          this.media.is_favored = false;
           await removeFromFavorites(this.tracker.id, this.media.id);
+          this.media.is_favored = false;
         } else {
-          this.media.is_favored = true;
           await addToFavorites(this.tracker.id, this.media.id);
+          this.media.is_favored = true;
         }
+
+        this.isTogglingFavorite = false;
       },
       async init() {
         this.isLoading = true;

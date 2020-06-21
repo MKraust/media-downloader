@@ -10,8 +10,8 @@
     >
       <div class="d-flex align-items-center mw-100 mr-5">
         <div>
-          <a class="btn btn-sm btn-icon btn-primary mr-4" @click="$router.back()">
-            <i class="fas fa-angle-left"></i>
+          <a class="btn btn-sm btn-icon btn-primary btn-shadow mr-4" @click="$router.back()">
+            <i class="flaticon2-left-arrow"></i>
           </a>
         </div>
         <!--begin::Page Title-->
