@@ -12,33 +12,25 @@ class TrackerController extends Controller
     /** @var Tracker\BaseTracker */
     private $_tracker;
 
-    public function __construct(Requests\TrackerRequest $trackerRequest, Tracker\Keeper $trackerKeeper)
+    public function __construct(Requests\TrackerRequest $request, Tracker\Keeper $trackerKeeper)
     {
-        $trackerId = $trackerRequest->tracker;
+        $trackerId = $request->tracker;
         $this->_tracker = $trackerKeeper->getTrackerById($trackerId);
     }
 
-    public function search(): Collection
+    public function search(Requests\Tracker\Search $request): Collection
     {
-        $searchQuery = request('query');
-        $offset = request('offset');
-
-        return $this->_tracker->search($searchQuery, $offset);
+        return $this->_tracker->search(request('query'), $request->offset);
     }
 
-    public function media(): array
+    public function media(Requests\Tracker\Media $request): array
     {
-        $id = request('id');
-
-        return $this->_tracker->loadMediaById($id)->jsonSerialize();
+        return $this->_tracker->loadMediaById($request->id)->jsonSerialize();
     }
 
-    public function download()
+    public function download(Requests\Tracker\Download $request)
     {
-        $url = request('url');
-        $contentType = request('type');
-
-        $this->_tracker->startDownload($url, $contentType);
+        $this->_tracker->startDownload($request->url, $request->type);
 
         return response()->json(['status' => 'success']);
     }
