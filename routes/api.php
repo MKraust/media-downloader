@@ -22,3 +22,5 @@ Route::post('/favorites/add', 'FavoritesController@addToFavorites');
 Route::get('/favorites/add', 'FavoritesController@addToFavorites');
 Route::get('/favorites/list', 'FavoritesController@getFavorites');
 Route::post('/favorites/remove', 'FavoritesController@removeFromFavorites');
+
+Route::get('/download/list', 'DownloadsController@getDownloads');

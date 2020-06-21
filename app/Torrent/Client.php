@@ -4,9 +4,6 @@ namespace App\Torrent;
 
 use App\Models\TorrentDownload;
 use GuzzleHttp;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Psr\Http\Message\StreamInterface;
 
 class Client
 {
@@ -17,11 +14,10 @@ class Client
     private const BASE_SAVE_PATH = '/home/kraust/Public/Video/';
 
     public function refreshDownloads() {
-        $response = $this->_getClient()->get(self::GET_TORRENTS)->getBody()->getContents();
-        $torrentsData = json_decode($response, true);
+        $downloadsData = $this->_getDownloadsData();
 
         $existingDownloads = TorrentDownload::all();
-        $downloads = collect($torrentsData)->map(function (array $torrentData) {
+        $downloads = collect($downloadsData)->map(function (array $torrentData) {
             return new TorrentDownload([
                 'hash' => $torrentData['hash'],
                 'name' => $torrentData['name'],
@@ -38,6 +34,28 @@ class Client
 
         $newDownloads->each->save();
         $removedDownloads->each->delete();
+    }
+
+    public function getDownloads(): array {
+        $downloads = TorrentDownload::active()->get();
+        $hashes = $downloads->map->hash->toArray();
+
+        return $this->_getDownloadsData($hashes);
+    }
+
+    /**
+     * @param string[] $hashes
+     * @return array
+     */
+    private function _getDownloadsData(array $hashes = []): array {
+        $params = [
+            'query' => [
+                'hashes' => implode('|', $hashes),
+            ],
+        ];
+
+        $response = $this->_getClient()->get(self::GET_TORRENTS, $params)->getBody()->getContents();
+        return json_decode($response, true);
     }
 
     public function startDownload(string $fileUrl, string $contentType): void {
