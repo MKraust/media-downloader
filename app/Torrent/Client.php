@@ -22,8 +22,8 @@ class Client
 
     private $_telegram;
 
-    public function __construct(Telegram\Client $telegram) {
-        $this->_telegram = $telegram;
+    public function __construct() {
+        $this->_telegram = new Telegram\Client();
     }
 
     public function refreshDownloads() {
