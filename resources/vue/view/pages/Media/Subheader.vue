@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import subheaderMixin from "@/view/layout/subheader/subheaderMixin";
+  import subheaderMixin from '@/view/layout/subheader/subheaderMixin';
 
   export default {
     name: "Subheader",

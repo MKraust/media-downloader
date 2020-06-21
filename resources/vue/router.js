@@ -1,5 +1,5 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from 'vue';
+import Router from 'vue-router';
 
 import Layout from '@/view/layout/Layout';
 import Tracker from '@/view/pages/Tracker/App';
