@@ -64,7 +64,7 @@
             data-placement="right"
             data-container="body"
             data-boundary="window"
-            v-b-tooltip.hover.right="'Загрузки'"
+            v-b-tooltip.hover.right="'Избранное'"
           >
             <router-link
               to="/favorites"
