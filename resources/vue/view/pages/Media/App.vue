@@ -123,10 +123,10 @@
         this.isTogglingFavorite = true;
 
         if (this.media.is_favored) {
-          await removeFromFavorites(this.tracker.id, this.media.id);
+          await removeFromFavorites(this.tracker.id, this.media.id, this.media.title, this.media.original_title, this.media.poster);
           this.media.is_favored = false;
         } else {
-          await addToFavorites(this.tracker.id, this.media.id);
+          await addToFavorites(this.tracker.id, this.media.id, this.media.title, this.media.original_title, this.media.poster);
           this.media.is_favored = true;
         }
 

@@ -18,10 +18,20 @@ class FavoritesController extends Controller
     public function addToFavorites(Tracker\Keeper $trackerKeeper) {
         $trackerId = request('tracker');
         $mediaId = request('id');
-        $tracker = $trackerKeeper->getTrackerById($trackerId);
+        $title = request('title');
+        $originalTitle = request('original_title');
+        $poster = request('poster');
 
-        $media = $tracker->loadMediaById($mediaId);
-        FavoriteMedia::createFromMedia($trackerId, $media)->save();
+        $tracker = $trackerKeeper->getTrackerById($trackerId);
+        $favoriteMedia = new FavoriteMedia([
+            'tracker_id' => $trackerId,
+            'url' => $tracker->decryptUrl($mediaId),
+            'title' => $title,
+            'original_title' => $originalTitle,
+            'image_url' => $poster,
+        ]);
+
+        $favoriteMedia->save();
 
         return response()->json('success');
     }
@@ -29,8 +39,8 @@ class FavoritesController extends Controller
     public function removeFromFavorites(Tracker\Keeper $trackerKeeper) {
         $trackerId = request('tracker');
         $mediaId = request('id');
-        $tracker = $trackerKeeper->getTrackerById($trackerId);
 
+        $tracker = $trackerKeeper->getTrackerById($trackerId);
         $url = $tracker->decryptUrl($mediaId);
         FavoriteMedia::where('url', $url)->delete();
 

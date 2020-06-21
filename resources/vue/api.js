@@ -118,10 +118,10 @@ export async function loadFavorites() {
     return favorites;
 }
 
-export async function addToFavorites(tracker, id) {
-    await axios.post(ADD_TO_FAVORITES, { tracker, id });
+export async function addToFavorites(tracker, id, title, original_title, poster) {
+    await axios.post(ADD_TO_FAVORITES, { tracker, id, title, original_title, poster });
 }
 
-export async function removeFromFavorites(tracker, id) {
-    await axios.post(REMOVE_FROM_FAVORITES, { tracker, id });
+export async function removeFromFavorites(tracker, id, title, original_title, poster) {
+    await axios.post(REMOVE_FROM_FAVORITES, { tracker, id, title, original_title, poster });
 }
