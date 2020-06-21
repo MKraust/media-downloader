@@ -39,7 +39,6 @@
 
   export default {
     mixins: [subheaderMixin],
-    name: "TrackerSubheader",
     props: ['disableSearch'],
     data() {
       return {

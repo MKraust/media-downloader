@@ -2,9 +2,9 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import Layout from '@/view/layout/Layout';
-import Tracker from '@/view/pages/Tracker';
-import Media from '@/view/pages/Media';
-import Dashboard from '@/view/pages/Dashboard';
+import Tracker from '@/view/pages/Tracker/App';
+import Media from '@/view/pages/Media/App';
+import Dashboard from '@/view/pages/Dashboard/App';
 import Downloads from '@/view/pages/Downloads/App';
 import Favorites from '@/view/pages/Favorites/App';
 

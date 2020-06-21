@@ -7,7 +7,7 @@
     </div>
 
     <div v-else>
-      <MediaSubheader :title="media.title" :subtitle="media.original_title" />
+      <Subheader :title="media.title" :subtitle="media.original_title" />
       <div class="container">
         <div class="row">
           <div class="col-md-4 mb-4">
@@ -57,18 +57,16 @@
 </template>
 
 <script>
-  import MediaSubheader from "./MediaSubheader";
+  import Subheader from "./Subheader";
   import Torrent from './Torrent';
-  import { loadMedia, loadMediaBlocked, startDownload } from "@/api";
+  import { loadMedia, loadMediaBlocked, startDownload, addToFavorites, removeFromFavorites } from '@/api';
   import notifyMixin from '@/mixins/notifyMixin';
   import asideToggleMixin from '@/mixins/asideToggleMixin';
-  import { addToFavorites, removeFromFavorites } from "../../api";
 
   export default {
-    name: "Media",
     mixins: [notifyMixin, asideToggleMixin],
     components: {
-      MediaSubheader,
+      Subheader,
       Torrent,
     },
     data() {

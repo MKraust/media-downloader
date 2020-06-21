@@ -33,7 +33,7 @@
   import subheaderMixin from "@/view/layout/subheader/subheaderMixin";
 
   export default {
-    name: "MediaSubheader",
+    name: "Subheader",
     mixins: [subheaderMixin],
     computed: {
       tracker() {

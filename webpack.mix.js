@@ -16,13 +16,9 @@ const mix = require('laravel-mix');
 //     .version()
 //     .sourceMaps();
 
+const webpackConfig = require('./webpack.config');
+
 mix.js('resources/vue/main.js', 'public/js')
     .version()
     .sourceMaps()
-    .webpackConfig({
-        resolve: {
-            alias: {
-                '@': path.resolve(__dirname, 'resources/vue')
-            }
-        }
-    });
+    .webpackConfig(webpackConfig);

@@ -33,15 +33,14 @@
 
 <script>
   import asideToggleMixin from '@/mixins/asideToggleMixin';
-  import TrackerSubheader from "./TrackerSubheader";
-  import MediaCard from './components/MediaCard';
+  import TrackerSubheader from "./Subheader";
+  import MediaCard from '@/view/pages/components/MediaCard';
   import {
     search,
     searchBlocked,
   } from "@/api";
 
   export default {
-    name: "Tracker",
     mixins: [asideToggleMixin],
     components: {
       TrackerSubheader,
