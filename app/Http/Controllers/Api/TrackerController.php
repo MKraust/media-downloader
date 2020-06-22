@@ -3,34 +3,46 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Media;
+use App\Models\Torrent;
 use App\Tracker;
-use Illuminate\Support\Collection;
 use App\Http\Requests;
+use Illuminate\Http\Request;
 
 class TrackerController extends Controller
 {
-    /** @var Tracker\BaseTracker */
-    private $_tracker;
+    /** @var Tracker\Keeper */
+    private $_trackerKeeper;
 
-    public function __construct(Requests\TrackerRequest $request, Tracker\Keeper $trackerKeeper)
-    {
-        $trackerId = $request->tracker;
-        $this->_tracker = $trackerKeeper->getTrackerById($trackerId);
+    public function __construct(Tracker\Keeper $trackerKeeper) {
+        $this->_trackerKeeper = $trackerKeeper;
     }
 
-    public function search(Requests\Tracker\Search $request)
+    public function search(Request $request)
     {
-        return $this->_tracker->search(request('query'), $request->offset);
+        $trackerId = $request->tracker_id;
+        $query = request('query');
+
+        $tracker = $this->_trackerKeeper->getTrackerById($trackerId);
+
+        return $tracker->search($query, $request->offset);
     }
 
-    public function media(Requests\Tracker\Media $request)
+    public function media(Request $request)
     {
-        return $this->_tracker->loadMediaById($request->id);
+        $mediaId = $request->id;
+        $media = Media::find($mediaId);
+        $tracker = $this->_trackerKeeper->getTrackerById($media->tracker_id);
+
+        return $tracker->loadMediaById($mediaId);
     }
 
-    public function download(Requests\Tracker\Download $request)
+    public function download(Request $request)
     {
-        $this->_tracker->startDownload($request->url, $request->type);
+        $torrentId = $request->id;
+        $torrent = Torrent::find($torrentId);
+        $tracker = $this->_trackerKeeper->getTrackerById($torrent->media->tracker_id);
+        $tracker->startDownload($torrent);
 
         return response()->json(['status' => 'success']);
     }

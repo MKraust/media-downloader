@@ -15,8 +15,8 @@ class CreateMediaTable extends Migration
     {
         Schema::dropIfExists('favorite_media');
         Schema::create('media', function (Blueprint $table) {
-            $table->string('id', 512)->primary()->unique();
-            $table->string('url', 512);
+            $table->string('id', 300)->primary()->unique();
+            $table->string('url', 300);
             $table->string('tracker_id');
             $table->string('title', 512);
             $table->string('original_title', 512)->nullable();

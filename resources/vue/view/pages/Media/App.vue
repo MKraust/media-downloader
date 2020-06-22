@@ -139,7 +139,7 @@
         if (this.tracker.is_blocked) {
           media = await loadMediaBlocked(this.tracker.id, this.$route.params.mediaId);
         } else {
-          media = await loadMedia(this.tracker.id, this.$route.params.mediaId);
+          media = await loadMedia(this.$route.params.mediaId);
         }
 
         this.media = media;
@@ -148,7 +148,7 @@
       },
       handleDownload(torrent) {
         if (confirm(`Скачать "${torrent.name}"?`)) {
-          startDownload(this.tracker, torrent.url, torrent.content_type);
+          startDownload(this.tracker, torrent);
           this.notifySuccess('Загрузка началась', torrent.name);
         }
       },

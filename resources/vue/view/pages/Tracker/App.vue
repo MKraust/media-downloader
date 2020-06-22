@@ -74,7 +74,7 @@
     methods: {
       async handleScroll() {
         let scrollPos = document.documentElement.scrollHeight - window.innerHeight - document.documentElement.scrollTop;
-        if (scrollPos !== 0 || this.isEndOfResultsReached || this.isLazyLoading) {
+        if (scrollPos !== 0 || this.isEndOfResultsReached || this.isLazyLoading || !this.lastSearchQuery) {
           return;
         }
 

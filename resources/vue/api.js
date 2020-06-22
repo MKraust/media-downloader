@@ -28,47 +28,47 @@ export async function loadTrackers() {
     return response.data;
 }
 
-export async function search(tracker, query, offset = 0) {
+export async function search(tracker_id, query, offset = 0) {
     console.log(query);
-    const params = { tracker, query, offset };
+    const params = { tracker_id, query, offset };
     const response = await axios.get(SEARCH_MEDIA_ITEMS, { params });
 
     return response.data;
 }
 
-export async function loadMedia(tracker, id) {
-    const params = { tracker, id };
+export async function loadMedia(id) {
+    const params = { id };
     const response = await axios.get(LOAD_MEDIA, { params });
 
     return response.data;
 }
 
-export async function startDownload(tracker, url, type) {
+export async function startDownload(tracker, torrent) {
     if (!tracker.is_blocked) {
-        const params = { tracker: tracker.id, url, type };
+        const params = { id: torrent.id };
         await axios.get(START_DOWNLOAD, { params });
         return;
     }
 
-    const response = await axios.get(url, { responseType: 'blob' });
+    const response = await axios.get(torrent.url, { responseType: 'blob' });
     const file = response.data;
     console.log(file);
 
     let body = new FormData();
-    body.set('tracker', tracker.id);
-    body.set('type', type);
+    body.append('id', torrent.id);
     body.append('file', file);
+    body.append('tracker_id', tracker.id);
 
     await axios.post(START_DOWNLOAD_FROM_FILE, body, {
         headers: { 'Content-Type': 'multipart/form-data' }
     });
 }
 
-export async function searchBlocked(tracker, query, offset = 0) {
+export async function searchBlocked(tracker_id, query, offset = 0) {
     try {
-        const searchUrl = (await axios.get(GET_SEARCH_URL, { params: { tracker, query, offset } })).data;
+        const searchUrl = (await axios.get(GET_SEARCH_URL, { params: { tracker_id, query, offset } })).data;
         const html = (await axios.get(searchUrl)).data;
-        const mediaItems = (await axios.post(PARSE_SEARCH_RESULTS_HTML, { tracker, html })).data;
+        const mediaItems = (await axios.post(PARSE_SEARCH_RESULTS_HTML, { tracker_id, html })).data;
 
         return mediaItems;
     } catch (error) {
@@ -76,13 +76,13 @@ export async function searchBlocked(tracker, query, offset = 0) {
     }
 }
 
-export async function loadMediaBlocked(tracker, id) {
-    const mediaUrls = (await axios.get(GET_MEDIA_URLS, { params: { tracker, id } })).data;
+export async function loadMediaBlocked(tracker_id, id) {
+    const mediaUrls = (await axios.get(GET_MEDIA_URLS, { params: { tracker_id, id } })).data;
     const [ mediaHtml, torrentsHtml ] = await Promise.all([
       axios.get(mediaUrls.media),
       axios.get(mediaUrls.torrents),
     ]);
-    const media = (await axios.post(PARSE_MEDIA, { tracker, id, html: { media: mediaHtml.data, torrents: torrentsHtml.data } })).data;
+    const media = (await axios.post(PARSE_MEDIA, { tracker_id, id, html: { media: mediaHtml.data, torrents: torrentsHtml.data } })).data;
 
     return media;
 }

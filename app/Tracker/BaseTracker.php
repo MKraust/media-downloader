@@ -23,12 +23,13 @@ abstract class BaseTracker
      */
     abstract public function search(string $query, int $offset): Collection;
 
-    final public function startDownload(string $url, string $contentType): void {
-        $fileContent = $this->loadTorrentFile($url);
-        $this->startDownloadFromFile($fileContent, $contentType);
+    final public function startDownload(App\Models\Torrent $torrent): void {
+        $fileContent = $this->loadTorrentFile($torrent->url);
+        $this->startDownloadFromFile($fileContent, $torrent);
     }
 
-    final public function startDownloadFromFile(string $fileContent, $contentType): void {
+    final public function startDownloadFromFile(string $fileContent, App\Models\Torrent $torrent): void {
+        $contentType = $torrent->content_type;
         $fileName = Str::uuid() . '.torrent';
         $filePath = storage_path("app/public/torrents/{$fileName}");
         File::put($filePath, $fileContent);
@@ -97,7 +98,7 @@ abstract class BaseTracker
 
         $torrents = collect();
         foreach ($torrentsData as $torrentData) {
-            $url = $torrentData['url'];
+            $url = urldecode($torrentData['url']);
             $torrent = App\Models\Torrent::firstOrNew(['media_id' => $media->id, 'url' => $url]);
 
             $this->_updateTorrentWithData($torrent, $media, $torrentData);
