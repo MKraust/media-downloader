@@ -21,6 +21,7 @@ class FavoritesController extends Controller
 
         $media = Media::find($mediaId);
         $media->is_favorite = true;
+        // добавить дату, когда было добавлено в избранное
         $media->save();
 
         return response()->json('success');
@@ -31,6 +32,7 @@ class FavoritesController extends Controller
 
         $media = Media::find($mediaId);
         $media->is_favorite = false;
+        // очищать дату добавления в избранное
         $media->save();
 
         return response()->json('success');
