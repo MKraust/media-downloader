@@ -57,11 +57,14 @@ abstract class BaseTracker
     abstract protected function loadMediaByUrl(string $url): ?Media;
 
     final public function encryptUrl(string $url): string {
-        return encrypt($url);
+        $preparedUrl = trim($url);
+        $preparedUrl = preg_replace('/^https?:/u', '', $preparedUrl);
+
+        return base64_encode($preparedUrl);
     }
 
     final public function decryptUrl(string $encryptedUrl): string {
-        return decrypt($encryptedUrl);
+        return base64_decode($encryptedUrl);
     }
 
     final protected function createMediaFromData(array $data): Media {
