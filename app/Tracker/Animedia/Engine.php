@@ -4,7 +4,7 @@
 namespace App\Tracker\Animedia;
 
 use App\Tracker;
-use App\Tracker\Media;
+use App\Models;
 use Illuminate\Support\Collection;
 
 class Engine extends Tracker\BaseTracker
@@ -45,7 +45,7 @@ class Engine extends Tracker\BaseTracker
         return (new Requester())->loadTorrentFile($url);
     }
 
-    protected function loadMediaByUrl(string $url): ?Media
+    protected function loadMediaByUrl(string $url): ?Models\Media
     {
         $html = (new Requester())->loadMediaPage($url);
         $parser = new MediaPageParser;
@@ -55,7 +55,7 @@ class Engine extends Tracker\BaseTracker
         return $this->createMediaFromData($itemData);
     }
 
-    protected function prepareMediaData(array $data): array
+    protected function _prepareMediaData(array $data): array
     {
         $preparedData = $data;
 

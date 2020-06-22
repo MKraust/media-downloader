@@ -3,6 +3,7 @@
 namespace App\Tracker;
 
 use Illuminate\Support\Collection;
+use App\Models;
 
 interface BlockedTracker {
 
@@ -12,5 +13,5 @@ interface BlockedTracker {
 
     public function getMediaUrls(string $mediaId): array;
 
-    public function parseMedia(string $mediaId, array $htmlParts): Media;
+    public function parseMedia(string $mediaId, array $htmlParts): Models\Media;
 }

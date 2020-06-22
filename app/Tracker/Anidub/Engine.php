@@ -2,6 +2,7 @@
 
 namespace App\Tracker\Anidub;
 
+use App\Models;
 use App\Tracker;
 use Illuminate\Support\Collection;
 
@@ -24,7 +25,7 @@ class Engine extends Tracker\BaseTracker
 
     /**
      * @param string $query
-     * @return Collection|Tracker\Media[]
+     * @return Collection|Models\Media[]
      */
     public function search(string $query, int $offset): Collection
     {
@@ -44,7 +45,7 @@ class Engine extends Tracker\BaseTracker
         return (new Requester())->loadTorrentFile($url);
     }
 
-    protected function loadMediaByUrl(string $url): ?Tracker\Media
+    protected function loadMediaByUrl(string $url): ?Models\Media
     {
         $html = (new Requester())->loadMediaPage($url);
         $parser = new MediaPageParser;
@@ -54,7 +55,7 @@ class Engine extends Tracker\BaseTracker
         return $this->createMediaFromData($itemData);
     }
 
-    protected function prepareMediaData(array $data): array
+    protected function _prepareMediaData(array $data): array
     {
         $preparedData = $data;
 

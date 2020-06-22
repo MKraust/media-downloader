@@ -18,14 +18,14 @@ class TrackerController extends Controller
         $this->_tracker = $trackerKeeper->getTrackerById($trackerId);
     }
 
-    public function search(Requests\Tracker\Search $request): Collection
+    public function search(Requests\Tracker\Search $request)
     {
         return $this->_tracker->search(request('query'), $request->offset);
     }
 
-    public function media(Requests\Tracker\Media $request): array
+    public function media(Requests\Tracker\Media $request)
     {
-        return $this->_tracker->loadMediaById($request->id)->jsonSerialize();
+        return $this->_tracker->loadMediaById($request->id);
     }
 
     public function download(Requests\Tracker\Download $request)

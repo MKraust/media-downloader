@@ -3,7 +3,7 @@
 namespace App\Tracker\FastTorrent;
 
 use App\Tracker;
-use App\Tracker\Media;
+use App\Models;
 use Illuminate\Support\Collection;
 
 class Engine extends Tracker\BaseTracker implements Tracker\BlockedTracker
@@ -39,7 +39,7 @@ class Engine extends Tracker\BaseTracker implements Tracker\BlockedTracker
         ];
     }
 
-    public function parseMedia(string $mediaId, array $htmlParts): Media {
+    public function parseMedia(string $mediaId, array $htmlParts): Models\Media {
         $mediaPageParser = new MediaPageParser;
         $itemData = $mediaPageParser->parse($htmlParts['media']);
 
@@ -69,7 +69,7 @@ class Engine extends Tracker\BaseTracker implements Tracker\BlockedTracker
         return (new Requester())->loadTorrentFile($url);
     }
 
-    protected function loadMediaByUrl(string $url): ?Media
+    protected function loadMediaByUrl(string $url): ?Models\Media
     {
         $requester = new Requester;
 
