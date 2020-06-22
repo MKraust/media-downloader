@@ -87,10 +87,10 @@
     },
     computed: {
       isInProgress() {
-        return ['downloading', 'uploading', 'metaDL', 'checkingDL', 'checkingUP'].includes(this.download.state);
+        return ['downloading', 'uploading', 'metaDL', 'checkingDL', 'checkingUP'].includes(this.download.state_original);
       },
       statusColor() {
-        switch (this.download.state) {
+        switch (this.download.state_original) {
           case 'error':
             return 'danger';
 
@@ -104,7 +104,7 @@
       },
       isActive: {
         get() {
-          switch (this.download.state) {
+          switch (this.download.state_original) {
             case 'error':
             case 'pausedUP':
             case 'pausedDL':
@@ -117,7 +117,7 @@
         async set(isActive) {
           this.isChangingState = true;
 
-          this.download.state = 'pausedDL';
+          this.download.state_original = 'pausedDL';
           if (isActive) {
             await resumeDownload(this.download.hash);
           } else {
@@ -131,10 +131,10 @@
         return this.download.progress * 100;
       },
       speed() {
-        return humanizeBytes(this.download.dlspeed, 1) + '/c';
+        return humanizeBytes(this.download.download_speed_in_bytes_per_second, 1) + '/c';
       },
       estimate() {
-        const eta = this.download.eta;
+        const eta = this.download.estimate_in_seconds;
         if (eta < 60) {
           return `${eta} сек`;
         }
@@ -151,6 +151,10 @@
         }
 
         const days = Math.floor(eta / 3600 * 24);
+        if (days > 5) {
+          return '∞';
+        }
+
         return `${days} дн`;
       }
     },

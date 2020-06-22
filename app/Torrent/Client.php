@@ -6,6 +6,7 @@ use App\Jobs\RefreshTorrentDownloads;
 use App\Models\TorrentDownload;
 use GuzzleHttp;
 use App\Telegram;
+use Illuminate\Support\Collection;
 
 class Client
 {
@@ -55,18 +56,24 @@ class Client
         });
     }
 
-    public function getDownloads(): array {
+    /**
+     * @return Collection|Download[]
+     */
+    public function getDownloads(): Collection {
         $downloads = TorrentDownload::active()->get();
         $hashes = $downloads->map->hash->toArray();
 
-        return $this->_getDownloadsData($hashes);
+        $downloadsData = $this->_getDownloadsData($hashes);
+        return $downloadsData->map(static function (array $downloadData) {
+            return Download::createFromRemoteData($downloadData);
+        });
     }
 
     /**
      * @param string[] $hashes
-     * @return array
+     * @return Collection
      */
-    private function _getDownloadsData(array $hashes = []): array {
+    private function _getDownloadsData(array $hashes = []): Collection {
         $params = [
             'query' => [
                 'hashes' => implode('|', $hashes),
@@ -74,7 +81,7 @@ class Client
         ];
 
         $response = $this->_getClient()->get(self::GET_TORRENTS, $params)->getBody()->getContents();
-        return json_decode($response, true);
+        return collect(json_decode($response, true));
     }
 
     public function startDownload(string $fileUrl, string $contentType): void {
