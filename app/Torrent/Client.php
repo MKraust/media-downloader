@@ -31,18 +31,15 @@ class Client
         $downloadsData = $this->_getDownloadsData();
 
         $existingDownloads = TorrentDownload::all();
-        $downloads = collect($downloadsData)->map(function (array $torrentData) {
-            return new TorrentDownload([
-                'hash' => $torrentData['hash'],
-                'name' => $torrentData['name'],
-            ]);
+        $downloads = $downloadsData->map(static function (array $downloadData) {
+            return Download::createFromRemoteData($downloadData)->convertIntoModel();
         });
 
-        $newDownloads = $downloads->filter(function (TorrentDownload $download) use ($existingDownloads) {
+        $newDownloads = $downloads->filter(static function (TorrentDownload $download) use ($existingDownloads) {
             return !$existingDownloads->contains('hash', $download->hash);
         });
 
-        $removedDownloads = $existingDownloads->filter(function (TorrentDownload $download) use ($downloads) {
+        $removedDownloads = $existingDownloads->filter(static function (TorrentDownload $download) use ($downloads) {
             return !$downloads->contains('hash', $download->hash);
         });
 
