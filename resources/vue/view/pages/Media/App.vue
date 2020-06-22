@@ -102,10 +102,10 @@
         return this.medis.torrents;
       },
       favoriteButtonType() {
-        return this.media.is_favored ? 'danger' : 'info';
+        return this.media.is_favorite ? 'danger' : 'info';
       },
       favoriteButtonText() {
-        return this.media.is_favored ? 'Удалить из избранного' : 'В избранное';
+        return this.media.is_favorite ? 'Удалить из избранного' : 'В избранное';
       }
     },
     watch: {
@@ -122,12 +122,12 @@
       async toggleFavorite() {
         this.isTogglingFavorite = true;
 
-        if (this.media.is_favored) {
-          await removeFromFavorites(this.tracker.id, this.media.id, this.media.title, this.media.original_title, this.media.poster);
-          this.media.is_favored = false;
+        if (this.media.is_favorite) {
+          await removeFromFavorites(this.media.id);
+          this.media.is_favorite = false;
         } else {
-          await addToFavorites(this.tracker.id, this.media.id, this.media.title, this.media.original_title, this.media.poster);
-          this.media.is_favored = true;
+          await addToFavorites(this.media.id);
+          this.media.is_favorite = true;
         }
 
         this.isTogglingFavorite = false;
