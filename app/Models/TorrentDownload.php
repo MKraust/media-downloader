@@ -19,7 +19,7 @@ class TorrentDownload extends Model
     ];
 
     public function torrent() {
-        return $this->hasOne(Torrent::class);
+        return $this->belongsTo(Torrent::class);
     }
 
     public function scopeActive(Eloquent\Builder $query): Eloquent\Builder {
