@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Torrent;
+use App\Http\Requests;
 
 class DownloadsController extends Controller
 {
@@ -18,15 +19,15 @@ class DownloadsController extends Controller
         return $this->_torrentClient->getDownloads();
     }
 
-    public function deleteDownload() {
-        $this->_torrentClient->deleteDownload(request('hash'));
+    public function deleteDownload(Requests\Torrent\ManageDownload $request) {
+        $this->_torrentClient->deleteDownload($request->hash);
     }
 
-    public function pauseDownload() {
-        $this->_torrentClient->pauseDownload(request('hash'));
+    public function pauseDownload(Requests\Torrent\ManageDownload $request) {
+        $this->_torrentClient->pauseDownload($request->hash);
     }
 
-    public function resumeDownload() {
-        $this->_torrentClient->resumeDownload(request('hash'));
+    public function resumeDownload(Requests\Torrent\ManageDownload $request) {
+        $this->_torrentClient->resumeDownload($request->hash);
     }
 }
