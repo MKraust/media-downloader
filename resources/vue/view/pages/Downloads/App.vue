@@ -3,7 +3,7 @@
     <BasicSubheader title="Загрузки" />
     <div class="container py-4">
       <div v-if="downloads.length > 0">
-        <div v-for="download in downloads" :key="download.hash" class="mb-3">
+        <div v-for="download in sortedDownloads" :key="download.hash" class="mb-3">
           <Download :download="download" @delete="handleDelete(download)" />
         </div>
       </div>
@@ -39,6 +39,11 @@
     },
     destroyed() {
       this.stopWatchingDownloads();
+    },
+    computed: {
+      sortedDownloads() {
+        return this.$lodash.orderBy(this.downloads, ['media.torrent_id', 'media.title', 'torrent.name'], ['asc']);
+      },
     },
     methods: {
       async refreshDownloads() {
