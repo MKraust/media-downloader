@@ -15,7 +15,7 @@ class TorrentDownload extends Model
 
     protected $fillable = [
         'hash',
-        'name',
+        'torrent_id',
     ];
 
     public function torrent() {
