@@ -7,7 +7,6 @@ use App\Models\Media;
 use App\Models\Torrent;
 use App\Tracker;
 use App\Http\Requests;
-use Illuminate\Http\Request;
 
 class BlockedTrackerController extends Controller
 {
@@ -19,20 +18,14 @@ class BlockedTrackerController extends Controller
         $this->_trackerKeeper = $trackerKeeper;
     }
 
-    public function getSearchUrl(Requests\Tracker\Blocked\GetSearchUrl $request)
+    public function getSearchUrl(Requests\Tracker\Blocked\GetSearchUrl $request, Tracker\BlockedTracker $tracker)
     {
-        $query = $request->search_query;
-        $trackerId = $request->tracker_id;
-
-        return $this->_trackerKeeper->getTrackerById($trackerId)->getSearchingUrl($query);
+        return $tracker->getSearchingUrl($request->search_query);
     }
 
-    public function parseSearchResult(Requests\Tracker\Blocked\ParseSearchResults $request)
+    public function parseSearchResult(Requests\Tracker\Blocked\ParseSearchResults $request, Tracker\BlockedTracker $tracker)
     {
-        $html = $request->html;
-        $trackerId = $request->tracker_id;
-
-        return $this->_trackerKeeper->getTrackerById($trackerId)->parseSearchResults($html);
+        return $tracker->parseSearchResults($request->html);
     }
 
     public function getMediaUrls(Requests\Tracker\Blocked\GetMediaUrls $request)

@@ -7,7 +7,6 @@ use App\Models\Media;
 use App\Models\Torrent;
 use App\Tracker;
 use App\Http\Requests;
-use Illuminate\Http\Request;
 
 class TrackerController extends Controller
 {
@@ -18,14 +17,8 @@ class TrackerController extends Controller
         $this->_trackerKeeper = $trackerKeeper;
     }
 
-    public function search(Requests\Tracker\Search $request)
-    {
-        $trackerId = $request->tracker_id;
-        $query = $request->search_query;
-
-        $tracker = $this->_trackerKeeper->getTrackerById($trackerId);
-
-        return $tracker->search($query, $request->offset);
+    public function search(Requests\Tracker\Search $request, Tracker\BaseTracker $tracker) {
+        return $tracker->search($request->search_query, $request->offset);
     }
 
     public function media(Requests\Tracker\Media $request)

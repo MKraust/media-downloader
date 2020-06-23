@@ -39,12 +39,16 @@ abstract class BaseTracker
         $torrentClient->startDownload($fileUrl, $contentType);
     }
 
+    public function isBlocked(): bool {
+        return $this instanceof BlockedTracker;
+    }
+
     final public function serialize(): array {
         return [
             'id'         => $this->id(),
             'title'      => $this->title(),
             'icon'       => $this->icon(),
-            'is_blocked' => $this instanceof BlockedTracker,
+            'is_blocked' => $this->isBlocked(),
         ];
     }
 
