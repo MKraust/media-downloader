@@ -3,6 +3,7 @@
 namespace App\Torrent;
 
 use App\Jobs\RefreshTorrentDownloads;
+use App\Models\Torrent;
 use App\Models\TorrentDownload;
 use GuzzleHttp;
 use App\Telegram;
@@ -44,13 +45,7 @@ class Client
         });
 
         $newDownloads->each->save();
-        $removedDownloads->each(function (TorrentDownload $download) {
-            if (!$download->is_deleted) {
-                $this->_telegram->notifyAboutFinishedDownload($download->name);
-            }
-
-            $download->delete();
-        });
+        $removedDownloads->each->delete();
     }
 
     /**
@@ -61,9 +56,13 @@ class Client
         $hashes = $downloads->map->hash->toArray();
 
         $downloadsData = $this->_getDownloadsData($hashes);
-        return $downloadsData->map(static function (array $downloadData) {
-            return Download::createFromRemoteData($downloadData);
-        });
+        return $downloadsData
+            ->filter(static function (array $downloadData) {
+                return preg_match('/^id:\d+$/', $downloadData['name']);
+            })
+            ->map(static function (array $downloadData) {
+                return Download::createFromRemoteData($downloadData);
+            });
     }
 
     /**
@@ -81,7 +80,7 @@ class Client
         return collect(json_decode($response, true));
     }
 
-    public function startDownload(string $fileUrl, string $contentType): void {
+    public function startDownload(Torrent $torrent, string $fileUrl): void {
         $httpClient = $this->_getClient();
         $httpClient->post(self::START_DOWNLOAD_URL, [
             'multipart' => [
@@ -91,7 +90,11 @@ class Client
                 ],
                 [
                     'name' => 'savepath',
-                    'contents' => self::BASE_SAVE_PATH . $this->_getDirectoryByContentType($contentType),
+                    'contents' => self::BASE_SAVE_PATH . $this->_getDirectoryByContentType($torrent->content_type),
+                ],
+                [
+                    'name' => 'rename',
+                    'contents' => "id:{$torrent->id}",
                 ]
             ],
         ]);
@@ -100,15 +103,13 @@ class Client
     }
 
     public function deleteDownload(string $hash): void {
-        $download = TorrentDownload::find($hash);
-        $download->is_deleted = true;
-        $download->save();
-
         $this->_getClient()->post(self::DELETE_DOWNLOAD, [
             'form_params' => [
                 'hashes' => $hash,
             ],
         ]);
+
+        TorrentDownload::destroy($hash);
     }
 
     public function pauseDownload(string $hash): void {

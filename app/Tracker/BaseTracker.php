@@ -36,7 +36,7 @@ abstract class BaseTracker
 
         $fileUrl = url("/storage/torrents/{$fileName}");
         $torrentClient = new App\Torrent\Client();
-        $torrentClient->startDownload($fileUrl, $contentType);
+        $torrentClient->startDownload($torrent, $fileUrl);
     }
 
     public function isBlocked(): bool {
