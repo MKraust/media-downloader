@@ -18,14 +18,18 @@ class BlockedTrackerController extends Controller
         $this->_trackerKeeper = $trackerKeeper;
     }
 
-    public function getSearchUrl(Requests\Tracker\Blocked\GetSearchUrl $request, Tracker\BlockedTracker $tracker)
+    public function getSearchUrl(Requests\Tracker\Blocked\GetSearchUrl $request)
     {
-        return $tracker->getSearchingUrl($request->search_query);
+        return $this->_trackerKeeper
+            ->getTrackerById($request->tracker_id)
+            ->getSearchingUrl($request->search_query);
     }
 
-    public function parseSearchResult(Requests\Tracker\Blocked\ParseSearchResults $request, Tracker\BlockedTracker $tracker)
+    public function parseSearchResult(Requests\Tracker\Blocked\ParseSearchResults $request)
     {
-        return $tracker->parseSearchResults($request->html);
+        return $this->_trackerKeeper
+            ->getTrackerById($request->tracker_id)
+            ->parseSearchResults($request->html);
     }
 
     public function getMediaUrls(Requests\Tracker\Blocked\GetMediaUrls $request)
@@ -33,7 +37,9 @@ class BlockedTrackerController extends Controller
         $mediaId = $request->id;
         $trackerId = Media::find($mediaId)->tracker_id;
 
-        return $this->_trackerKeeper->getTrackerById($trackerId)->getMediaUrls($mediaId);
+        return $this->_trackerKeeper
+            ->getTrackerById($trackerId)
+            ->getMediaUrls($mediaId);
     }
 
     public function parseMedia(Requests\Tracker\Blocked\ParseMedia $request)
@@ -43,7 +49,9 @@ class BlockedTrackerController extends Controller
 
         $trackerId = Media::find($mediaId)->tracker_id;
 
-        return $this->_trackerKeeper->getTrackerById($trackerId)->parseMedia($mediaId, $htmlParts);
+        return $this->_trackerKeeper
+            ->getTrackerById($trackerId)
+            ->parseMedia($mediaId, $htmlParts);
     }
 
     public function downloadFromFile(Requests\Tracker\Blocked\DownloadFromFile $request)
@@ -53,7 +61,10 @@ class BlockedTrackerController extends Controller
 
         $torrent = Torrent::find($torrentId);
         $trackerId = $torrent->media->tracker_id;
-        $this->_trackerKeeper->getTrackerById($trackerId)->startDownloadFromFile($file, $torrent);
+
+        $this->_trackerKeeper
+            ->getTrackerById($trackerId)
+            ->startDownloadFromFile($file, $torrent);
 
         return response()->json(['status' => 'success']);
     }

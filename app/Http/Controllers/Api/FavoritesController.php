@@ -14,7 +14,7 @@ class FavoritesController extends Controller
 
         $media = Media::find($mediaId);
         $media->is_favorite = true;
-        // добавить дату, когда было добавлено в избранное
+        $media->added_to_favorites_at = now();
         $media->save();
 
         return response()->json('success');
@@ -25,13 +25,13 @@ class FavoritesController extends Controller
 
         $media = Media::find($mediaId);
         $media->is_favorite = false;
-        // очищать дату добавления в избранное
+        $media->added_to_favorites_at = null;
         $media->save();
 
         return response()->json('success');
     }
 
     public function getFavorites() {
-        return Media::where('is_favorite', 1)->orderByDesc('updated_at')->get();
+        return Media::favorite()->get();
     }
 }
