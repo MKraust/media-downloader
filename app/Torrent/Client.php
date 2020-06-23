@@ -105,7 +105,7 @@ class Client
             ],
         ]);
 
-        RefreshTorrentDownloads::dispatch()->delay(now()->addSeconds(5));
+        $this->refreshDownloads();
     }
 
     public function deleteDownload(string $hash): void {
