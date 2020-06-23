@@ -4,13 +4,15 @@
 namespace App\Torrent;
 
 
+use App\Models\Media;
+use App\Models\Torrent;
 use App\Models\TorrentDownload;
 
 class Download implements \JsonSerializable {
 
     private $_hash;
 
-    private $_name;
+    private $_originalName;
 
     private $_downloadSpeedInBytesPerSecond;
 
@@ -22,9 +24,9 @@ class Download implements \JsonSerializable {
 
     private $_progress;
 
-    public function __construct(string $hash, string $name, int $downloadSpeedInBytesPerSecond, int $estimateInSeconds, int $sizeInBytes, string $stateOriginal, float $progress) {
+    public function __construct(string $hash, string $originalName, int $downloadSpeedInBytesPerSecond, int $estimateInSeconds, int $sizeInBytes, string $stateOriginal, float $progress) {
         $this->_hash = $hash;
-        $this->_name = $name;
+        $this->_originalName = $originalName;
         $this->_downloadSpeedInBytesPerSecond = $downloadSpeedInBytesPerSecond;
         $this->_estimateInSeconds = $estimateInSeconds;
         $this->_sizeInBytes = $sizeInBytes;
@@ -46,33 +48,13 @@ class Download implements \JsonSerializable {
 
     public function convertIntoModel(): TorrentDownload {
         return new TorrentDownload([
-            'hash' => $this->_hash,
-            'name' => $this->_name,
+            'hash'       => $this->_hash,
+            'torrent_id' => $this->_getTorrentId(),
         ]);
     }
 
     public function hash(): string {
         return $this->_hash;
-    }
-
-    public function name(): string {
-        return $this->_name;
-    }
-
-    public function downloadSpeedInBytesPerSecond(): int {
-        return $this->_downloadSpeedInBytesPerSecond;
-    }
-
-    public function estimateInSeconds(): int {
-        return $this->_estimateInSeconds;
-    }
-
-    public function sizeInBytes(): int {
-        return $this->_sizeInBytes;
-    }
-
-    public function stateOriginal(): string {
-        return $this->_stateOriginal;
     }
 
     public function progress(): float {
@@ -82,12 +64,27 @@ class Download implements \JsonSerializable {
     public function jsonSerialize(): array {
         return [
             'hash'                               => $this->_hash,
-            'name'                               => $this->_name,
+            'name'                               => $this->_originalName,
             'download_speed_in_bytes_per_second' => $this->_downloadSpeedInBytesPerSecond,
             'estimate_in_seconds'                => $this->_estimateInSeconds,
             'size_in_bytes'                      => $this->_sizeInBytes,
             'state_original'                     => $this->_stateOriginal,
             'progress'                           => (string)$this->_progress,
+            'media'                              => $this->_getMedia(),
+            'torrent'                            => $this->_getTorrent(),
         ];
+    }
+
+    private function _getTorrentId(): int {
+        return str_replace('id:', '', $this->_originalName);
+    }
+
+    private function _getMedia(): Media {
+        return $this->_getTorrent()->media;
+    }
+
+    private function _getTorrent(): Torrent {
+        $torrentId = $this->_getTorrentId();
+        return Torrent::find($torrentId);
     }
 }

@@ -18,6 +18,10 @@ class TorrentDownload extends Model
         'name',
     ];
 
+    public function torrent() {
+        return $this->hasOne(Torrent::class);
+    }
+
     public function scopeActive(Eloquent\Builder $query): Eloquent\Builder {
         return $query->where('is_deleted', 0);
     }

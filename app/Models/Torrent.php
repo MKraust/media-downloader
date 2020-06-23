@@ -22,6 +22,10 @@ class Torrent extends Model
         return $this->belongsTo(Media::class);
     }
 
+    public function download() {
+        return $this->hasOne(TorrentDownload::class);
+    }
+
     public function getSeasonAttribute() {
         return json_decode($this->attributes['season'], true);
     }

@@ -45,7 +45,13 @@ class Client
         });
 
         $newDownloads->each->save();
-        $removedDownloads->each->delete();
+        $removedDownloads->each(function (TorrentDownload $download) {
+            if (!$download->is_deleted) {
+                $this->_telegram->notifyAboutFinishedDownload($download);
+            }
+
+            $download->delete();
+        });
     }
 
     /**
@@ -103,13 +109,15 @@ class Client
     }
 
     public function deleteDownload(string $hash): void {
+        $download = TorrentDownload::find($hash);
+        $download->is_deleted = true;
+        $download->save();
+
         $this->_getClient()->post(self::DELETE_DOWNLOAD, [
             'form_params' => [
                 'hashes' => $hash,
             ],
         ]);
-
-        TorrentDownload::destroy($hash);
     }
 
     public function pauseDownload(string $hash): void {

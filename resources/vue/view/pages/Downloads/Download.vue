@@ -11,7 +11,18 @@
         </div>
       </div>
 
-      <h5 class="flex-grow-1 mr-3 mb-0 text-truncate">{{ download.name }}</h5>
+      <div class="symbol symbol-30 symbol-light mr-3">
+        <span class="symbol-label">
+          <img :src="tracker.icon" class="h-75 w-75 alight-self-center">
+        </span>
+      </div>
+
+      <h5 class="flex-grow-1 mr-3 mb-0 text-truncate">
+        {{ media.title }}
+        <span v-if="torrent.content_type !== 'movie'" class="ml-2 text-muted h6">
+          {{ torrent.name }}
+        </span>
+      </h5>
 
       <div class="d-flex align-items-center mr-5" style="min-width: 100px; max-width: 100px;">
         <i class="fas fa-tachometer-alt mr-2"></i>
@@ -37,7 +48,8 @@
 
     <div class="d-block d-xl-none">
 
-      <h5 class="text-truncate mb-2">{{ download.name }}</h5>
+      <h5 class="text-truncate mb-1">{{ media.title }}</h5>
+      <h6 v-if="!isMovie" class="text-truncate text-muted mb-3">{{ torrent.name }}</h6>
 
       <div class="d-flex mb-3">
 
@@ -156,7 +168,20 @@
         }
 
         return `${days} дн`;
-      }
+      },
+      media() {
+        return this.download.media;
+      },
+      torrent() {
+        return this.download.torrent;
+      },
+      tracker() {
+        let trackerId = this.media.tracker_id;
+        return this.$store.getters.trackers.find(tracker => tracker.id === trackerId);
+      },
+      isMovie() {
+        return this.torrent.content_type === 'movie';
+      },
     },
   }
 </script>
