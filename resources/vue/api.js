@@ -28,9 +28,9 @@ export async function loadTrackers() {
     return response.data;
 }
 
-export async function search(tracker_id, query, offset = 0) {
-    console.log(query);
-    const params = { tracker_id, query, offset };
+export async function search(tracker_id, search_query, offset = 0) {
+    console.log(search_query);
+    const params = { tracker_id, search_query, offset };
     const response = await axios.get(SEARCH_MEDIA_ITEMS, { params });
 
     return response.data;
@@ -57,16 +57,15 @@ export async function startDownload(tracker, torrent) {
     let body = new FormData();
     body.append('id', torrent.id);
     body.append('file', file);
-    body.append('tracker_id', tracker.id);
 
     await axios.post(START_DOWNLOAD_FROM_FILE, body, {
         headers: { 'Content-Type': 'multipart/form-data' }
     });
 }
 
-export async function searchBlocked(tracker_id, query, offset = 0) {
+export async function searchBlocked(tracker_id, search_query, offset = 0) {
     try {
-        const searchUrl = (await axios.get(GET_SEARCH_URL, { params: { tracker_id, query, offset } })).data;
+        const searchUrl = (await axios.get(GET_SEARCH_URL, { params: { tracker_id, search_query, offset } })).data;
         const html = (await axios.get(searchUrl)).data;
         const mediaItems = (await axios.post(PARSE_SEARCH_RESULTS_HTML, { tracker_id, html })).data;
 
@@ -82,7 +81,7 @@ export async function loadMediaBlocked(tracker_id, id) {
       axios.get(mediaUrls.media),
       axios.get(mediaUrls.torrents),
     ]);
-    const media = (await axios.post(PARSE_MEDIA, { tracker_id, id, html: { media: mediaHtml.data, torrents: torrentsHtml.data } })).data;
+    const media = (await axios.post(PARSE_MEDIA, { tracker_id, id, html_parts: { media: mediaHtml.data, torrents: torrentsHtml.data } })).data;
 
     return media;
 }

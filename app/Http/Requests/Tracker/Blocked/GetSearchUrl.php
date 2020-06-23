@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Tracker;
+namespace App\Http\Requests\Tracker\Blocked;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Search extends FormRequest
+class GetSearchUrl extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

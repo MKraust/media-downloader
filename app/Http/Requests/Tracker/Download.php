@@ -25,11 +25,7 @@ class Download extends FormRequest
     public function rules()
     {
         return [
-            'url' => 'required|url',
-            'type' => [
-                'required',
-                Rule::in(['anime', 'movie', 'series']),
-            ],
+            'id' => 'required|integer|min:1',
         ];
     }
 }

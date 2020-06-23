@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Tracker;
+namespace App\Http\Requests\Tracker\Blocked;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Search extends FormRequest
+class ParseMedia extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class Search extends FormRequest
     public function rules()
     {
         return [
-            'tracker_id'   => 'required|string',
-            'search_query' => 'required|string',
-            'offset'       => 'integer|min:0',
+            'id'         => 'required|string',
+            'html_parts' => 'required|array'
         ];
     }
 }

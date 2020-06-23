@@ -18,17 +18,17 @@ class TrackerController extends Controller
         $this->_trackerKeeper = $trackerKeeper;
     }
 
-    public function search(Request $request)
+    public function search(Requests\Tracker\Search $request)
     {
         $trackerId = $request->tracker_id;
-        $query = request('query');
+        $query = $request->search_query;
 
         $tracker = $this->_trackerKeeper->getTrackerById($trackerId);
 
         return $tracker->search($query, $request->offset);
     }
 
-    public function media(Request $request)
+    public function media(Requests\Tracker\Media $request)
     {
         $mediaId = $request->id;
         $media = Media::find($mediaId);
@@ -37,7 +37,7 @@ class TrackerController extends Controller
         return $tracker->loadMediaById($mediaId);
     }
 
-    public function download(Request $request)
+    public function download(Requests\Tracker\Download $request)
     {
         $torrentId = $request->id;
         $torrent = Torrent::find($torrentId);
