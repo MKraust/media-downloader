@@ -62,6 +62,7 @@
   import { loadMedia, loadMediaBlocked, startDownload, addToFavorites, removeFromFavorites } from '@/api';
   import notifyMixin from '@/mixins/notifyMixin';
   import asideToggleMixin from '@/mixins/asideToggleMixin';
+  import { confirm } from '@/alert';
 
   export default {
     mixins: [notifyMixin, asideToggleMixin],
@@ -147,10 +148,10 @@
         this.isLoading = false;
       },
       handleDownload(torrent) {
-        if (confirm(`Скачать "${torrent.name}"?`)) {
+        confirm('Скачать?', torrent.name, () => {
           startDownload(this.tracker, torrent);
           this.notifySuccess('Загрузка началась', torrent.name);
-        }
+        });
       },
       switchSortingOrder() {
         this.sortingOrder = this.sortingOrder === 'asc' ? 'desc' : 'asc';

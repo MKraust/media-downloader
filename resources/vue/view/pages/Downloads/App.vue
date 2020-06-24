@@ -18,6 +18,7 @@
   import asideToggleMixin from '@/mixins/asideToggleMixin';
   import BasicSubheader from '../components/BasicSubheader';
   import Download from './Download';
+  import { confirm } from '@/alert';
 
   import { loadDownloads, deleteDownload } from '@/api'
 
@@ -67,10 +68,13 @@
         }
       },
       async handleDelete(downloadToDelete) {
-        if (confirm(`Удалить ${downloadToDelete.name}?`)) {
+        const torrent = downloadToDelete.torrent;
+        const downloadName = downloadToDelete.media.title + (torrent.content_type === 'movie' ? ` ${torrent.name}` : '');
+
+        confirm('Остановить загрузку?', downloadName, async () => {
           await deleteDownload(downloadToDelete.hash);
           this.downloads = this.downloads.filter(download => download.hash !== downloadToDelete.hash);
-        }
+        });
       }
     }
   }
