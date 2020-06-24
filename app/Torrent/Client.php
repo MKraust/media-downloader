@@ -138,11 +138,11 @@ class Client
 
     private function _getDirectoryByContentType(string $contentType): string {
         switch ($contentType) {
-            case 'anime':
+            case Torrent::TYPE_ANIME:
                 return 'Anime';
-            case 'series':
+            case Torrent::TYPE_SERIES:
                 return 'Serials';
-            case 'movie':
+            case Torrent::TYPE_MOVIE:
                 return 'Movies';
         }
     }

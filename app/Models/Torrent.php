@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Torrent extends Model
 {
+    public const TYPE_MOVIE = 'movie';
+    public const TYPE_SERIES = 'series';
+    public const TYPE_ANIME = 'anime';
+
     protected $fillable = [
         'name',
         'url',

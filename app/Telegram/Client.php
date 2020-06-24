@@ -2,6 +2,7 @@
 
 namespace App\Telegram;
 
+use App\Models\Torrent;
 use App\Models\TorrentDownload;
 use GuzzleHttp;
 
@@ -21,7 +22,7 @@ class Client
 
     private function getDownloadName(TorrentDownload $download): string {
         $mediaTitle = $download->torrent->media->title;
-        if ($download->torrent->content_type === 'movie') {
+        if ($download->torrent->content_type === Torrent::TYPE_MOVIE) {
             return $mediaTitle;
         }
 

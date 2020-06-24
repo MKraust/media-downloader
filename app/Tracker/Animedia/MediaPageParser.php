@@ -2,6 +2,7 @@
 
 namespace App\Tracker\Animedia;
 
+use App\Models\Torrent;
 use Illuminate\Support\Collection;
 use Symfony\Component\DomCrawler\Crawler;
 use App\Exceptions;
@@ -97,6 +98,7 @@ class MediaPageParser
 
             $series = $tab->filter('.tracker_info_left > h3')->first()->text();
             $torrent['name'] = "{$name} ({$series})";
+            $torrent['season'] = $this->_parseSeason($name, $series);
 
             $torrent['quality'] = $this->_parseQualityFromTab($tab);
             $torrent['size'] = $this->_parseSizeFromTab($tab);
@@ -104,10 +106,31 @@ class MediaPageParser
 
             $torrent['voice_acting'] = $voiceActing;
             $torrent['content_type'] = $this->_getContentTypeByTitle($name);
+
             $torrents->add($torrent);
         });
 
         return $torrents;
+    }
+
+    private function _parseSeason(string $name, string $series): ?array {
+        if (!preg_match('/сезон/ui', $name)) {
+            return null;
+        }
+
+        $nameParts = explode(' ', $name);
+        $seasonNumber = null;
+        foreach ($nameParts as $namePart) {
+            if (is_numeric($namePart)) {
+                $seasonNumber = (int)$namePart;
+                break;
+            }
+        }
+
+        preg_match('/\d+-\d+/', $series, $matches);
+        $seriesCount = (int)array_map('trim', explode('-', $matches[0]))[1];
+
+        return [$seasonNumber, $seriesCount];
     }
 
     private function _parseOriginalTitle(Crawler $mediaNode): ?string {
@@ -146,23 +169,23 @@ class MediaPageParser
         $lcTitle = mb_strtolower($title);
 
         if (mb_strpos($lcTitle, 'сезон') !== false) {
-            return 'anime';
+            return Torrent::TYPE_ANIME;
         }
 
         if (mb_strpos($lcTitle, 'серии') !== false) {
-            return 'anime';
+            return Torrent::TYPE_ANIME;
         }
 
         if (mb_strpos($lcTitle, 'фильм') !== false) {
-            return 'movie';
+            return Torrent::TYPE_MOVIE;
         }
 
         if (mb_strpos($lcTitle, 'ова') !== false) {
-            return 'anime';
+            return Torrent::TYPE_ANIME;
         }
 
         if (mb_strpos($lcTitle, 'ova') !== false) {
-            return 'anime';
+            return Torrent::TYPE_ANIME;
         }
 
         throw new Exceptions\MediaParsingException("[Animedia] Unable to detect content type by title: {$title}");

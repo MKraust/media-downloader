@@ -4,6 +4,7 @@
 namespace App\Tracker\FastTorrent;
 
 
+use App\Models\Torrent;
 use Illuminate\Support\Collection;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -54,7 +55,7 @@ class TorrentsParser
                 $season = (int)$seasonParts[0];
                 $series = (int)$seasonParts[1];
                 $torrent['season'] = [$season, $series];
-                $torrent['content_type'] = $season === 0 && $series === 0 ? 'movie' : 'series';
+                $torrent['content_type'] = $season === 0 && $series === 0 ? Torrent::TYPE_MOVIE : Torrent::TYPE_SERIES;
             }
 
             $torrents->add($torrent);
