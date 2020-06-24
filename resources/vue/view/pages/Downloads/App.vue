@@ -43,7 +43,7 @@
     },
     computed: {
       sortedDownloads() {
-        return this.$lodash.orderBy(this.downloads, ['media.torrent_id', 'media.title', 'torrent.name'], ['asc']);
+        return this.$lodash.orderBy(this.downloads, ['media.tracker_id', 'media.title', 'torrent.name'], ['asc']);
       },
     },
     methods: {
