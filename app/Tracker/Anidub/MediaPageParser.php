@@ -6,8 +6,15 @@ use App\Exceptions\MediaParsingException;
 use App\Models\Torrent;
 use Symfony\Component\DomCrawler\Crawler;
 
-class MediaPageParser
+class MediaPageParser extends TitleParser
 {
+    /** @var TitleParser */
+    private $_titleParser;
+
+    public function __construct() {
+        $this->_titleParser = new TitleParser;
+    }
+
     public function parse(string $html): array {
         $crawler = new Crawler($html);
 
@@ -16,9 +23,9 @@ class MediaPageParser
         $itemNode = $crawler->filter('#dle-content .story')->first();
         $fullTitle = $this->parseFullTitle($itemNode);
 
-        $media['title'] = $this->parseTitle($fullTitle);
-        $media['original_title'] = $this->parseOriginalTitle($fullTitle);
-        $media['series_count'] = $this->parseSeriesCount($fullTitle);
+        $media['title'] = $this->_titleParser->parseTitle($fullTitle);
+        $media['original_title'] = $this->_titleParser->parseOriginalTitle($fullTitle);
+        $media['series_count'] = $this->_titleParser->parseSeriesCount($fullTitle);
         $media['poster'] = $itemNode->filter('.poster > img')->first()->attr('src');
 
         $season = $media['series_count'] ? $this->getSeasonBySeriesCount($media['series_count']) : null;
@@ -75,27 +82,6 @@ class MediaPageParser
 
     private function parseFullTitle(Crawler $itemNode): string {
         return $itemNode->filter('.story_h #news-title')->text();
-    }
-
-    private function parseTitle(string $fullTitle): string {
-        $titleParts = explode('/ ', $fullTitle); // @todo fix this as in titles may be slashes
-        $trimmedTitleParts = array_map('trim', $titleParts);
-
-        return $trimmedTitleParts[0];
-    }
-
-    private function parseOriginalTitle(string $fullTitle): string {
-        $titleParts = explode('/ ', $fullTitle); // @todo fix this as in titles may be slashes
-        $trimmedTitleParts = array_map('trim', $titleParts);
-
-        return trim(preg_replace('/\[.+]/u', '', $trimmedTitleParts[1]));
-    }
-
-    private function parseSeriesCount(string $fullTitle): ?string {
-        preg_match('/\[.+]/u', $fullTitle, $seriesCount);
-        $seriesCount = $seriesCount[0] ?? null;
-
-        return $seriesCount !== null ? str_replace(['[', ']'], '', $seriesCount) : null;
     }
 
     private function getSeasonBySeriesCount(string $seriesCount): array {

@@ -7,16 +7,33 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class SearchResultsParser extends BaseSearchResultsParser
 {
+    /** @var TitleParser */
+    private $_titleParser;
+
+    public function __construct() {
+        $this->_titleParser = new TitleParser;
+    }
+
     protected function getMediaItemsNodes(Crawler $document) {
         return $document->filter('.search_post');
     }
 
     protected function getTitle(Crawler $mediaNode): string {
-        return $this->getTitleNode($mediaNode)->text();
+        $fullTitle = $this->getTitleNode($mediaNode)->text();
+
+        return $this->_titleParser->parseTitle($fullTitle);
     }
 
     protected function getOriginalTitle(Crawler $mediaNode): ?string {
-        return null;
+        $fullTitle = $this->getTitleNode($mediaNode)->text();
+
+        return $this->_titleParser->parseOriginalTitle($fullTitle);
+    }
+
+    protected function getSeriesCount(Crawler $mediaNode): ?string {
+        $fullTitle = $this->getTitleNode($mediaNode)->text();
+
+        return $this->_titleParser->parseSeriesCount($fullTitle);
     }
 
     protected function getLink(Crawler $mediaNode): string {

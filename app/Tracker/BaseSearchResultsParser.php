@@ -19,10 +19,15 @@ abstract class BaseSearchResultsParser
                 'title'          => $this->getTitle($node),
                 'poster'         => $this->getPoster($node),
                 'original_title' => $this->getOriginalTitle($node),
+                'series_count'   => $this->getSeriesCount($node),
             ]);
         });
 
         return $items;
+    }
+
+    protected function getSeriesCount(Crawler $mediaNode): ?string {
+        return null;
     }
 
     abstract protected function getMediaItemsNodes(Crawler $document);
