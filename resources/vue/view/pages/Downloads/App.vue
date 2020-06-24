@@ -69,7 +69,7 @@
       },
       async handleDelete(downloadToDelete) {
         const torrent = downloadToDelete.torrent;
-        const downloadName = downloadToDelete.media.title + (torrent.content_type === 'movie' ? ` ${torrent.name}` : '');
+        const downloadName = downloadToDelete.media.title + (torrent.content_type !== 'movie' ? ` ${torrent.name}` : '');
 
         confirm('Остановить загрузку?', downloadName, async () => {
           await deleteDownload(downloadToDelete.hash);
