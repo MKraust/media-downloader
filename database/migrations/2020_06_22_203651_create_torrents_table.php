@@ -28,8 +28,6 @@ class CreateTorrentsTable extends Migration
 
             $table->string('media_id', 300);
             $table->foreign('media_id')->references('id')->on('media')->cascadeOnDelete();
-
-            $table->unique(['media_id', 'url']);
         });
     }
 

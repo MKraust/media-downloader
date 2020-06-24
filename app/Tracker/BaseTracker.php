@@ -97,23 +97,33 @@ abstract class BaseTracker
     }
 
     final protected function _refreshTorrentsWithData(App\Models\Media $media, Collection $torrentsData) {
-        $urls = $torrentsData->map->url;
-        App\Models\Torrent::where('media_id', $media->id)->whereNotIn('url', $urls);
+        $existingTorrents = App\Models\Torrent::where('media_id', $media->id)->get();
 
         $torrents = collect();
         foreach ($torrentsData as $torrentData) {
-            $url = urldecode($torrentData['url']);
-            $torrent = App\Models\Torrent::firstOrNew(['media_id' => $media->id, 'url' => $url]);
+            $existingTorrent = $existingTorrents->first(function (App\Models\Torrent $torrent) use ($torrentData) {
+                return $this->_isTorrentMatchParsedData($torrent, $torrentData);
+            });
 
-            $this->_updateTorrentWithData($torrent, $media, $torrentData);
+            $torrent = $existingTorrent ?? new App\Models\Torrent(['media_id' => $media->id]);
+//            try {
+                $this->_updateTorrentWithData($torrent, $media, $torrentData);
+//            } catch (\Throwable $e) {
+//                dd([$torrentData, $torrent, $existingTorrent]);
+//            }
             $torrents->push($torrent);
         }
+    }
+
+    protected function _isTorrentMatchParsedData(App\Models\Torrent $torrent, array $torrentData): bool {
+        return $torrent->url === $torrentData['url'];
     }
 
     private function _updateTorrentWithData(App\Models\Torrent $torrent, App\Models\Media $media, array $data): void {
         $torrent->media_id     = $media->id;
         $torrent->name         = $data['name'];
         $torrent->content_type = $data['content_type'];
+        $torrent->url          = $data['url'];
         $torrent->voice_acting = $data['voice_acting'] ?? null;
         $torrent->quality      = $data['quality'] ?? null;
         $torrent->size         = $data['size'] ?? null;

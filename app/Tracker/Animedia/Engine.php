@@ -3,6 +3,7 @@
 
 namespace App\Tracker\Animedia;
 
+use App;
 use App\Tracker;
 use App\Models;
 use Illuminate\Support\Collection;
@@ -66,5 +67,13 @@ class Engine extends Tracker\BaseTracker
         }
 
         return $preparedData;
+    }
+
+    protected function _isTorrentMatchParsedData(App\Models\Torrent $torrent, array $torrentData): bool {
+        return $this->_prepareTorrentUrl($torrent->url) === $this->_prepareTorrentUrl($torrentData['url']);
+    }
+
+    private function _prepareTorrentUrl(string $url): string {
+        return preg_replace('/&signature=[^&]*/u', '', $url);
     }
 }

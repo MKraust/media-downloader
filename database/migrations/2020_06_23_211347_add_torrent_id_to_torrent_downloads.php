@@ -29,7 +29,6 @@ class AddTorrentIdToTorrentDownloads extends Migration
     {
         Schema::table('torrent_downloads', function (Blueprint $table) {
             $table->dropForeign('torrent_id');
-            $table->dropColumn('torrent_id');
             $table->string('name', 1024);
         });
     }
