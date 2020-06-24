@@ -18,7 +18,14 @@ class TorrentsParser
             $torrent = [];
 
             $link = $torrentNode->filter('.torrent-info .download-event')->first();
-            $torrent['name'] = str_replace('.torrent', '', $link->text());
+
+            $seasonColumnClass = $columns['season'];
+            if ($seasonColumnClass === null) {
+                $torrent['name'] = str_replace('.torrent', '', $link->text());
+            } else {
+                $torrent['name'] = $this->parseSimpleColumn($torrentNode, $seasonColumnClass);
+            }
+
             $torrent['url'] = Requester::BASE_URL . $link->attr('href');
 
             $qualityColumnClass = $columns['quality'];
