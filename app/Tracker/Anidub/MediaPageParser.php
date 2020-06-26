@@ -29,7 +29,7 @@ class MediaPageParser extends TitleParser
         $media['poster'] = $itemNode->filter('.poster > img')->first()->attr('src');
 
         $season = $media['series_count'] ? $this->getSeasonBySeriesCount($media['series_count']) : null;
-        $contentType = $this->getContentTypeByTitle($media['title']);
+        $contentType = $this->getContentTypeByFullTitle($fullTitle);
 
         $torrents = collect();
         $staticH = $crawler->filter('#tabs > .static_h')->first();
@@ -61,7 +61,7 @@ class MediaPageParser extends TitleParser
         return $media;
     }
 
-    private function getContentTypeByTitle(string $title): string {
+    private function getContentTypeByFullTitle(string $title): string {
         return preg_match('/\d+ из \d+/u', $title)
             ? Torrent::TYPE_ANIME
             : Torrent::TYPE_MOVIE;
