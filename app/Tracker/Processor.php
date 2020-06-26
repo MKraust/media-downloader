@@ -43,8 +43,8 @@ class Processor {
 
         $mediaTitles = $mediaWithNewEpisodes->map(function (Media $media) {
             $tracker = $this->_keeper->getTrackerById($media->tracker_id);
-            return "[{$tracker->title()}] {$media->title}";
-        });
+            return "\[{$tracker->title()}] {$media->title}";
+        })->sort();
 
         $this->_telegram->notifyAboutNewEpisodes($mediaTitles);
     }
