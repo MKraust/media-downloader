@@ -33,4 +33,20 @@ class Media extends Model
     public function scopeFavorite($builder) {
         return $builder->where('is_favorite', 1)->orderByDesc('added_to_favorites_at');
     }
+
+    public function topSeason(): array {
+        $topSeason = null;
+        foreach ($this->torrents as $torrent) {
+            $season = $torrent->season;
+            if ($season === null) {
+                continue;
+            }
+
+            if ($topSeason === null || $season[0] > $topSeason[0] || $season[1] > $topSeason[1]) {
+                $topSeason = $season;
+            }
+        }
+
+        return $topSeason;
+    }
 }

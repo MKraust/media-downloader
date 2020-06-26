@@ -7,7 +7,7 @@ use App\Models;
 
 interface BlockedTracker {
 
-    public function getSearchingUrl(string $query): string;
+    public function getSearchingUrl(string $query, int $offset): ?string;
 
     public function parseSearchResults(string $html): Collection;
 

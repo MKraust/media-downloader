@@ -22,7 +22,11 @@ class Engine extends Tracker\BaseTracker implements Tracker\BlockedTracker
         return 'http://media7.veleto.ru/media/uploads/logo/favicon.ico';
     }
 
-    public function getSearchingUrl(string $query): string {
+    public function getSearchingUrl(string $query, int $offset): ?string {
+        if ($offset > 0) {
+            return null;
+        }
+
         return (new Requester)->getSearchUrl($query);
     }
 

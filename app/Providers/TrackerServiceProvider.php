@@ -14,6 +14,10 @@ class TrackerServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton(App\Tracker\Processor::class, static function ($app) {
+            return new App\Tracker\Processor;
+        });
+
         $this->app->singleton(App\Tracker\Keeper::class, static function ($app) {
             return new App\Tracker\Keeper;
         });

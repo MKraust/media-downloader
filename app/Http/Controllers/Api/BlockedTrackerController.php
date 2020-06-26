@@ -22,7 +22,7 @@ class BlockedTrackerController extends Controller
     {
         return $this->_trackerKeeper
             ->getTrackerById($request->tracker_id)
-            ->getSearchingUrl($request->search_query);
+            ->getSearchingUrl($request->search_query, $request->offset);
     }
 
     public function parseSearchResult(Requests\Tracker\Blocked\ParseSearchResults $request)

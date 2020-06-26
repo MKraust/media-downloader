@@ -66,6 +66,10 @@ export async function startDownload(tracker, torrent) {
 export async function searchBlocked(tracker_id, search_query, offset = 0) {
     try {
         const searchUrl = (await axios.get(GET_SEARCH_URL, { params: { tracker_id, search_query, offset } })).data;
+        if (!searchUrl) {
+            return [];
+        }
+
         const html = (await axios.get(searchUrl)).data;
         const mediaItems = (await axios.post(PARSE_SEARCH_RESULTS_HTML, { tracker_id, html })).data;
 

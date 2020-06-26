@@ -2,20 +2,30 @@
 
 namespace App\Telegram;
 
+use App\Models\Media;
 use App\Models\Torrent;
 use App\Models\TorrentDownload;
 use GuzzleHttp;
+use Illuminate\Support\Collection;
 
 class Client
 {
     public function notifyAboutFinishedDownload(TorrentDownload $download): void {
+        $this->_sendMessageToChannel('Загрузка завершена', $this->getDownloadName($download));
+    }
+
+    public function notifyAboutNewEpisodes(Collection $mediaTitles): void {
+        $this->_sendMessageToChannel('Новые серии', $mediaTitles->implode("\n"));
+    }
+
+    private function _sendMessageToChannel(string $title, string $message): void {
         $httpClient = new GuzzleHttp\Client;
         $url = $this->getMessageSendingUrl();
         $httpClient->get($url, [
             'query' => [
                 'chat_id'    => $this->getChatId(),
                 'parse_mode' => 'markdown',
-                'text'       => "*Загрузка завершена*\n{$this->getDownloadName($download)}",
+                'text'       => "*{$title}*\n\n{$message}",
             ],
         ]);
     }
