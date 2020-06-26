@@ -3,7 +3,7 @@
     <BasicSubheader title="Избранное" />
     <div class="container py-4">
       <div v-if="favorites.length > 0" class="row">
-        <div v-for="favorite in favorites" :key="favorite.id" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-3 d-flex">
+        <div v-for="favorite in favorites" :key="favorite.id" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-7 d-flex">
           <MediaCard :media="favorite" class="align-self-stretch"/>
         </div>
       </div>
