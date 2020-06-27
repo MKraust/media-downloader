@@ -11,7 +11,7 @@
               </div>
             </div>
             <div class="card-body">
-              <div v-for="drive in drives" :key="Math.random()">
+              <div v-for="(drive, index) in drives" :key="Math.random()" :class="{ 'mb-4': index < drives.length - 1 }">
                 <Drive :drive="drive" />
               </div>
             </div>

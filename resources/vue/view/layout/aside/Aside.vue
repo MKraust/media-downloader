@@ -16,7 +16,7 @@
             data-placement="right"
             data-container="body"
             data-boundary="window"
-            v-b-tooltip.hover.right="'Трекеры'"
+            v-b-tooltip.hover.right="'Сводка'"
           >
             <router-link
               to="/dashboard"
