@@ -5,7 +5,7 @@ namespace App\Server;
 class Storage {
 
     public function getAvailableSpace(): array {
-        exec('df -h', $output);
+        exec('df -B1', $output);
         $drivesInfoData = preg_grep('/\/dev\/sd/', $output);
         $driveNames = $this->_getDriveNames();
 

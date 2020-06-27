@@ -4,7 +4,7 @@
       <div class="card-title font-weight-bolder">
         <div class="card-label">
           {{ drive.name }}
-          <div class="font-size-sm text-muted mt-2">{{ drive.available }} свободно</div>
+          <div class="font-size-sm text-muted mt-2">Использовано {{ used }} из {{ total }}</div>
         </div>
       </div>
     </div>
@@ -19,6 +19,7 @@
 <script>
   import ApexCharts from 'apexcharts';
   import settings from '@/settings';
+  import { humanizeBytes } from "@/helper";
 
   export default {
     name: "Drive",
@@ -35,6 +36,15 @@
       this.id = this._uid;
     },
     computed: {
+      total() {
+        return humanizeBytes(this.drive.total, 1);
+      },
+      used() {
+        return humanizeBytes(this.drive.used, 1);
+      },
+      available() {
+        return humanizeBytes(this.drive.available, 1);
+      },
       variant() {
         if (this.drive.usage_percent >= 85) {
           return 'danger';
@@ -51,7 +61,7 @@
     },
     methods: {
       initWidget() {
-        const drive = this.drive;
+        const availableSpace = this.available;
         const element = document.getElementById(this.id);
         // const height = parseInt(KTUtil.css(element, 'height'));
 
@@ -91,7 +101,7 @@
                   offsetY: -40,
                   show: true,
                   formatter: function (val) {
-                    return drive.available;
+                    return availableSpace;
                   }
                 }
               },
