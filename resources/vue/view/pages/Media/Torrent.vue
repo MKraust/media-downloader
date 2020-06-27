@@ -7,13 +7,13 @@
             <div v-if="torrent.voice_acting" class="card-text mb-4">{{ torrent.voice_acting }}</div>
             <div class="d-flex">
                 <span v-if="torrent.quality" class="badge badge-primary d-inline-flex align-items-center mr-2">
-                    <i class="flaticon2-photograph text-white mr-2"></i> {{ torrent.quality }}
+                    <i class="fas fa-photo-video text-white mr-2"></i> {{ torrent.quality }}
                 </span>
                 <span v-if="torrent.size" class="badge badge-primary d-inline-flex align-items-center mr-2">
-                    <i class="flaticon2-box-1 text-white mr-2"></i> {{ torrent.size }}
+                    <i class="fas fa-weight-hanging text-white mr-2"></i> {{ torrent.size }}
                 </span>
                 <span v-if="torrent.downloads" class="badge badge-primary d-inline-flex align-items-center">
-                    <i class="flaticon2-download text-white mr-2"></i> {{ torrent.downloads }}
+                    <i class="fas fa-download text-white mr-2"></i> {{ torrent.downloads }}
                 </span>
             </div>
         </div>

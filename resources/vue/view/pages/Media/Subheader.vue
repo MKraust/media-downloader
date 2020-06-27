@@ -11,7 +11,9 @@
       <div class="d-flex align-items-center mw-100 mr-5">
         <div>
           <a class="btn btn-sm btn-icon btn-primary btn-shadow mr-4" @click="$router.back()">
-            <i class="flaticon2-left-arrow"></i>
+            <span class="svg-icon svg-icon-xl">
+              <inline-svg src="/media/svg/icons/Navigation/Angle-left.svg" />
+            </span>
           </a>
         </div>
         <!--begin::Page Title-->
