@@ -3,18 +3,9 @@
     <BasicSubheader title="Сводная информация" />
     <div class="container py-4">
       <div class="row">
-        <div class="col-md-12">
-          <div class="card card-custom">
-            <div class="card-header">
-              <div class="card-title">
-                <h3 class="card-label">Хранилище</h3>
-              </div>
-            </div>
-            <div class="card-body">
-              <div v-for="(drive, index) in drives" :key="Math.random()" :class="{ 'mb-4': index < drives.length - 1 }">
-                <Drive :drive="drive" />
-              </div>
-            </div>
+        <div class="col-md-9">
+          <div v-for="(drive, index) in drives" :key="Math.random()" :class="{ 'mb-4': index < drives.length - 1 }">
+            <Drive :drive="drive" />
           </div>
         </div>
       </div>

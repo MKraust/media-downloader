@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="bg-white rounded">
     <div class="d-none d-md-block">
-      <div class="d-flex align-items-center py-1 px-3 rounded bg-light">
+      <div class="d-flex align-items-center py-2 px-4">
         <span class="svg-icon svg-icon-xl mr-3 drive-icon" :class="{ [`svg-icon-${variant}`]: true }">
           <inline-svg src="/media/svg/icons/Devices/Hard-drive.svg" />
         </span>
 
-        <span class="font-weight-bold text-dark-75 font-size-lg mb-0 mr-3 flex-grow-1">{{ drive.name }}</span>
+        <span class="h5 font-weight-bold text-dark-75 font-size-lg mb-0 mr-3 flex-grow-1 pt-1">{{ drive.name }}</span>
         <span class="font-weight-bold text-dark-75 font-size-lg mb-0 mr-5">{{ drive.available }} / {{ drive.total }}</span>
 
         <b-progress height="1.6rem" class="d-flex" style="width: 200px;">
@@ -16,12 +16,12 @@
     </div>
 
     <div class="d-md-none">
-      <div class="px-4 pb-3 pt-1 rounded bg-light">
+      <div class="px-4 pb-3 pt-1">
         <div class="d-flex align-items-center mb-2">
           <span class="svg-icon svg-icon-xl mr-3 drive-icon" :class="{ [`svg-icon-${variant}`]: true }">
             <inline-svg src="/media/svg/icons/Devices/Hard-drive.svg" />
           </span>
-          <span class="font-weight-bold text-dark-75 font-size-lg mb-0 mr-3 flex-grow-1">{{ drive.name }}</span>
+          <span class="h5 font-weight-bold text-dark-75 font-size-lg mb-0 mr-3 flex-grow-1">{{ drive.name }}</span>
           <span class="font-weight-bold text-dark-75 font-size-lg mb-0">{{ drive.available }} / {{ drive.total }}</span>
         </div>
 
