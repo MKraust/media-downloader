@@ -11,7 +11,8 @@ class Storage {
 
         $drivesInfo = [];
         foreach ($drivesInfoData as $driveInfoData) {
-            $infoParts = array_map('trim', explode(' ', $driveInfoData));
+            $driveInfoData = preg_replace('/\s+/', '|', $driveInfoData);
+            $infoParts = array_map('trim', explode('|', $driveInfoData));
             $driveName = $driveNames[$infoParts[0]];
             $totalSpace = $infoParts[1];
             $availableSpace = $infoParts[3];
