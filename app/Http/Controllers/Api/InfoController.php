@@ -18,6 +18,7 @@ class InfoController extends Controller
     public function __construct(Tracker\Keeper $trackerKeeper, Server\Storage $serverStorage)
     {
         $this->_trackerKeeper = $trackerKeeper;
+        $this->_serverStorage = $serverStorage;
     }
 
     public function trackers(): Collection {
