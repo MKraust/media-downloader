@@ -6,7 +6,7 @@ use App\Tracker;
 use App\Models;
 use Illuminate\Support\Collection;
 
-class Engine extends Tracker\BaseTracker implements Tracker\BlockedTracker
+class Engine extends Tracker\BaseTracker
 {
     public function id(): string
     {
@@ -56,6 +56,10 @@ class Engine extends Tracker\BaseTracker implements Tracker\BlockedTracker
     }
 
     public function search(string $query, int $offset): Collection {
+        if ($offset > 0) {
+            return collect();
+        }
+
         $html = (new Requester)->search($query);
         return $this->parseSearchResultsHtml($html);
     }
