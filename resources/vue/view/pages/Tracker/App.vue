@@ -23,7 +23,7 @@
     <div v-else class="container">
       <div class="row">
         <div v-for="mediaItem in searchResults" :key="mediaItem.id" class="col-xs-12 col-sm-6 col-md-6 col-lg-4 mb-7 d-flex">
-          <MediaCard :media="mediaItem" class="align-self-stretch" />
+          <MediaCard :media="mediaItem" class="align-self-stretch w-100" />
         </div>
       </div>
     </div>
