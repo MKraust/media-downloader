@@ -32,4 +32,4 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         password: ${{ secrets.SSH_PASSWORD }}
         port: ${{ secrets.SSH_PORT }}
-        script: 'cd ${{ secrets.APP_DIR }} && php artisan down && git fetch && git reset --hard origin/deploy && composer install --no-interaction --no-dev --prefer-dist && php artisan migrate --force && php artisan up'
+        script: 'cd ${{ secrets.APP_DIR }} && php artisan down && git fetch && git reset --hard origin/deploy && php ~/.bin/composer.phar install --no-interaction --no-dev --prefer-dist && php artisan migrate --force && php artisan up'
