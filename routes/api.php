@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/trackers', 'InfoController@trackers');
+Route::get('/info/storage', 'InfoController@storage');
 
 Route::get('/search', 'TrackerController@search');
 Route::get('/media', 'TrackerController@media');
