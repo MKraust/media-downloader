@@ -58,12 +58,16 @@
       <div class="d-flex mb-3">
 
         <div class="d-flex align-items-center mr-3" style="min-width: 100px; max-width: 100px;">
-          <i class="fas fa-tachometer-alt mr-2"></i>
+          <span class="svg-icon svg-icon-xl svg-icon-primary mr-1">
+            <inline-svg src="/media/svg/icons/Media/Forward.svg" />
+          </span>
           <span>{{ speed }}</span>
         </div>
 
         <div class="d-flex align-items-center" style="min-width: 100px; max-width: 100px;">
-          <i class="fas fa-clock mr-2"></i>
+          <span class="svg-icon svg-icon-xl svg-icon-primary mr-1">
+            <inline-svg src="/media/svg/icons/Home/Timer.svg" />
+          </span>
           <span>{{ estimate }}</span>
         </div>
       </div>

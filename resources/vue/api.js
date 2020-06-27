@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const BACKEND_API = `${window.location.protocol}//${window.location.host}/api`;
 const LOAD_TRACKERS = BACKEND_API + '/trackers';
+const LOAD_STORAGE_INFO = BACKEND_API + '/info/storage';
 const START_DOWNLOAD = BACKEND_API + '/download';
 const START_DOWNLOAD_FROM_FILE = START_DOWNLOAD + '/file';
 
@@ -118,4 +119,8 @@ export async function addToFavorites(id) {
 
 export async function removeFromFavorites(id) {
     await axios.post(REMOVE_FROM_FAVORITES, { id });
+}
+
+export async function loadStorageInfo() {
+    return (await axios.get(LOAD_STORAGE_INFO)).data;
 }
