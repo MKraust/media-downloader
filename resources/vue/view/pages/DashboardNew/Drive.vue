@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-    <div class="card-body" style="height: 170px;">
+    <div class="card-body" style="height: 170px; top: -30px;">
       <!--begin::Chart-->
       <div :id="id"></div>
       <!--end::Chart-->
@@ -64,7 +64,7 @@
           chart: {
             height: 280,
             type: 'radialBar',
-            offsetY: -30,
+            offsetY: 0,
           },
           plotOptions: {
             radialBar: {
