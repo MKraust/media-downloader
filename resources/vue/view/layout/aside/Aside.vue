@@ -52,7 +52,7 @@
             >
               <span class="svg-icon svg-icon-xl">
                 <!--begin::Svg Icon-->
-                <inline-svg src="/media/svg/icons/Media/Equalizer.svg" />
+                <inline-svg src="/media/svg/icons/Files/Cloud-download.svg" />
                 <!--end::Svg Icon-->
               </span>
             </router-link>
@@ -76,7 +76,7 @@
             >
               <span class="svg-icon svg-icon-xl">
                 <!--begin::Svg Icon-->
-                <inline-svg src="/media/svg/icons/Home/Library.svg" />
+                <inline-svg src="/media/svg/icons/General/Star.svg" />
                 <!--end::Svg Icon-->
               </span>
             </router-link>
