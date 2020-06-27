@@ -3,11 +3,9 @@
     <BasicSubheader title="Сводная информация" />
     <div class="container py-4">
       <div class="row">
-        <div class="col-md-9">
-          <div v-for="(drive, index) in drives" :key="Math.random()" :class="{ 'mb-4': index < drives.length - 1 }">
+          <div v-for="(drive, index) in drives" :key="Math.random()" class="col-md-4 mb-4">
             <Drive :drive="drive" />
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -15,10 +13,12 @@
 
 <script>
   import BasicSubheader from "@/view/pages/components/BasicSubheader";
-  import Drive from '@/view/pages/Dashboard/Drive';
+  import Drive from './Drive';
   import { loadStorageInfo } from "@/api";
+  import asideToggleMixin from "@/mixins/asideToggleMixin";
 
   export default {
+    mixins: [asideToggleMixin],
     components: {
       BasicSubheader,
       Drive,
@@ -26,6 +26,7 @@
     data() {
       return {
         drives: [],
+        isAsideHidden: false,
       };
     },
     async created() {
