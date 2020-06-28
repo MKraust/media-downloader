@@ -44,7 +44,7 @@
         </b-progress>
       </div>
 
-      <b-button variant="outline-danger" size="sm" class="btn-icon btn-delete" @click="$emit('delete')">
+      <b-button variant="danger" size="sm" class="btn-icon btn-delete" @click="$emit('delete')">
         <i class="flaticon2-rubbish-bin-delete-button"></i>
       </b-button>
 
@@ -83,7 +83,7 @@
           <b-progress-bar :value="progress" :variant="statusColor" :animated="isInProgress" />
         </b-progress>
 
-        <b-button variant="outline-danger" size="sm" class="btn-icon btn-delete" @click="$emit('delete')">
+        <b-button variant="danger" size="sm" class="btn-icon btn-delete" @click="$emit('delete')">
           <i class="flaticon2-rubbish-bin-delete-button"></i>
         </b-button>
       </div>
