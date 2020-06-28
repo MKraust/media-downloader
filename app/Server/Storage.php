@@ -15,12 +15,14 @@ class Storage {
             $infoParts = array_map('trim', explode('|', $driveInfoData));
             $driveName = $driveNames[$infoParts[0]];
             $totalSpace = $infoParts[1];
+            $usedSpace = $infoParts[2];
             $availableSpace = $infoParts[3];
             $usagePercent = str_replace('%', '', $infoParts[4]);
 
             $drivesInfo[] = [
                 'name' => $driveName,
                 'total' => $totalSpace,
+                'used' => $usedSpace,
                 'available' => $availableSpace,
                 'usage_percent' => $usagePercent,
             ];
