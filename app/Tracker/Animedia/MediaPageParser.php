@@ -172,6 +172,10 @@ class MediaPageParser
             return Torrent::TYPE_ANIME;
         }
 
+        if (mb_strpos($lcTitle, 'cезон') !== false) { // английская буква С
+            return Torrent::TYPE_ANIME;
+        }
+
         if (mb_strpos($lcTitle, 'серии') !== false) {
             return Torrent::TYPE_ANIME;
         }
