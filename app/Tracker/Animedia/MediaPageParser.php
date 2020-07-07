@@ -186,6 +186,10 @@ class MediaPageParser
             return Torrent::TYPE_ANIME;
         }
 
+        if (mb_strpos($lcTitle, 'серия') !== false) {
+            return Torrent::TYPE_ANIME;
+        }
+
         if (mb_strpos($lcTitle, 'фильм') !== false) {
             return Torrent::TYPE_MOVIE;
         }
