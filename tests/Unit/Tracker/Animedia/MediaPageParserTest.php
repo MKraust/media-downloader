@@ -25,17 +25,17 @@ class MediaPageParserTest extends TestCase
             'common anime'                        => [
                 'anime_common.html',
                 [
-                    'title' => 'Башня Бога',
+                    'title'          => 'Башня Бога',
                     'original_title' => 'Kami no Tou',
-                    'poster' => 'https://static.animedia.tv/uploads/god_tower.jpg',
-                    'torrents' => [
+                    'poster'         => 'https://static.animedia.tv/uploads/god_tower.jpg',
+                    'torrents'       => [
                         [
-                            'url' => 'https://tt.animedia.tv/?ACT=114&signature=d0a6540f309798f299525c24a74073ec&id=1314',
-                            'name' => '1 Сезон (Серии 1-13 из 13)',
-                            'season' => [1, 13],
-                            'quality' => '720p',
-                            'size' => '4.8 GB',
-                            'downloads' => 10870,
+                            'url'          => 'https://tt.animedia.tv/?ACT=114&signature=d0a6540f309798f299525c24a74073ec&id=1314',
+                            'name'         => '1 Сезон (Серии 1-13 из 13)',
+                            'season'       => [1, 13],
+                            'quality'      => '720p',
+                            'size'         => '4.8 GB',
+                            'downloads'    => 10870,
                             'voice_acting' => 'KovarnyBober & Neonoir & Wicked_Wayfarer',
                             'content_type' => App\Models\Torrent::TYPE_ANIME,
                         ],
