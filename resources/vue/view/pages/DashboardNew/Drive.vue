@@ -1,5 +1,5 @@
 <template>
-  <div class="card card-custom gutter-b card-stretch">
+  <div class="card card-custom gutter-b card-stretch shadow-sm">
     <div class="card-header border-0 pt-5">
       <div class="card-title font-weight-bolder">
         <div class="card-label">

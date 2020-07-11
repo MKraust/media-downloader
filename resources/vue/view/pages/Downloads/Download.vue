@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-white p-4">
+  <div class="card bg-white p-4 shadow-sm">
     <div class="d-none d-xl-flex align-items-center">
 
       <div class="mr-3">

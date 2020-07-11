@@ -1,5 +1,5 @@
 <template>
-  <div class="card ribbon ribbon-clip ribbon-left">
+  <div class="card ribbon ribbon-clip ribbon-left shadow-sm">
     <div v-if="media.series_count" class="ribbon-target" style="top: 12px;">
       <span class="ribbon-inner bg-danger"></span>{{ media.series_count }}
     </div>

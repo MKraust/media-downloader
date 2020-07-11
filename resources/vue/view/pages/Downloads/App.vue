@@ -7,8 +7,9 @@
           <Download :download="download" @delete="handleDelete(download)" />
         </div>
       </div>
-      <div v-else class="card bg-white p-4">
-        <h5 class="text-center py-3 mb-0">Ничего не загружается</h5>
+      <div class="alert alert-custom alert-white shadow-sm" role="alert">
+        <div class="alert-icon"><i class="flaticon-exclamation-1"></i></div>
+        <div class="alert-text h5 mb-0">В данный момент нет активных загрузок</div>
       </div>
     </div>
   </div>
