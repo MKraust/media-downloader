@@ -70,11 +70,11 @@ class MediaPageParser
         return null;
     }
 
-    private function _parseDownloadsFromBlock(Crawler $torrentBlock) {
+    private function _parseDownloadsFromBlock(Crawler $torrentBlock): ?int {
         $infoNodes = $torrentBlock->filter('.intup_left_op');
         foreach ($infoNodes as $infoNode) {
             if (mb_strpos($infoNode->textContent, 'Скачиваний') !== false) {
-                return trim($infoNode->childNodes[1]->textContent, ' ;');
+                return (int)trim($infoNode->childNodes[1]->textContent, ' ;');
             }
         }
 
