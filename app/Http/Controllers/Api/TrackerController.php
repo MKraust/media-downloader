@@ -25,7 +25,6 @@ class TrackerController extends Controller
 
     public function media(Requests\Tracker\Media $request)
     {
-        throw new \Exception('123');
         $mediaId = $request->id;
         $media = Media::find($mediaId);
 
