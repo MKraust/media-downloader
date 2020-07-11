@@ -27,15 +27,6 @@ class Requester
     }
 
     private function loadContent(string $url): string {
-        $config = [
-            'config' => [
-                'curl' => [
-                    'CURLOPT_PROXY' => 'socks5://127.0.0.1:9050',
-                    'CURLOPT_HTTPPROXYTUNNEL' => 1,
-                ],
-            ],
-        ];
-
         return $this->getClient()->get($url)->getBody()->getContents();
     }
 

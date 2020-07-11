@@ -22,39 +22,6 @@ class Engine extends Tracker\BaseTracker
         return asset('/media/tracker/fast-torrent.ico');
     }
 
-    public function getSearchingUrl(string $query, int $offset): ?string {
-        if ($offset > 0) {
-            return null;
-        }
-
-        return (new Requester)->getSearchUrl($query);
-    }
-
-    public function parseSearchResults(string $html): Collection {
-        return $this->parseSearchResultsHtml($html);
-    }
-
-    public function getMediaUrls(string $mediaId): array {
-        $url = $this->decryptUrl($mediaId);
-
-        return [
-            'media'    => $url,
-            'torrents' => (new Requester)->getTorrentsUrlByMediaUrl($url),
-        ];
-    }
-
-    public function parseMedia(string $mediaId, array $htmlParts): Models\Media {
-        $mediaPageParser = new MediaPageParser;
-        $itemData = $mediaPageParser->parse($htmlParts['media']);
-
-        $torrentsParser = new TorrentsParser;
-        $itemData['torrents'] = $torrentsParser->parse($htmlParts['torrents']);
-
-        $itemData['url'] = $this->decryptUrl($mediaId);
-
-        return $this->createMediaFromData($itemData);
-    }
-
     public function search(string $query, int $offset): Collection {
         if ($offset > 0) {
             return collect();

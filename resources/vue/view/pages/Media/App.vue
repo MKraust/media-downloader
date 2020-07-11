@@ -59,7 +59,7 @@
 <script>
   import Subheader from "./Subheader";
   import Torrent from './Torrent';
-  import { loadMedia, loadMediaBlocked, startDownload, addToFavorites, removeFromFavorites } from '@/api';
+  import { addToFavorites, loadMedia, removeFromFavorites, startDownload } from '@/api';
   import notifyMixin from '@/mixins/notifyMixin';
   import asideToggleMixin from '@/mixins/asideToggleMixin';
   import { confirm } from '@/alert';
@@ -136,14 +136,7 @@
       async init() {
         this.isLoading = true;
 
-        let media;
-        if (this.tracker.is_blocked) {
-          media = await loadMediaBlocked(this.tracker.id, this.$route.params.mediaId);
-        } else {
-          media = await loadMedia(this.$route.params.mediaId);
-        }
-
-        this.media = media;
+        this.media = await loadMedia(this.$route.params.mediaId);
 
         this.isLoading = false;
       },

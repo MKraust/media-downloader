@@ -35,10 +35,7 @@
   import asideToggleMixin from '@/mixins/asideToggleMixin';
   import TrackerSubheader from "./Subheader";
   import MediaCard from '@/view/pages/components/MediaCard';
-  import {
-    search,
-    searchBlocked,
-  } from "@/api";
+  import { search } from "@/api";
 
   export default {
     mixins: [asideToggleMixin],
@@ -80,13 +77,7 @@
 
         this.isLazyLoading = true;
 
-        let mediaItems;
-        if (this.tracker.is_blocked) {
-          mediaItems = await searchBlocked(this.tracker.id, this.lastSearchQuery, this.searchResults.length);
-        } else {
-          console.log(this.tracker.id, this.searchQuery, this.searchResults.length);
-          mediaItems = await search(this.tracker.id, this.lastSearchQuery, this.searchResults.length);
-        }
+        let mediaItems = await search(this.tracker.id, this.lastSearchQuery, this.searchResults.length);
 
         if (mediaItems.length === 0) {
           this.isEndOfResultsReached = true;
@@ -110,16 +101,7 @@
         this.isLoading = true;
         this.error = false;
 
-        let mediaItems;
-        if (this.tracker.is_blocked) {
-          mediaItems = await searchBlocked(this.tracker.id, searchQuery);
-          if (!mediaItems) {
-            this.error = true;
-            this.isLoading = false;
-          }
-        } else {
-          mediaItems = await search(this.tracker.id, searchQuery);
-        }
+        let mediaItems = await search(this.tracker.id, searchQuery);
 
         this.lastSearchQuery = searchQuery;
 

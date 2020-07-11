@@ -10,12 +10,6 @@ Route::get('/media', 'TrackerController@media');
 Route::post('/download', 'TrackerController@download');
 Route::get('/download', 'TrackerController@download');
 
-Route::get('/search/url', 'BlockedTrackerController@getSearchUrl');
-Route::post('/search/parse', 'BlockedTrackerController@parseSearchResult');
-Route::get('/media/urls', 'BlockedTrackerController@getMediaUrls');
-Route::post('/media/parse', 'BlockedTrackerController@parseMedia');
-Route::post('/download/file', 'BlockedTrackerController@downloadFromFile');
-
 Route::post('/favorites/add', 'FavoritesController@addToFavorites');
 Route::get('/favorites/add', 'FavoritesController@addToFavorites');
 Route::get('/favorites/list', 'FavoritesController@getFavorites');
