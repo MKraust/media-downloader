@@ -19,7 +19,7 @@ class Engine extends Tracker\BaseTracker
     }
 
     public function icon(): string {
-        return 'http://media7.veleto.ru/media/uploads/logo/favicon.ico';
+        return asset('/media/tracker/fast-torrent.ico');
     }
 
     public function getSearchingUrl(string $query, int $offset): ?string {

@@ -23,7 +23,7 @@ class Engine extends Tracker\BaseTracker
 
     public function icon(): string
     {
-        return 'https://tt.animedia.tv/favicon.ico';
+        return asset('/media/tracker/animedia.ico');
     }
 
     public function search(string $query, int $offset): Collection
