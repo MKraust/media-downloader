@@ -2,7 +2,7 @@
   <div>
     <div v-if="error">
       <Subheader title="Ошибка" />
-      <div class="container">
+      <div class="container py-4">
         <div class="alert alert-custom alert-outline alert-outline-danger alert-shadow bg-white" role="alert">
           <div class="alert-icon"><i class="flaticon-warning"></i></div>
           <div class="alert-text h5 mb-0">
