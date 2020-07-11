@@ -9,23 +9,30 @@
       :disable-search="isLoading"
       @search="handleSearch"
     />
-    <div v-if="isLoading" class="d-flex justify-content-center" style="height: 400px;">
-      <div class="spinner spinner-track spinner-primary spinner-lg" style="margin-left: -1rem;"></div>
-    </div>
-    <div v-else-if="error" class="container">
-      <div class="card bg-white p-4">
-        <h5 class="text-center py-3">Произошла ошибка. Возможно, трекер заблокирован.</h5>
-        <div class="d-flex justify-content-center">
-          <a href="App-prefs://prefs:root=General&path=VPN" class="btn btn-sm btn-primary d-inline">Включить VPN</a>
+    <div class="container">
+      <div v-if="isLoading" class="d-flex justify-content-center" style="height: 400px;">
+        <div class="spinner spinner-track spinner-primary spinner-lg" style="margin-left: -1rem;"></div>
+      </div>
+      <div v-else-if="error" class="alert alert-custom alert-outline alert-outline-danger alert-shadow bg-white" role="alert">
+        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+        <div class="alert-text h5 mb-0">
+          Произошла ошибка. Подробности в
+          <strong>
+            <a href="https://sentry.io/organizations/personal-purposes/issues/?project=5284009" class="text-danger text-hover-danger">Sentry</a>
+          </strong>
         </div>
       </div>
-    </div>
-    <div v-else class="container">
-      <transition-group name="list" tag="div" class="row">
-        <div v-for="mediaItem in searchResults" :key="mediaItem.id" class="col-xs-12 col-sm-6 col-md-6 col-lg-4 mb-7 d-flex">
-          <MediaCard :media="mediaItem" class="align-self-stretch w-100" />
-        </div>
-      </transition-group>
+      <div v-else-if="isLastSearchEmpty" class="alert alert-custom alert-white alert-shadow" role="alert">
+        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+        <div class="alert-text h5 mb-0">По запросу <strong>{{ lastSearchQuery }}</strong> ничего не найдено</div>
+      </div>
+      <div v-else>
+        <transition-group name="list" tag="div" class="row">
+          <div v-for="mediaItem in searchResults" :key="mediaItem.id" class="col-xs-12 col-sm-6 col-md-6 col-lg-4 mb-7 d-flex">
+            <MediaCard :media="mediaItem" class="align-self-stretch w-100" />
+          </div>
+        </transition-group>
+      </div>
     </div>
   </div>
 
@@ -51,6 +58,7 @@
         isEndOfResultsReached: false,
         isLazyLoading: false,
         lastSearchQuery: '',
+        isLastSearchEmpty: false,
       };
     },
     created: function () {
@@ -97,13 +105,23 @@
           return;
         }
 
+        this.isLastSearchEmpty = false;
         this.isEndOfResultsReached = false;
         this.isLoading = true;
         this.error = false;
 
-        let mediaItems = await search(this.tracker.id, searchQuery);
+        try {
+          let mediaItems = await search(this.tracker.id, searchQuery);
+        } catch (e) {
+          this.error = true;
+          this.isLoading = false;
+          return;
+        }
 
         this.lastSearchQuery = searchQuery;
+        if (mediaItems.length === 0) {
+          this.isLastSearchEmpty = true;
+        }
 
         this.$store.commit('saveSearch', {
           trackerId: this.tracker.id,

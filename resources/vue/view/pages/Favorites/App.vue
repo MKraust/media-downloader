@@ -7,8 +7,9 @@
           <MediaCard :media="favorite" class="align-self-stretch w-100"/>
         </div>
       </div>
-      <div v-else class="card bg-white p-4">
-        <h5 class="text-center py-3 mb-0">В избранном пока ничего нет</h5>
+      <div v-else class="alert alert-custom alert-white alert-shadow" role="alert">
+        <div class="alert-icon"><i class="flaticon-exclamation-1"></i></div>
+        <div class="alert-text h5 mb-0">В избранном пока ничего нет</div>
       </div>
     </div>
   </div>
