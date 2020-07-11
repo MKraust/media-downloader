@@ -9,7 +9,7 @@
       :disable-search="isLoading"
       @search="handleSearch"
     />
-    <div class="container">
+    <div class="container py-4">
       <div v-if="isLoading" class="d-flex justify-content-center" style="height: 400px;">
         <div class="spinner spinner-track spinner-primary spinner-lg" style="margin-left: -1rem;"></div>
       </div>
