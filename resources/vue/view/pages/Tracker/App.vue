@@ -21,11 +21,11 @@
       </div>
     </div>
     <div v-else class="container">
-      <div class="row">
+      <transition-group name="list" tag="div" class="row">
         <div v-for="mediaItem in searchResults" :key="mediaItem.id" class="col-xs-12 col-sm-6 col-md-6 col-lg-4 mb-7 d-flex">
           <MediaCard :media="mediaItem" class="align-self-stretch w-100" />
         </div>
-      </div>
+      </transition-group>
     </div>
   </div>
 
@@ -117,5 +117,15 @@
 </script>
 
 <style scoped>
-
+  .list-item {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .list-enter-active, .list-leave-active {
+    transition: all 0.5s;
+  }
+  .list-enter, .list-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
 </style>
