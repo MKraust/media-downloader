@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\HttpRequester;
+namespace App\Services\Http;
 
 class ProxyRequester extends Requester {
 

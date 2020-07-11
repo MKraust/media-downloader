@@ -4,7 +4,7 @@ namespace App\Telegram;
 
 use App\Models\Torrent;
 use App\Models\TorrentDownload;
-use App\Services\HttpRequester\Requester;
+use App\Services\Http\Requester;
 use Illuminate\Support\Collection;
 
 class Client

@@ -3,7 +3,7 @@
 
 namespace App\Tracker\Animedia;
 
-use App\Services\HttpRequester\ProxyRequester;
+use App\Services\Http\ProxyRequester;
 use GuzzleHttp;
 
 class Requester

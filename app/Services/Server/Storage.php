@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Server;
+namespace App\Services\Server;
 
 class Storage {
 

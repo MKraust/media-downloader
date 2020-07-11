@@ -2,7 +2,7 @@
 
 namespace App\Tracker\Anidub;
 
-use App\Services\HttpRequester\ProxyRequester;
+use App\Services\Http\ProxyRequester;
 use GuzzleHttp;
 
 class Requester
