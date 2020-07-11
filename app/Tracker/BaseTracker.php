@@ -10,6 +10,7 @@ use Psr\Http\Message\StreamInterface;
 
 abstract class BaseTracker
 {
+    /** @var App\Torrent\Client */
     private $_torrentClient;
 
     public function __construct() {
@@ -31,10 +32,6 @@ abstract class BaseTracker
 
     final public function startDownload(App\Models\Torrent $torrent): void {
         $fileContent = $this->loadTorrentFile($torrent->url);
-        $this->startDownloadFromFile($fileContent, $torrent);
-    }
-
-    final public function startDownloadFromFile(string $fileContent, App\Models\Torrent $torrent): void {
         $fileName = Str::uuid() . '.torrent';
         $filePath = storage_path("app/public/torrents/{$fileName}");
         File::put($filePath, $fileContent);
