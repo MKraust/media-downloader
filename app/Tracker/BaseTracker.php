@@ -10,6 +10,12 @@ use Psr\Http\Message\StreamInterface;
 
 abstract class BaseTracker
 {
+    private $_torrentClient;
+
+    public function __construct() {
+        $this->_torrentClient = app()->make(App\Torrent\Client::class);
+    }
+
     abstract public function id(): string;
 
     abstract public function title(): string;
@@ -29,18 +35,12 @@ abstract class BaseTracker
     }
 
     final public function startDownloadFromFile(string $fileContent, App\Models\Torrent $torrent): void {
-        $contentType = $torrent->content_type;
         $fileName = Str::uuid() . '.torrent';
         $filePath = storage_path("app/public/torrents/{$fileName}");
         File::put($filePath, $fileContent);
 
         $fileUrl = url("/storage/torrents/{$fileName}");
-        $torrentClient = new App\Torrent\Client();
-        $torrentClient->startDownload($torrent, $fileUrl);
-    }
-
-    public function isBlocked(): bool {
-        return $this instanceof BlockedTracker;
+        $this->_torrentClient->startDownload($torrent, $fileUrl);
     }
 
     final public function serialize(): array {
@@ -48,7 +48,6 @@ abstract class BaseTracker
             'id'         => $this->id(),
             'title'      => $this->title(),
             'icon'       => $this->icon(),
-            'is_blocked' => $this->isBlocked(),
         ];
     }
 

@@ -2,14 +2,19 @@
 
 namespace App\Tracker\Anidub;
 
+use App\Services\HttpRequester\ProxyRequester;
 use GuzzleHttp;
 
 class Requester
 {
-    private const COOKIE_CACHE_KEY = 'anidub_cookies';
-    private const COOKIES_LIFETIME = 3600 * 24;
-
     public const BASE_URL = 'https://tr.anidub.com';
+
+    /** @var ProxyRequester */
+    private $_httpRequester;
+
+    public function __construct() {
+        $this->_httpRequester = app()->make(ProxyRequester::class);
+    }
 
     public function search(string $searchQuery, int $offset): string {
         $page = (int)floor($offset / 15) + 1;
@@ -32,55 +37,27 @@ class Requester
             "catlist" => [3, 10, 11, 14],
         ];
 
-        $response = $this->getClient()->post('/', [
-            'cookies' => $this->getCookies(),
-            'form_params' => $params,
-        ]);
-
-        return $response->getBody()->getContents();
+        $cookies = $this->getCookies();
+        return $this->_httpRequester->post(self::BASE_URL, $params, $cookies);
     }
 
     public function loadMediaPage(string $url): string {
-        $response = $this->getClient()->post($url, [
-            'cookies' => $this->getCookies(),
-        ]);
-
-        return $response->getBody()->getContents();
+        $cookies = $this->getCookies();
+        return $this->_httpRequester->get($url, [], $cookies);
     }
 
     public function loadTorrentFile(string $url): string {
-        $response = $this->getClient()->get($url, [
-            'cookies' => $this->getCookies(),
-        ]);
-
-        return $response->getBody()->getContents();
+        $cookies = $this->getCookies();
+        return $this->_httpRequester->get($url, [], $cookies);
     }
 
     private function getCookies(): GuzzleHttp\Cookie\CookieJar {
-//        return Cache::remember(self::COOKIE_CACHE_KEY, 1, function () {
-            $parameters = [
-                'login_name'     => 'Kraust',
-                'login_password' => '80578057Qw',
-                'login'          => 'submit'
-            ];
-
-            $jar = new GuzzleHttp\Cookie\CookieJar();
-            $this->getClient()->post('/', [
-                'form_params' => $parameters,
-                'cookies'     => $jar,
-            ]);
-
-            return $jar;
-//        });
-    }
-
-    private function getClient(): GuzzleHttp\Client {
-        $config = [
-            'base_uri' => self::BASE_URL,
-            'proxy' => '127.0.0.1:9050', //use without "socks5://" scheme
-            'verify' => true, // used only for SSL check , u can set false too for not check
-            'curl' => [CURLOPT_PROXYTYPE => 7],
+        $parameters = [
+            'login_name'     => 'Kraust',
+            'login_password' => '80578057Qw',
+            'login'          => 'submit'
         ];
-        return new GuzzleHttp\Client($config);
+
+        return $this->_httpRequester->getPostCookies(self::BASE_URL, $parameters);
     }
 }

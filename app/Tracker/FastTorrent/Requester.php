@@ -2,11 +2,19 @@
 
 namespace App\Tracker\FastTorrent;
 
+use App\Services\HttpRequester\ProxyRequester;
 use GuzzleHttp;
 
 class Requester
 {
     public const BASE_URL = 'http://fast-torrent.ru';
+
+    /** @var ProxyRequester */
+    private $_httpRequester;
+
+    public function __construct() {
+        $this->_httpRequester = app()->make(ProxyRequester::class);
+    }
 
     public function loadTorrentFile(string $url): string {
         return $this->loadContent($url);
@@ -27,7 +35,7 @@ class Requester
     }
 
     private function loadContent(string $url): string {
-        return $this->getClient()->get($url)->getBody()->getContents();
+        return $this->_httpRequester->get($url);
     }
 
     public function getSearchUrl(string $query, int $page = 1): string {
@@ -37,15 +45,5 @@ class Requester
 
     public function getTorrentsUrlByMediaUrl(string $url): string {
         return str_replace('.html', '/torrents.html', $url);
-    }
-
-    private function getClient(): GuzzleHttp\Client {
-        $config = [
-            'base_uri' => self::BASE_URL,
-            'proxy' => '127.0.0.1:9050', //use without "socks5://" scheme
-            'verify' => true, // used only for SSL check , u can set false too for not check
-            'curl' => [CURLOPT_PROXYTYPE => 7],
-        ];
-        return new GuzzleHttp\Client($config);
     }
 }

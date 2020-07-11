@@ -15,13 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(App\Telegram\Client::class, function ($app) {
-            return new App\Telegram\Client;
-        });
-
-        $this->app->singleton(App\Server\Storage::class, function ($app) {
-            return new App\Server\Storage;
-        });
+        $this->app->singleton(App\Services\HttpRequester\Requester::class);
+        $this->app->singleton(App\Services\HttpRequester\ProxyRequester::class);
+        $this->app->singleton(App\Telegram\Client::class);
+        $this->app->singleton(App\Server\Storage::class);
     }
 
     /**

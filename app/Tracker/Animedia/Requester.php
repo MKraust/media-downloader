@@ -3,8 +3,8 @@
 
 namespace App\Tracker\Animedia;
 
+use App\Services\HttpRequester\ProxyRequester;
 use GuzzleHttp;
-use Illuminate\Support\Collection;
 
 class Requester
 {
@@ -12,29 +12,28 @@ class Requester
 
     private const MEDIA_PER_PAGE = 40;
 
+    /** @var ProxyRequester */
+    private $_httpRequester;
+
+    public function __construct() {
+        $this->_httpRequester = app()->make(ProxyRequester::class);
+    }
+
     public function search(string $searchQuery, int $offset): string {
         $page = (int)floor($offset / self::MEDIA_PER_PAGE);
-        $response = $this->getClient()->get("/ajax/search_result/P{$page}", [
-            'query' => [
-                'limit'        => self::MEDIA_PER_PAGE,
-                'keywords'     => $searchQuery,
-                'orderby_sort' => 'view_count_one|desc',
-            ],
+        return $this->_httpRequester->get(self::BASE_URL . "/ajax/search_result/P{$page}", [
+            'limit'        => self::MEDIA_PER_PAGE,
+            'keywords'     => $searchQuery,
+            'orderby_sort' => 'view_count_one|desc',
         ]);
-
-        return $response->getBody()->getContents();
     }
 
     public function loadMediaPage(string $url): string {
-        $response = $this->getClient()->post($url);
-
-        return $response->getBody()->getContents();
+        return $this->_httpRequester->get($url);
     }
 
     public function loadTorrentFile(string $url): string {
-        $response = $this->getClient()->get($url);
-
-        return $response->getBody()->getContents();
+        return $this->_httpRequester->get($url);
     }
 
     private function getClient(): GuzzleHttp\Client {

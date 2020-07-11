@@ -5,7 +5,7 @@ namespace App\Torrent;
 use App\Jobs\RefreshTorrentDownloads;
 use App\Models\Torrent;
 use App\Models\TorrentDownload;
-use GuzzleHttp;
+use App\Services\HttpRequester\Requester;
 use App\Telegram;
 use Illuminate\Support\Collection;
 
@@ -13,19 +13,24 @@ class Client
 {
     private const BASE_URL = 'http://torrent.mkraust.ru';
 
-    private const GET_TORRENTS = '/query/torrents';
+    private const GET_TORRENTS = self::BASE_URL . '/query/torrents';
 
-    private const START_DOWNLOAD_URL = '/command/download';
-    private const DELETE_DOWNLOAD = '/command/deletePerm';
-    private const PAUSE_DOWNLOAD = '/command/pause';
-    private const RESUME_DOWNLOAD = '/command/resume';
+    private const START_DOWNLOAD_URL = self::BASE_URL . '/command/download';
+    private const DELETE_DOWNLOAD    = self::BASE_URL . '/command/deletePerm';
+    private const PAUSE_DOWNLOAD     = self::BASE_URL . '/command/pause';
+    private const RESUME_DOWNLOAD    = self::BASE_URL . '/command/resume';
 
     private const BASE_SAVE_PATH = '/home/kraust/Public/Video/';
 
+    /** @var Telegram\Client */
     private $_telegram;
 
-    public function __construct() {
-        $this->_telegram = new Telegram\Client();
+    /** @var Requester */
+    private $_httpRequester;
+
+    public function __construct(Telegram\Client $telegram, Requester $requester) {
+        $this->_telegram = $telegram;
+        $this->_httpRequester = $requester;
     }
 
     public function refreshDownloads() {
@@ -77,32 +82,18 @@ class Client
      */
     private function _getDownloadsData(array $hashes = []): Collection {
         $params = [
-            'query' => [
-                'hashes' => implode('|', $hashes),
-            ],
+            'hashes' => implode('|', $hashes),
         ];
 
-        $response = $this->_getClient()->get(self::GET_TORRENTS, $params)->getBody()->getContents();
+        $response = $this->_httpRequester->get(self::GET_TORRENTS, $params);
         return collect(json_decode($response, true));
     }
 
     public function startDownload(Torrent $torrent, string $fileUrl): void {
-        $httpClient = $this->_getClient();
-        $httpClient->post(self::START_DOWNLOAD_URL, [
-            'multipart' => [
-                [
-                    'name' => 'urls',
-                    'contents' => $fileUrl,
-                ],
-                [
-                    'name' => 'savepath',
-                    'contents' => self::BASE_SAVE_PATH . $this->_getDirectoryByContentType($torrent->content_type),
-                ],
-                [
-                    'name' => 'rename',
-                    'contents' => "id:{$torrent->id}",
-                ]
-            ],
+        $this->_httpRequester->postMultipart(self::START_DOWNLOAD_URL, [
+            'urls'     => $fileUrl,
+            'savepath' => self::BASE_SAVE_PATH . $this->_getDirectoryByContentType($torrent->content_type),
+            'rename'   => "id:{$torrent->id}",
         ]);
 
         RefreshTorrentDownloads::dispatch()->delay(now()->addSeconds(5));
@@ -113,26 +104,20 @@ class Client
         $download->is_deleted = true;
         $download->save();
 
-        $this->_getClient()->post(self::DELETE_DOWNLOAD, [
-            'form_params' => [
-                'hashes' => $hash,
-            ],
+        $this->_httpRequester->post(self::DELETE_DOWNLOAD, [
+            'hashes' => $hash,
         ]);
     }
 
     public function pauseDownload(string $hash): void {
-        $this->_getClient()->post(self::PAUSE_DOWNLOAD, [
-            'form_params' => [
-                'hash' => $hash,
-            ],
+        $this->_httpRequester->post(self::PAUSE_DOWNLOAD, [
+            'hash' => $hash,
         ]);
     }
 
     public function resumeDownload(string $hash): void {
-        $this->_getClient()->post(self::RESUME_DOWNLOAD, [
-            'form_params' => [
-                'hash' => $hash,
-            ],
+        $this->_httpRequester->post(self::RESUME_DOWNLOAD, [
+            'hash' => $hash,
         ]);
     }
 
@@ -145,9 +130,5 @@ class Client
             case Torrent::TYPE_MOVIE:
                 return 'Movies';
         }
-    }
-
-    private function _getClient(): GuzzleHttp\Client {
-        return new GuzzleHttp\Client(['base_uri' => self::BASE_URL]);
     }
 }
