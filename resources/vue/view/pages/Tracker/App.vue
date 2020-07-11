@@ -110,8 +110,9 @@
         this.isLoading = true;
         this.error = false;
 
+        let mediaItems;
         try {
-          let mediaItems = await search(this.tracker.id, searchQuery);
+          mediaItems = await search(this.tracker.id, searchQuery);
         } catch (e) {
           this.error = true;
           this.isLoading = false;

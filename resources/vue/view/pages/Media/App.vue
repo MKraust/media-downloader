@@ -1,7 +1,21 @@
 <template>
   <div>
+    <div v-if="error">
+      <Subheader title="Ошибка" />
+      <div class="container">
+        <div class="alert alert-custom alert-outline alert-outline-danger alert-shadow bg-white" role="alert">
+          <div class="alert-icon"><i class="flaticon-warning"></i></div>
+          <div class="alert-text h5 mb-0">
+            Произошла ошибка. Подробности в
+            <strong>
+              <a href="https://sentry.io/organizations/personal-purposes/issues/?project=5284009" class="text-danger text-hover-danger">Sentry</a>
+            </strong>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <div v-if="isLoading || media === null" class="d-flex justify-content-center" style="height: 400px;">
+    <div v-else-if="isLoading || media === null" class="d-flex justify-content-center" style="height: 400px;">
       <div v-if="isLoading" class="spinner spinner-track spinner-primary spinner-lg" style="margin-left: -1rem;"></div>
       <p v-else-if="media === null" class="text-center">Медиа контент не найден</p>
     </div>
@@ -73,6 +87,7 @@
     data() {
       return {
         isLoading: false,
+        error: false,
         media: null,
         sortBy: 'size_int',
         sortingOrder: 'desc',
@@ -136,7 +151,11 @@
       async init() {
         this.isLoading = true;
 
-        this.media = await loadMedia(this.$route.params.mediaId);
+        try {
+          this.media = await loadMedia(this.$route.params.mediaId);
+        } catch (e) {
+          this.error = true;
+        }
 
         this.isLoading = false;
       },

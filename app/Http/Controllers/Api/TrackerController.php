@@ -18,7 +18,6 @@ class TrackerController extends Controller
     }
 
     public function search(Requests\Tracker\Search $request) {
-        throw new \Exception('123');
         return $this->_trackerKeeper
             ->getTrackerById($request->tracker_id)
             ->search($request->search_query, $request->offset);
@@ -26,6 +25,7 @@ class TrackerController extends Controller
 
     public function media(Requests\Tracker\Media $request)
     {
+        throw new \Exception('123');
         $mediaId = $request->id;
         $media = Media::find($mediaId);
 
