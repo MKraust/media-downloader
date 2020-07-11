@@ -75,6 +75,12 @@ class Requester
     }
 
     private function getClient(): GuzzleHttp\Client {
-        return new GuzzleHttp\Client(['base_uri' => self::BASE_URL]);
+        $config = [
+            'base_uri' => self::BASE_URL,
+            'proxy' => '127.0.0.1:9050', //use without "socks5://" scheme
+            'verify' => true, // used only for SSL check , u can set false too for not check
+            'curl' => [CURLOPT_PROXYTYPE => 7],
+        ];
+        return new GuzzleHttp\Client($config);
     }
 }
