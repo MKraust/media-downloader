@@ -7,7 +7,7 @@
           <Download :download="download" @delete="handleDelete(download)" />
         </div>
       </div>
-      <div class="alert alert-custom alert-white alert-shadow" role="alert">
+      <div v-else class="alert alert-custom alert-white alert-shadow" role="alert">
         <div class="alert-icon"><i class="flaticon-exclamation-1"></i></div>
         <div class="alert-text h5 mb-0">В данный момент нет активных загрузок</div>
       </div>
