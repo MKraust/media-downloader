@@ -9,7 +9,10 @@ class Requester {
     public function get(string $url, array $params = [], ?GuzzleHttp\Cookie\CookieJar $cookies = null): string {
         $client = $this->_getClient();
 
-        $requestConfig = ['query' => $params];
+        $requestConfig = [];
+        if (count($params) > 0) {
+            $requestConfig['query'] = $params;
+        }
         if ($cookies !== null) {
             $requestConfig['cookies'] = $cookies;
         }
