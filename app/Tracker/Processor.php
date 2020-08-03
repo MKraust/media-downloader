@@ -21,7 +21,7 @@ class Processor {
     public function checkFavoritesForNewEpisodes(): void {
         $favorites = Media::favorite()->with('torrents')->get();
 
-        $mediaWithNewEpisodes = collect();
+        $mediaTitles = collect();
         foreach ($favorites as $favorite) {
             $topSeason = $favorite->topSeason();
             $tracker = $this->_keeper->getTrackerById($favorite->tracker_id);
@@ -32,20 +32,29 @@ class Processor {
             }
 
             $updatedTopSeason = $updatedMedia->topSeason();
-            if ($updatedTopSeason !== null && ($updatedTopSeason[0] > $topSeason[0] || $updatedTopSeason[1] > $topSeason[1])) {
-                $mediaWithNewEpisodes->push($updatedMedia);
+            if ($this->_hasNewEpisodes($topSeason, $updatedTopSeason)) {
+                $mediaTitle = $this->_getMediaTitleForNotification($updatedMedia);
+                $mediaTitles->push($mediaTitle);
             }
         }
 
-        if ($mediaWithNewEpisodes->count() === 0) {
-            return;
+        if ($mediaTitles->count() > 0) {
+            $this->_telegram->notifyAboutNewEpisodes($mediaTitles->sort());
         }
+    }
 
-        $mediaTitles = $mediaWithNewEpisodes->map(function (Media $media) {
-            $tracker = $this->_keeper->getTrackerById($media->tracker_id);
-            return "\[{$tracker->title()}] {$media->title}";
-        })->sort();
+    private function _hasNewEpisodes(array $previousSeason, array $newSeason): bool {
+        return $newSeason !== null && ($newSeason[0] > $previousSeason[0] || $newSeason[1] > $previousSeason[1]);
+    }
 
-        $this->_telegram->notifyAboutNewEpisodes($mediaTitles);
+    private function _getMediaTitleForNotification(Media $media): string {
+        $season = $media->topSeason();
+        $tracker = $this->_keeper->getTrackerById($media->tracker_id);
+
+        $seasonInfo = $season[0] === 1
+            ? "({$season[1]} серия)"
+            : "({$season[0]} сезон, {$season[1]} серия)";
+
+        return "\[{$tracker->title()}] {$media->title} {$seasonInfo}";
     }
 }
