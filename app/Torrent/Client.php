@@ -20,7 +20,7 @@ class Client
     private const PAUSE_DOWNLOAD     = self::BASE_URL . '/torrents/pause';
     private const RESUME_DOWNLOAD    = self::BASE_URL . '/torrents/resume';
 
-    private const BASE_SAVE_PATH = '/media/';
+    private const BASE_SAVE_PATH = '/downloads/';
 
     /** @var Telegram\Client */
     private $_telegram;
@@ -110,8 +110,9 @@ class Client
         $download->save();
 
         $this->_httpRequester->post(self::DELETE_DOWNLOAD, [
-            'hashes' => $hash,
-        ]);
+            'hashes'      => $hash,
+            'deleteFiles' => true,
+        ], $this->_cookies);
     }
 
     public function pauseDownload(string $hash): void {
