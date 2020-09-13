@@ -36,5 +36,5 @@ RUN docker-php-ext-install gd
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-COPY ./php/entrypoint.sh /entrypoint.sh
+COPY ./docker/images/php/entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
