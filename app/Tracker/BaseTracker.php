@@ -36,7 +36,7 @@ abstract class BaseTracker
         $filePath = storage_path("app/public/torrents/{$fileName}");
         File::put($filePath, $fileContent);
 
-        $fileUrl = url("/storage/torrents/{$fileName}");
+        $fileUrl = env('APP_URL') . "/storage/torrents/{$fileName}";
         $this->_torrentClient->startDownload($torrent, $fileUrl);
     }
 

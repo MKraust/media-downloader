@@ -11,16 +11,16 @@ use Illuminate\Support\Collection;
 
 class Client
 {
-    private const BASE_URL = 'http://torrent.mkraust.ru';
+    private const BASE_URL = 'http://qbittorrent:8080/api/v2';
 
-    private const GET_TORRENTS = self::BASE_URL . '/query/torrents';
+    private const GET_TORRENTS = self::BASE_URL . '/torrents/info';
 
-    private const START_DOWNLOAD_URL = self::BASE_URL . '/command/download';
-    private const DELETE_DOWNLOAD    = self::BASE_URL . '/command/deletePerm';
-    private const PAUSE_DOWNLOAD     = self::BASE_URL . '/command/pause';
-    private const RESUME_DOWNLOAD    = self::BASE_URL . '/command/resume';
+    private const START_DOWNLOAD_URL = self::BASE_URL . '/torrents/add';
+    private const DELETE_DOWNLOAD    = self::BASE_URL . '/torrents/delete';
+    private const PAUSE_DOWNLOAD     = self::BASE_URL . '/torrents/pause';
+    private const RESUME_DOWNLOAD    = self::BASE_URL . '/torrents/resume';
 
-    private const BASE_SAVE_PATH = '/home/kraust/Public/Video/';
+    private const BASE_SAVE_PATH = '/media/';
 
     /** @var Telegram\Client */
     private $_telegram;
@@ -28,9 +28,16 @@ class Client
     /** @var Requester */
     private $_httpRequester;
 
+    private $_cookies;
+
     public function __construct(Telegram\Client $telegram, Requester $requester) {
         $this->_telegram = $telegram;
         $this->_httpRequester = $requester;
+
+        $this->_cookies = $this->_httpRequester->getPostCookies(self::BASE_URL . '/auth/login', [
+            'username' => 'admin',
+            'password' => 'adminadmin',
+        ]);
     }
 
     public function refreshDownloads() {
@@ -81,11 +88,9 @@ class Client
      * @return Collection
      */
     private function _getDownloadsData(array $hashes = []): Collection {
-        $params = [
-            'hashes' => implode('|', $hashes),
-        ];
+        $params = count($hashes) > 0 ? ['hashes' => implode('|', $hashes)] : [];
 
-        $response = $this->_httpRequester->get(self::GET_TORRENTS, $params);
+        $response = $this->_httpRequester->get(self::GET_TORRENTS, $params, $this->_cookies);
         return collect(json_decode($response, true));
     }
 
@@ -94,7 +99,7 @@ class Client
             'urls'     => $fileUrl,
             'savepath' => self::BASE_SAVE_PATH . $this->_getDirectoryByContentType($torrent->content_type),
             'rename'   => "id:{$torrent->id}",
-        ]);
+        ], $this->_cookies);
 
         RefreshTorrentDownloads::dispatch()->delay(now()->addSeconds(5));
     }
@@ -124,11 +129,11 @@ class Client
     private function _getDirectoryByContentType(string $contentType): string {
         switch ($contentType) {
             case Torrent::TYPE_ANIME:
-                return 'Anime';
+                return 'anime';
             case Torrent::TYPE_SERIES:
-                return 'Serials';
+                return 'serials';
             case Torrent::TYPE_MOVIE:
-                return 'Movies';
+                return 'movies';
         }
     }
 }

@@ -35,19 +35,21 @@ class Requester {
         return $response->getBody()->getContents();
     }
 
-    public function postMultipart(string $url, array $params = []): string {
+    public function postMultipart(string $url, array $params = [], ?GuzzleHttp\Cookie\CookieJar $cookies = null): string {
         $client = $this->_getClient();
-        $requestConfig = [];
+        $requestConfig = ['multipart' => []];
+        if ($cookies !== null) {
+            $requestConfig['cookies'] = $cookies;
+        }
+
         foreach ($params as $key => $value) {
-            $requestConfig[] = [
+            $requestConfig['multipart'][] = [
                 'name'     => $key,
                 'contents' => $value,
             ];
         }
 
-        $response = $client->post($url, [
-            'multipart' => $requestConfig,
-        ]);
+        $response = $client->post($url, $requestConfig);
 
         return $response->getBody()->getContents();
     }

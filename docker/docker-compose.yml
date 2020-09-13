@@ -73,6 +73,8 @@ services:
       - 8080:8080
     volumes:
       - ./../media:/downloads
+    networks:
+      - app-network
 
   plex:
     image: plexinc/pms-docker
