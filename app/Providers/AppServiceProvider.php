@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(App\Services\Http\ProxyRequester::class);
         $this->app->singleton(App\Telegram\Client::class);
         $this->app->singleton(App\Services\Server\Storage::class);
+        $this->app->singleton(App\Services\Media\PostDownloadProcessor::class);
     }
 
     /**

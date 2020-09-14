@@ -30,6 +30,10 @@ abstract class BaseTracker
      */
     abstract public function search(string $query, int $offset): Collection;
 
+    public function processDownloadedMedia(App\Models\Torrent $torrent, string $path): void {
+        //
+    }
+
     final public function startDownload(App\Models\Torrent $torrent): void {
         $fileContent = $this->loadTorrentFile($torrent->url);
         $fileName = Str::uuid() . '.torrent';
