@@ -31,7 +31,8 @@ abstract class BaseTracker
     abstract public function search(string $query, int $offset): Collection;
 
     public function processDownloadedMedia(App\Models\Torrent $torrent, string $path): void {
-        //
+        // rename file or directory to Original_media_title_[t:<torrent_id>]_[<torrent_name>]
+        // if directory and anime then get all use postdl.php script
     }
 
     final public function startDownload(App\Models\Torrent $torrent): void {
