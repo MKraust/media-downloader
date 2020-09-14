@@ -83,10 +83,14 @@ services:
     container_name: plex
     restart: unless-stopped
     tty: true
+    environment:
+      - PLEX_UID=0
+      - PLEX_GID=0
+      - ALLOWED_NETWORKS=192.168.0.0/16,172.16.0.0/12,10.0.0.0/8,127.0.0.0/8
     ports:
       - 32400:32400
     volumes:
-      - ./../media:/media
+      - ./../media:/data
     networks:
       - app-network
 
