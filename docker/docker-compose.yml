@@ -74,7 +74,7 @@ services:
       - 6881:6881/udp
       - 8080:8080
     volumes:
-      - ./images/qBittorrent/config/qBittorrent.conf:/config/qBittorrent/qBittorrent.conf
+      - ./images/qBittorrent/config/qBittorrent.conf:/config/qBittorrent/qBittorrent_new.conf
       - ./../media/:/downloads/
     networks:
       - app-network
