@@ -8,6 +8,7 @@ services:
       dockerfile: ./docker/images/php/Dockerfile
     image: digitalocean.com/php
     container_name: app
+    user: root
     tty: true
     environment:
       SERVICE_NAME: app
@@ -16,6 +17,7 @@ services:
     volumes:
       - ..:/var/www:delegated
       - ./images/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./images/php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf
     expose:
       - 9000
     networks:

@@ -33,6 +33,8 @@ abstract class BaseTracker
     public function processDownloadedMedia(App\Models\Torrent $torrent, string $path): void {
         // add path to torrent model
         // if directory and anime then use postdl.php script
+        // ALWAYS LOG FILE NAMES CHANGES TO .rename.log
+
     }
 
     final public function startDownload(App\Models\Torrent $torrent): void {

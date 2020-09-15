@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-php-fpm -D
+php-fpm -DR
 /etc/init.d/tor start
 
 echo '* * * * * cd /var/www && php artisan schedule:run >> /dev/null 2>&1' | crontab
