@@ -20,4 +20,4 @@ Route::post('/download/delete', 'DownloadsController@deleteDownload');
 Route::post('/download/pause', 'DownloadsController@pauseDownload');
 Route::post('/download/resume', 'DownloadsController@resumeDownload');
 
-Route::get('/download/finish', 'DownloadsController@finishDownload');
+Route::get('/download/finish', 'WebhookController@finishDownload');

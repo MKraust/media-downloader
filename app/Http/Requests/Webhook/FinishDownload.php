@@ -18,8 +18,8 @@ class FinishDownload extends FormRequest
     public function rules(): array
     {
         return [
-            'hash'      => 'required|string',
-            'directory' => 'required|string',
+            'hash' => 'required|string',
+            'path' => 'required|string',
         ];
     }
 }
