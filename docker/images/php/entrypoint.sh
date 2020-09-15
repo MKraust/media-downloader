@@ -1,14 +1,12 @@
 #!/bin/bash
 set -e
 
-php-fpm -DR
-/etc/init.d/tor start
+php-fpm -D
 
 echo '* * * * * cd /var/www && php artisan schedule:run >> /dev/null 2>&1' | crontab
-cron
 
 cd /var/www
 composer install --no-interaction --prefer-dist
 php artisan migrate
 
-php -a
+tor
