@@ -8,7 +8,6 @@ services:
       dockerfile: ./docker/images/php/Dockerfile
     image: digitalocean.com/php
     container_name: app
-    user: root
     tty: true
     environment:
       SERVICE_NAME: app
@@ -17,7 +16,6 @@ services:
     volumes:
       - ..:/var/www:delegated
       - ./images/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - ./images/php/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf
     expose:
       - 9000
     networks:
@@ -67,8 +65,8 @@ services:
     restart: unless-stopped
     tty: true
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=Europe/Moscow
       - WEBUI_PORT=8080
     ports:
@@ -87,8 +85,8 @@ services:
     restart: unless-stopped
     tty: true
     environment:
-      - PLEX_UID=0
-      - PLEX_GID=0
+      - PLEX_UID=1000
+      - PLEX_GID=1000
       - ALLOWED_NETWORKS=192.168.0.0/16,172.16.0.0/12,10.0.0.0/8,127.0.0.0/8
     ports:
       - 32400:32400
