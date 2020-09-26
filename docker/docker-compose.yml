@@ -16,6 +16,7 @@ services:
     volumes:
       - ..:/var/www:delegated
       - ./images/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ../downloads:/downloads
     expose:
       - 9000
     networks:

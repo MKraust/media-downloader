@@ -31,10 +31,104 @@ abstract class BaseTracker
     abstract public function search(string $query, int $offset): Collection;
 
     public function processDownloadedMedia(App\Models\Torrent $torrent, string $path): void {
-        // add path to torrent model
-        // if directory and anime then use postdl.php script
-        // ALWAYS LOG FILE NAMES CHANGES TO .rename.log
+        return;
+        $torrent->download_path = $path;
+        $this->_postDownload($torrent);
+        $torrent->save();
 
+    }
+
+    private function _processFileDownload(App\Models\Torrent $torrent): void {
+        // rename file to media original title or simply title
+    }
+
+    private function _processDirectoryDownload(App\Models\Torrent $torrent): void {
+        $path = $torrent->download_path;
+        $files = scandir($path . '/');
+        if ($files === false) {
+            return;
+        }
+
+        $files = array_filter($files, function ($file) {
+            return Str::startsWith($file, '.');
+        });
+
+        $isEpisodesStartFromFirst = false;
+        $episodeOffset = 0;
+
+        $log = [];
+
+        foreach ($files as $index => $file) {
+            $parts = explode('.', $file);
+            $extension = count($parts) > 1 ? array_pop($parts) : null;
+            $fileNameWithoutExtension = implode('.', $parts);
+
+            $newFileName = str_replace('_', ' ', $fileNameWithoutExtension);
+            $newFileName = preg_replace('/\[[^\]]*\]/', '', $newFileName);
+            $newFileName = str_replace('  ', ' ', $newFileName);
+
+            $episode = $index + 1;
+
+            $episodePatterns = [
+                '~(?<=\[)\d+(?=\.\d+\])~', '~(?<=\[)\d+(?=\])~', '~(?<=\[)\d+(?=_of_\d+\])~',
+            ];
+
+            $season = null;
+            foreach ($episodePatterns as $pattern) {
+                preg_match($pattern, $file, $episodeMatches);
+                if (count($episodeMatches) > 0) {
+                    $episode = (int)$episodeMatches[0];
+                    if ($pattern === $episodePatterns[0]) {
+                        $season = 0;
+                        break;
+                    }
+
+                    break;
+                }
+            }
+
+            if ($season === null) {
+                $season = 1;
+                preg_match('/(?<=TV-)\d+/', $file, $seasonMatches);
+                if (count($seasonMatches) > 0) {
+                    $season = (int)$seasonMatches[0];
+                }
+            }
+
+            if ($season < 10) {
+                $season = "0{$season}";
+            }
+
+            if ($episode < 100 && $episode < 10) {
+                $episode = "00{$episode}";
+            } else if ($episode < 100) {
+                $episode = "0{$episode}";
+            }
+
+            $newFileName = "{$newFileName} - s{$season}e{$episode}" . ($extension ? ".{$extension}" : '');
+            $newFileName = str_replace('  ', ' ', $newFileName);
+
+            rename("{$path}/{$file}", "{$path}/{$newFileName}");
+            $log[] = [
+                'from' => $file, 'to' => $newFileName,
+            ];
+            usleep(100);
+        }
+
+        $logJson = json_encode($log, JSON_PRETTY_PRINT);
+        file_put_contents("{$path}/.rename.log", $logJson);
+    }
+
+    private function _postDownload(App\Models\Torrent $torrent): void {
+        if (is_file($torrent->download_path)) {
+            $this->_processFileDownload($torrent);
+            return;
+        }
+
+        if (is_dir($torrent->download_path)) {
+            $this->_processDirectoryDownload($torrent);
+            return;
+        }
     }
 
     final public function startDownload(App\Models\Torrent $torrent): void {
