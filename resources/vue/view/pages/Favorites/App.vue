@@ -1,7 +1,12 @@
 <template>
   <div>
     <BasicSubheader title="Избранное" />
-    <div class="container py-4">
+
+    <div v-if="isLoading" class="d-flex justify-content-center" style="height: 400px;">
+      <div class="spinner spinner-track spinner-primary spinner-lg" style="margin-left: -1rem;"></div>
+    </div>
+
+    <div v-else class="container py-4">
       <div v-if="favorites.length > 0" class="row">
         <div v-for="favorite in favorites" :key="favorite.id" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-7 d-flex">
           <MediaCard :media="favorite" class="align-self-stretch w-100"/>
@@ -32,6 +37,7 @@
       return {
         isAsideHidden: true,
         favorites: [],
+        isLoading: false,
       };
     },
     created() {
@@ -39,7 +45,11 @@
     },
     methods: {
       async reloadData() {
+        this.isLoading = true;
+
         this.favorites = await loadFavorites();
+
+        this.isLoading = false;
       }
     }
   }
