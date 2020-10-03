@@ -31,19 +31,24 @@
               </div>
               <img :src="media.poster" class="card-img-top card-img-bottom" style="width: 100%;">
             </div>
-            <button
-              class="btn btn-lg btn-shadow w-100 font-weight-bolder"
-              :class="{
-                [`btn-${favoriteButtonType}`]: true,
-                spinner: isTogglingFavorite,
-                'spinner-white': isTogglingFavorite,
-                'spinner-right': isTogglingFavorite,
-              }"
-              :disabled="isTogglingFavorite"
-              @click="toggleFavorite"
-            >
-              {{ favoriteButtonText }}
-            </button>
+            <div class="d-flex">
+              <button
+                class="btn btn-lg btn-shadow w-100 font-weight-bolder mr-2"
+                :class="{
+                  [`btn-${favoriteButtonType}`]: true,
+                  spinner: isTogglingFavorite,
+                  'spinner-white': isTogglingFavorite,
+                  'spinner-right': isTogglingFavorite,
+                }"
+                :disabled="isTogglingFavorite"
+                @click="toggleFavorite"
+              >
+                <i :class="{ [media.is_favorite ? 'fas fa-heart' : 'far fa-heart']: true }" class="pr-0"></i>
+              </button>
+              <button class="btn btn-lg btn-shadow btn-success w-100 font-weight-bolder" @click="openMediaPageInTracker">
+                <i class="fas fa-external-link-alt pr-0"></i>
+              </button>
+            </div>
           </div>
           <div class="col-md-8">
             <div class="input-group mb-4">
@@ -135,6 +140,9 @@
       }
     },
     methods: {
+      openMediaPageInTracker() {
+        window.open(this.media.url);
+      },
       async toggleFavorite() {
         this.isTogglingFavorite = true;
 
