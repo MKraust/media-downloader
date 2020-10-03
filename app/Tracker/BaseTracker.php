@@ -87,7 +87,7 @@ abstract class BaseTracker
         $media->title          = $media->title ?? $data['title'];
         $media->poster         = $media->poster ?? $data['poster'];
         $media->original_title = $media->original_title ?? $data['original_title'] ?? null;
-        $media->series_count   = $media->series_count ?? $data['series_count'] ?? null;
+        $media->series_count   = $data['series_count'] ?? $media->series_count ?? null;
 
         $media->save();
     }

@@ -85,7 +85,7 @@ class MediaPageParser extends TitleParser
     }
 
     private function getSeasonBySeriesCount(string $seriesCount): array {
-        preg_match('/\d+(\s*)из(\s*)\d+/u', $seriesCount, $matches);
+        preg_match('/\d+(\s*)из(\s*)\d+/ui', $seriesCount, $matches);
         if (count($matches) === 0) {
             throw new MediaParsingException('Can not parse season from series count: ' . $seriesCount);
         }

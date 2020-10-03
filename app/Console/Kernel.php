@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new Jobs\RefreshTorrentDownloads)->everyMinute();
-        $schedule->job(new Jobs\CheckFavoritesForNewEpisodes)->dailyAt('19:00');
+        $schedule->job(new Jobs\CheckFavoritesForNewEpisodes)->hourly()->between('6:00', '19:00');
     }
 
     /**
