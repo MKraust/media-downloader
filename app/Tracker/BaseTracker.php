@@ -32,10 +32,7 @@ abstract class BaseTracker
 
     public function processDownloadedMedia(App\Models\Torrent $torrent, string $path): void {
         return;
-        $torrent->download_path = $path;
-        $this->_postDownload($torrent);
-        $torrent->save();
-
+        $this->_processDownload($torrent, $path);
     }
 
     private function _processFileDownload(App\Models\Torrent $torrent): void {
@@ -119,7 +116,7 @@ abstract class BaseTracker
         file_put_contents("{$path}/.rename.log", $logJson);
     }
 
-    private function _postDownload(App\Models\Torrent $torrent): void {
+    private function _processDownload(App\Models\Torrent $torrent, string $downloadPath): void {
         if (is_file($torrent->download_path)) {
             $this->_processFileDownload($torrent);
             return;
