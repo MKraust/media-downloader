@@ -5,6 +5,7 @@ namespace App\Services\Media;
 use App\Models;
 use App\Tracker;
 use App\Telegram;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PostDownloadProcessor {
@@ -29,12 +30,16 @@ class PostDownloadProcessor {
     }
 
     private function _processDownload(Models\Torrent $torrent, string $path): void {
+        Log::info('Start processing download');
+
         if (is_file($path)) {
+            Log::info('Path is file');
             $this->_processFileDownload($torrent, $path);
             return;
         }
 
         if (is_dir($path)) {
+            Log::info('Path id directory');
             $this->_processDirectoryDownload($torrent, $path);
             return;
         }
@@ -45,14 +50,19 @@ class PostDownloadProcessor {
     }
 
     private function _processDirectoryDownload(Models\Torrent $torrent, string $path): void {
+        Log::info('Start processing directory download', ['path' => $path]);
+
         $files = scandir($path . '/');
         if ($files === false) {
+            Log::info('No files found in dir');
             return;
         }
 
-        $files = array_filter($files, function ($file) {
-            return Str::startsWith($file, '.');
-        });
+        $files = array_values(array_filter($files, function ($file) {
+            return !Str::startsWith($file, '.');
+        }));
+
+        Log::info('Found files', ['files' => $files]);
 
         $log = [];
 

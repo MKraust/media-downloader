@@ -16,7 +16,7 @@ services:
     volumes:
       - ..:/var/www:delegated
       - ./images/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - ../downloads:/downloads
+      - downloads:/downloads
     expose:
       - 9000
     networks:
@@ -76,7 +76,7 @@ services:
       - 8080:8080
     volumes:
       - ./images/qBittorrent/config/qBittorrent.conf:/config/qBittorrent/qBittorrent_new.conf
-      - ./../media/:/downloads/
+      - downloads:/downloads
     networks:
       - app-network
 
@@ -92,7 +92,7 @@ services:
     ports:
       - 32400:32400
     volumes:
-      - ./../media:/data
+      - downloads:/data
     networks:
       - app-network
 
@@ -104,4 +104,6 @@ networks:
 # Volumes
 volumes:
   dbdata:
+    driver: local
+  downloads:
     driver: local
