@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read  Media $media
+ */
 class Torrent extends Model
 {
     public const TYPE_MOVIE = 'movie';
