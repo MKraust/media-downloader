@@ -9,7 +9,11 @@ class Requester {
     public function get(string $url, array $params = [], ?GuzzleHttp\Cookie\CookieJar $cookies = null): string {
         $client = $this->_getClient();
 
-        $requestConfig = [];
+        $requestConfig = [
+            'headers'     => [
+                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+            ],
+        ];
         if (count($params) > 0) {
             $requestConfig['query'] = $params;
         }
@@ -25,7 +29,12 @@ class Requester {
     public function post(string $url, array $params = [], ?GuzzleHttp\Cookie\CookieJar $cookies = null): string {
         $client = $this->_getClient();
 
-        $requestConfig = ['form_params' => $params];
+        $requestConfig = [
+            'form_params' => $params,
+            'headers'     => [
+                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+            ],
+        ];
         if ($cookies !== null) {
             $requestConfig['cookies'] = $cookies;
         }
@@ -37,7 +46,12 @@ class Requester {
 
     public function postMultipart(string $url, array $params = []): string {
         $client = $this->_getClient();
-        $requestConfig = [];
+        $requestConfig = [
+            'headers'     => [
+                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+            ],
+        ];
+        
         foreach ($params as $key => $value) {
             $requestConfig[] = [
                 'name'     => $key,
@@ -57,6 +71,9 @@ class Requester {
         $this->_getClient()->post($url, [
             'form_params' => $params,
             'cookies'     => $cookies,
+            'headers'     => [
+                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+            ],
         ]);
 
         return $cookies;
