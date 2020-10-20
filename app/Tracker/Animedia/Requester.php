@@ -42,6 +42,9 @@ class Requester
             'proxy' => '127.0.0.1:9050', //use without "socks5://" scheme
             'verify' => true, // used only for SSL check , u can set false too for not check
             'curl' => [CURLOPT_PROXYTYPE => 7],
+            'headers' => [
+                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+            ],
         ];
         return new GuzzleHttp\Client($config);
     }
