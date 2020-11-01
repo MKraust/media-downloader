@@ -46,11 +46,7 @@ class Requester {
 
     public function postMultipart(string $url, array $params = []): string {
         $client = $this->_getClient();
-        $requestConfig = [
-            'headers'     => [
-                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
-            ],
-        ];
+        $requestConfig = [];
         
         foreach ($params as $key => $value) {
             $requestConfig[] = [
@@ -61,6 +57,9 @@ class Requester {
 
         $response = $client->post($url, [
             'multipart' => $requestConfig,
+            'headers'   => [
+                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+            ],
         ]);
 
         return $response->getBody()->getContents();
