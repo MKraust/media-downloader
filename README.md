@@ -1,4 +1,6 @@
-## API
+# API
+
+## Медиа
 
 ### Список торрент-трекеров
 
@@ -129,24 +131,7 @@ GET /api/media
 }
 ```
 
-### Получение одной сущности медиа
-
-Роут: 
-```
-GET /api/download
-```
-Запрос:
-```
-{
-  "id": 1326 (id торрента)
-}
-```
-Ответ:
-```
-{
-    "status": "success"
-}
-```
+## Избранное
 
 ### Получение списка избранного
 
@@ -171,6 +156,65 @@ GET /api/favorites/list
     "added_to_favorites_at": "2020-11-22T22:27:55.000000Z"
   }
 ]
+```
+
+### Добавление в избранное
+
+Роут: 
+```
+GET /api/favorites/add
+```
+Запрос:
+```
+{
+  "id": "Ly90ci5hbmlkdWIuY29tL2FuaW1lX3R2L2FuaW1lX29uZ29pbmcvMTExNDktbWFnaWNoZXNrYXlhLWJpdHZhLWp1anV0c3Uta2Fpc2VuLmh0bWw=" (id медиа)
+}
+```
+Ответ:
+```
+{
+    "status": "success"
+}
+```
+
+### Удаление из избранного
+
+Роут: 
+```
+GET /api/favorites/remove
+```
+Запрос:
+```
+{
+  "id": "Ly90ci5hbmlkdWIuY29tL2FuaW1lX3R2L2FuaW1lX29uZ29pbmcvMTExNDktbWFnaWNoZXNrYXlhLWJpdHZhLWp1anV0c3Uta2Fpc2VuLmh0bWw=" (id медиа)
+}
+```
+Ответ:
+```
+{
+    "status": "success"
+}
+```
+
+## Загрузки
+
+### Начало загрузки торрента
+
+Роут: 
+```
+GET /api/download
+```
+Запрос:
+```
+{
+  "id": 1326 (id торрента)
+}
+```
+Ответ:
+```
+{
+    "status": "success"
+}
 ```
 
 ### Получение списка текущих загрузок
