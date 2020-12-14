@@ -128,3 +128,138 @@ GET /api/media
     ]
 }
 ```
+
+### Получение одной сущности медиа
+
+Роут: 
+```
+GET /api/download
+```
+Запрос:
+```
+{
+  "id": 1326 (id торрента)
+}
+```
+Ответ:
+```
+{
+    "status": "success"
+}
+```
+
+### Получение списка избранного
+
+Роут: 
+```
+GET /api/favorites/list
+```
+Ответ:
+```
+[
+  {
+    "id": "Ly90ci5hbmlkdWIuY29tL2FuaW1lX3R2L2FuaW1lX29uZ29pbmcvMTExNDktbWFnaWNoZXNrYXlhLWJpdHZhLWp1anV0c3Uta2Fpc2VuLmh0bWw=",
+    "url": "//tr.anidub.com/anime_tv/anime_ongoing/11149-magicheskaya-bitva-jujutsu-kaisen.html",
+    "tracker_id": "anidub",
+    "title": "Магическая битва",
+    "original_title": "Jujutsu Kaisen",
+    "poster": "https://static2.statics.life/tracker/poster/5d7a3c5ea3.jpg",
+    "series_count": "10 из 24",
+    "is_favorite": 1,
+    "created_at": "2020-11-22T22:27:45.000000Z",
+    "updated_at": "2020-12-08T16:00:05.000000Z",
+    "added_to_favorites_at": "2020-11-22T22:27:55.000000Z"
+  }
+]
+```
+
+### Получение списка текущих загрузок
+
+Роут: 
+```
+GET /api/download/list
+```
+Ответ:
+```
+[
+    {
+        "hash": "7543652b927df0a76983a86680a74207531d5216",
+        "name": "id:1326",
+        "download_speed_in_bytes_per_second": 50022,
+        "estimate_in_seconds": 8640000,
+        "size_in_bytes": 1866310709,
+        "state_original": "pausedDL",
+        "progress": "0.00062329600017314",
+        "media": {
+            "id": "Ly90ci5hbmlkdWIuY29tL2FuaW1lX3R2L2Z1bGwvOTkwMy1zZW0tc21lcnRueWgtZ3JlaG92LXpuYW1lbmllLXN2eWFzY2hlbm5veS12b3lueS10di0yLXRoZS1zZXZlbi1kZWFkbHktc2lucy1zaWducy1vZi1ob2x5LXdhci10di0yLTAxLWl6LTA0Lmh0bWw=",
+            "url": "//tr.anidub.com/anime_tv/full/9903-sem-smertnyh-grehov-znamenie-svyaschennoy-voyny-tv-2-the-seven-deadly-sins-signs-of-holy-war-tv-2-01-iz-04.html",
+            "tracker_id": "anidub",
+            "title": "Семь смертных грехов: Знамение священной войны ТВ-2",
+            "original_title": "Nanatsu no Taizai: Seisen no Shirushi TV-2",
+            "poster": "https://static2.statics.life/tracker/poster/eb5b3de671.jpg",
+            "series_count": "04 из 04",
+            "is_favorite": 0,
+            "created_at": "2020-06-27T12:36:28.000000Z",
+            "updated_at": "2020-11-11T14:33:16.000000Z",
+            "added_to_favorites_at": null
+        },
+        "torrent": {
+            "id": 1326,
+            "name": "TV (720p)",
+            "url": "https://tr.anidub.com/engine/download.php?id=17130",
+            "content_type": "anime",
+            "voice_acting": "JAM",
+            "quality": "TV (720p)",
+            "size": "1.74 GB",
+            "size_int": null,
+            "downloads": 20119,
+            "season": [
+                1,
+                4
+            ],
+            "created_at": "2020-10-27T12:54:31.000000Z",
+            "updated_at": "2020-12-14T10:45:32.000000Z",
+            "media_id": "Ly90ci5hbmlkdWIuY29tL2FuaW1lX3R2L2Z1bGwvOTkwMy1zZW0tc21lcnRueWgtZ3JlaG92LXpuYW1lbmllLXN2eWFzY2hlbm5veS12b3lueS10di0yLXRoZS1zZXZlbi1kZWFkbHktc2lucy1zaWducy1vZi1ob2x5LXdhci10di0yLTAxLWl6LTA0Lmh0bWw="
+        }
+    }
+]
+```
+
+### Приостановка загрузки
+
+Роут: 
+```
+GET /api/download/pause
+```
+Запрос:
+```
+{
+    "hash": "7543652b927df0a76983a86680a74207531d5216"
+}
+```
+
+### Продолжение загрузки
+
+Роут: 
+```
+GET /api/download/resume
+```
+Запрос:
+```
+{
+    "hash": "7543652b927df0a76983a86680a74207531d5216"
+}
+```
+
+### Отмена (удаление) загрузки
+
+Роут: 
+```
+GET /api/download/delete
+```
+Запрос:
+```
+{
+    "hash": "7543652b927df0a76983a86680a74207531d5216"
+}
+```
