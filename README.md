@@ -162,7 +162,7 @@ GET /api/favorites/list
 
 Роут: 
 ```
-GET /api/favorites/add
+POST /api/favorites/add
 ```
 Запрос:
 ```
@@ -181,7 +181,7 @@ GET /api/favorites/add
 
 Роут: 
 ```
-GET /api/favorites/remove
+POST /api/favorites/remove
 ```
 Запрос:
 ```
@@ -202,7 +202,7 @@ GET /api/favorites/remove
 
 Роут: 
 ```
-GET /api/download
+POST /api/download
 ```
 Запрос:
 ```
@@ -273,7 +273,7 @@ GET /api/download/list
 
 Роут: 
 ```
-GET /api/download/pause
+POST /api/download/pause
 ```
 Запрос:
 ```
@@ -286,7 +286,7 @@ GET /api/download/pause
 
 Роут: 
 ```
-GET /api/download/resume
+POST /api/download/resume
 ```
 Запрос:
 ```
@@ -299,7 +299,7 @@ GET /api/download/resume
 
 Роут: 
 ```
-GET /api/download/delete
+POST /api/download/delete
 ```
 Запрос:
 ```
