@@ -8,7 +8,10 @@ class ProxyRequester extends Requester {
         return [
             'proxy'  => '127.0.0.1:9050',
             'verify' => true,
-            'curl'   => [CURLOPT_PROXYTYPE => 7],
+            'curl'   => [
+                CURLOPT_PROXYTYPE => 7,
+                CURLOPT_SSL_VERIFYPEER => 0,
+            ],
         ];
     }
 }
