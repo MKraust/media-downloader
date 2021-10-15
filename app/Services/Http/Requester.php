@@ -6,12 +6,14 @@ use GuzzleHttp;
 
 class Requester {
 
+    private const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36';
+
     public function get(string $url, array $params = [], ?GuzzleHttp\Cookie\CookieJar $cookies = null): string {
         $client = $this->_getClient();
 
         $requestConfig = [
             'headers'     => [
-                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+                'User-Agent' => self::USER_AGENT,
             ],
         ];
         if (count($params) > 0) {
@@ -32,7 +34,7 @@ class Requester {
         $requestConfig = [
             'form_params' => $params,
             'headers'     => [
-                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+                'User-Agent' => self::USER_AGENT,
             ],
         ];
         if ($cookies !== null) {
@@ -47,7 +49,7 @@ class Requester {
     public function postMultipart(string $url, array $params = []): string {
         $client = $this->_getClient();
         $requestConfig = [];
-        
+
         foreach ($params as $key => $value) {
             $requestConfig[] = [
                 'name'     => $key,
@@ -58,7 +60,7 @@ class Requester {
         $response = $client->post($url, [
             'multipart' => $requestConfig,
             'headers'   => [
-                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+                'User-Agent' => self::USER_AGENT,
             ],
         ]);
 
@@ -71,7 +73,7 @@ class Requester {
             'form_params' => $params,
             'cookies'     => $cookies,
             'headers'     => [
-                'User-Agent' => 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0',  
+                'User-Agent' => self::USER_AGENT,
             ],
         ]);
 
