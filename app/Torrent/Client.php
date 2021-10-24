@@ -70,7 +70,7 @@ class Client
             $contentPath = self::BASE_SAVE_PATH . "/Anime/{$directoryName}";
             $existingFiles = collect($this->_filesRenamer->getRenamedFiles($contentPath));
             if ($existingFiles->count() > 0) {
-                Log::info("Existing files for download {$download->hash}: " . implode("\n\t", $existingFiles->map->from()));
+                Log::info("Existing files for download {$download->hash}: " . implode("\n\t", $existingFiles->map->from()->toArray()));
             } else {
                 Log::info("No existing files for download {$download->hash}");
             }
