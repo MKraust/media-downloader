@@ -46,7 +46,7 @@ class Client
     public function refreshDownloads() {
         $downloadsData = $this->_getDownloadsData();
 
-        $existingDownloads = TorrentDownload::active();
+        $existingDownloads = TorrentDownload::active()->get();
         $downloads = $downloadsData->map(static function (array $downloadData) {
             return Download::createFromRemoteData($downloadData)->convertIntoModel();
         });
