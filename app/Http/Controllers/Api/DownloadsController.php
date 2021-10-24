@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Torrent;
 use App\Http\Requests;
+use App\Services;
 
 class DownloadsController extends Controller
 {
-    /** @var Torrent\Client */
-    private $_torrentClient;
+    private Torrent\Client $_torrentClient;
 
-    public function __construct(Torrent\Client $torrentClient) {
+    private Services\Files\Renamer $_filesRenamer;
+
+    public function __construct(Torrent\Client $torrentClient, Services\Files\Renamer $filesRenamer) {
         $this->_torrentClient = $torrentClient;
+        $this->_filesRenamer = $filesRenamer;
     }
 
     public function getDownloads() {
@@ -29,5 +32,9 @@ class DownloadsController extends Controller
 
     public function resumeDownload(Requests\Torrent\ManageDownload $request) {
         $this->_torrentClient->resumeDownload($request->hash);
+    }
+
+    public function finishDownload(Requests\Torrent\FinishDownload $request) {
+        $this->_filesRenamer->renameDownloadedFiles($request->path);
     }
 }
