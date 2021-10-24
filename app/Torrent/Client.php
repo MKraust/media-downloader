@@ -44,16 +44,13 @@ class Client
     }
 
     public function refreshDownloads() {
-        $downloadsData = $this->_getDownloadsData();
-
         $existingDownloads = TorrentDownload::active()->get();
+        $downloadsData = $this->_getDownloadsData();
         $downloads = $downloadsData->map(static function (array $downloadData) {
             return Download::createFromRemoteData($downloadData)->convertIntoModel();
         });
 
-        $removedDownloads = $existingDownloads->filter(fn(TorrentDownload $download) => !$downloads->contains('hash', $download->hash));
         $newDownloads = $downloads->filter(fn(TorrentDownload $download) => !$existingDownloads->contains('hash', $download->hash));
-
         $newDownloads->each(function (TorrentDownload $download) {
             TorrentDownload::updateOrCreate(['hash' => $download->hash], $download->toArray());
 
@@ -92,6 +89,7 @@ class Client
             }
         });
 
+        $removedDownloads = $existingDownloads->filter(fn(TorrentDownload $download) => !$downloads->contains('hash', $download->hash));
         $removedDownloads->each(function (TorrentDownload $download) {
             if (!$download->is_deleted) {
                 $this->_telegram->notifyAboutFinishedDownload($download);

@@ -3,6 +3,7 @@
 namespace App\Services\Files;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class Renamer {
 
@@ -35,10 +36,12 @@ class Renamer {
 
         $log = [];
         $alreadyRenamedFiles = collect($this->getRenamedFiles($path));
+        Log::info("Already renamed files: \n" . implode("\n", $alreadyRenamedFiles->map->to()->toArray()));
         $files = array_filter($files, function (string $file) use ($alreadyRenamedFiles) {
             return !(mb_strpos($file, '.') === 0)
-                && !$alreadyRenamedFiles->contains(fn(RenamedFile $renamedFile) => $file === $renamedFile->from());
+                && !$alreadyRenamedFiles->contains(fn(RenamedFile $renamedFile) => $file === $renamedFile->to());
         });
+        Log::info("Files to rename: \n" . implode("\n", $files));
 
         foreach ($files as $index => $file) {
             $newFileName = $this->normalizeFileName($file, $index + 1);
