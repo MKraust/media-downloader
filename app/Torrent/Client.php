@@ -46,18 +46,13 @@ class Client
     public function refreshDownloads() {
         $downloadsData = $this->_getDownloadsData();
 
-        $existingDownloads = TorrentDownload::all();
+        $existingDownloads = TorrentDownload::active();
         $downloads = $downloadsData->map(static function (array $downloadData) {
             return Download::createFromRemoteData($downloadData)->convertIntoModel();
         });
 
-        $newDownloads = $downloads->filter(static function (TorrentDownload $download) use ($existingDownloads) {
-            return !$existingDownloads->contains('hash', $download->hash);
-        });
-
-        $removedDownloads = $existingDownloads->filter(static function (TorrentDownload $download) use ($downloads) {
-            return !$downloads->contains('hash', $download->hash);
-        });
+        $removedDownloads = $existingDownloads->filter(fn(TorrentDownload $download) => !$downloads->contains('hash', $download->hash));
+        $newDownloads = $downloads->filter(fn(TorrentDownload $download) => !$existingDownloads->contains('hash', $download->hash));
 
         $newDownloads->each->save();
         $newDownloads->each(function (TorrentDownload $download) {
@@ -82,10 +77,13 @@ class Client
                 }
             }
 
-            $excludedFileNames = array_map(fn($id) => $files[$id]['name'],$notNeededFileIds);
-            Log::debug("Excluding files from download {$download->hash}: " . implode("\n\t", $excludedFileNames));
-
-            $this->_setFilesPriority($download->hash, $notNeededFileIds, self::FILE_PRIORITY_DO_NOT_DOWNLOAD);
+            if (count($notNeededFileIds) > 0) {
+                $excludedFileNames = array_map(fn($id) => $files[$id]['name'],$notNeededFileIds);
+                Log::info("Excluding files from download {$download->hash}: " . implode("\n\t", $excludedFileNames));
+                $this->_setFilesPriority($download->hash, $notNeededFileIds, self::FILE_PRIORITY_DO_NOT_DOWNLOAD);
+            } else {
+                Log::info("No files to exclude from download {$download->hash}");
+            }
         });
 
         $removedDownloads->each(function (TorrentDownload $download) {
