@@ -2,18 +2,16 @@
 
 namespace App\Tracker\FastTorrent;
 
-use App\Services\Http\ProxyRequester;
-use GuzzleHttp;
+use App\Services\Http\TorProxyRequester;
 
 class Requester
 {
     public const BASE_URL = 'http://fast-torrent.ru';
 
-    /** @var ProxyRequester */
-    private $_httpRequester;
+    private TorProxyRequester $_httpRequester;
 
     public function __construct() {
-        $this->_httpRequester = app()->make(ProxyRequester::class);
+        $this->_httpRequester = app()->make(TorProxyRequester::class);
     }
 
     public function loadTorrentFile(string $url): string {
