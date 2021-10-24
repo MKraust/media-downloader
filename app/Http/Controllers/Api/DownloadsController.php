@@ -35,6 +35,6 @@ class DownloadsController extends Controller
     }
 
     public function finishDownload(Requests\Torrent\FinishDownload $request) {
-        $this->_filesRenamer->renameDownloadedFiles($request->path);
+        $this->_filesRenamer->normalizeFileNames($request->path);
     }
 }

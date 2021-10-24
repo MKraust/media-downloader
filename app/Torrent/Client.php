@@ -6,14 +6,22 @@ use App\Jobs\RefreshTorrentDownloads;
 use App\Models\Torrent;
 use App\Models\TorrentDownload;
 use App\Services\Http\Requester;
+use App\Services\Files;
 use App\Telegram;
 use Illuminate\Support\Collection;
 
 class Client
 {
+    private const FILE_PRIORITY_DO_NOT_DOWNLOAD = 0;
+    private const FILE_PRIORITY_NORMAL = 1;
+    private const FILE_PRIORITY_HIGH = 6;
+    private const FILE_PRIORITY_MAX = 7;
+
     private const BASE_URL = 'http://torrent.mkraust.ru';
 
-    private const GET_TORRENTS = self::BASE_URL . '/query/torrents';
+    private const GET_TORRENTS      = self::BASE_URL . '/query/torrents';
+    private const GET_TORRENT_FILES = self::BASE_URL . '/api/v2/torrents/files';
+    private const SET_FILE_PRIORITY = self::BASE_URL . '/api/v2/torrents/filePrio';
 
     private const START_DOWNLOAD_URL = self::BASE_URL . '/command/download';
     private const DELETE_DOWNLOAD    = self::BASE_URL . '/command/deletePerm';
@@ -22,15 +30,16 @@ class Client
 
     private const BASE_SAVE_PATH = '/home/kraust/Public/Video/';
 
-    /** @var Telegram\Client */
-    private $_telegram;
+    private Telegram\Client $_telegram;
 
-    /** @var Requester */
-    private $_httpRequester;
+    private Requester $_httpRequester;
 
-    public function __construct(Telegram\Client $telegram, Requester $requester) {
+    private Files\Renamer $_filesRenamer;
+
+    public function __construct(Telegram\Client $telegram, Requester $requester, Files\Renamer $filesRenamer) {
         $this->_telegram = $telegram;
         $this->_httpRequester = $requester;
+        $this->_filesRenamer = $filesRenamer;
     }
 
     public function refreshDownloads() {
@@ -50,6 +59,31 @@ class Client
         });
 
         $newDownloads->each->save();
+        $newDownloads->each(function (TorrentDownload $download) {
+            if ($download->torrent->content_type !== Torrent::TYPE_ANIME) {
+                return;
+            }
+
+            $files = $this->_getDownloadFiles($download->hash);
+            if (count($files) === 0) {
+                return;
+            }
+
+            $directoryName = explode('/', $files[0]['name'])[0];
+            $contentPath = self::BASE_SAVE_PATH . "/Anime/{$directoryName}";
+            $existingFiles = collect($this->_filesRenamer->getRenamedFiles($contentPath));
+
+            $notNeededFileIds = [];
+            foreach ($files as $index => $file) {
+                $fileName = explode('/', $file['name'])[0];
+                if ($existingFiles->contains(fn(Files\RenamedFile $renamedFile) => $renamedFile->from() === $fileName)) {
+                    $notNeededFileIds[] = $index;
+                }
+            }
+
+            $this->_setFilesPriority($download->hash, $notNeededFileIds, self::FILE_PRIORITY_DO_NOT_DOWNLOAD);
+        });
+
         $removedDownloads->each(function (TorrentDownload $download) {
             if (!$download->is_deleted) {
                 $this->_telegram->notifyAboutFinishedDownload($download);
@@ -77,6 +111,17 @@ class Client
     }
 
     /**
+     * @param int[] $fileIds
+     */
+    private function _setFilesPriority(string $hash, array $fileIds, int $priority): void {
+        $this->_httpRequester->post(self::SET_FILE_PRIORITY, [
+            'hash' => $hash,
+            'id' => implode('|', $fileIds),
+            'priority' => $priority,
+        ]);
+    }
+
+    /**
      * @param string[] $hashes
      * @return Collection
      */
@@ -86,6 +131,14 @@ class Client
         ];
 
         $response = $this->_httpRequester->get(self::GET_TORRENTS, $params);
+        return collect(json_decode($response, true));
+    }
+
+    private function _getDownloadFiles(string $hash): Collection {
+        $response = $this->_httpRequester->get(self::GET_TORRENT_FILES, [
+            'hash' => $hash,
+        ]);
+
         return collect(json_decode($response, true));
     }
 
