@@ -8,8 +8,8 @@ use App\Models\TorrentDownload;
 use App\Services\Http\Requester;
 use App\Services\Files;
 use App\Telegram;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class Client
 {
@@ -83,7 +83,7 @@ class Client
             }
 
             $excludedFileNames = array_map(fn($id) => $files[$id]['name'],$notNeededFileIds);
-            Logger::debug("Excluding files from download {$download->hash}: " . implode("\n\t", $excludedFileNames));
+            Log::debug("Excluding files from download {$download->hash}: " . implode("\n\t", $excludedFileNames));
 
             $this->_setFilesPriority($download->hash, $notNeededFileIds, self::FILE_PRIORITY_DO_NOT_DOWNLOAD);
         });
