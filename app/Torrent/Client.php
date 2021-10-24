@@ -69,10 +69,15 @@ class Client
             $directoryName = explode('/', $files[0]['name'])[0];
             $contentPath = self::BASE_SAVE_PATH . "/Anime/{$directoryName}";
             $existingFiles = collect($this->_filesRenamer->getRenamedFiles($contentPath));
+            if ($existingFiles->count() > 0) {
+                Log::info("Existing files for download {$download->hash}: " . implode("\n\t", $existingFiles->map->from()));
+            } else {
+                Log::info("No existing files for download {$download->hash}");
+            }
 
             $notNeededFileIds = [];
             foreach ($files as $index => $file) {
-                $fileName = explode('/', $file['name'])[0];
+                $fileName = explode('/', $file['name'])[1];
                 if ($existingFiles->contains(fn(Files\RenamedFile $renamedFile) => $renamedFile->from() === $fileName)) {
                     $notNeededFileIds[] = $index;
                 }
