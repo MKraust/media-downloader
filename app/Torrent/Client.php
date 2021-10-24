@@ -134,12 +134,12 @@ class Client
         return collect(json_decode($response, true));
     }
 
-    private function _getDownloadFiles(string $hash): Collection {
+    private function _getDownloadFiles(string $hash): array {
         $response = $this->_httpRequester->get(self::GET_TORRENT_FILES, [
             'hash' => $hash,
         ]);
 
-        return collect(json_decode($response, true));
+        return json_decode($response, true);
     }
 
     public function startDownload(Torrent $torrent, string $fileUrl): void {

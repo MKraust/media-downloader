@@ -47,7 +47,7 @@ class Renamer {
             usleep(100);
         }
 
-        $log = array_merge($alreadyRenamedFiles, $log);
+        $log = array_merge($alreadyRenamedFiles->toArray(), $log);
         $this->_saveRenamedFilesLog($path, $log);
     }
 
