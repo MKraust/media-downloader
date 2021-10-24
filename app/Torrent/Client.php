@@ -54,8 +54,9 @@ class Client
         $removedDownloads = $existingDownloads->filter(fn(TorrentDownload $download) => !$downloads->contains('hash', $download->hash));
         $newDownloads = $downloads->filter(fn(TorrentDownload $download) => !$existingDownloads->contains('hash', $download->hash));
 
-        $newDownloads->each->save();
         $newDownloads->each(function (TorrentDownload $download) {
+            TorrentDownload::updateOrCreate(['hash' => $download->hash], $download->toArray());
+
             if ($download->torrent->content_type !== Torrent::TYPE_ANIME) {
                 return;
             }
