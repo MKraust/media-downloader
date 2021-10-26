@@ -8,7 +8,7 @@
 
     <div v-else class="container py-4">
       <div v-if="favorites.length > 0" class="row">
-        <div v-for="favorite in favorites" :key="favorite.id" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-7 d-flex">
+        <div v-for="favorite in favorites" :key="favorite.id" class="col-xs-12 col-sm-6 col-md-4 col-xl-3 mb-7 d-flex">
           <MediaCard :media="favorite" class="align-self-stretch w-100"/>
         </div>
       </div>

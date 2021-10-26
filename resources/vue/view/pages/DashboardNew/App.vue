@@ -3,7 +3,7 @@
     <BasicSubheader title="Сводная информация" />
     <div class="container py-4">
       <div class="row">
-          <div v-for="(drive, index) in drives" :key="Math.random()" class="col-md-4 mb-4">
+          <div v-for="drive in drives" :key="Math.random()" class="col-md-6 mb-4">
             <Drive :drive="drive" />
           </div>
       </div>
