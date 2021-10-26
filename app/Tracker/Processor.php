@@ -23,6 +23,7 @@ class Processor {
 
         $mediaTitles = collect();
         foreach ($favorites as $favorite) {
+            usleep(10000);
             $topSeason = $favorite->topSeason();
             $tracker = $this->_keeper->getTrackerById($favorite->tracker_id);
 
