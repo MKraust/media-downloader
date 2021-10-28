@@ -64,6 +64,10 @@ class NormalizeFileNameTest extends TestCase
                 'Kono Subarashii Sekai ni Shukufuku wo - s02e011.mp4',
                 11
             ],
+            [
+                'Nanatsu_no_Taizai_3_[23]_[AniMedia.TV].mp4',
+                'Nanatsu no Taizai - s03e023.mp4',
+            ]
         ];
     }
 }

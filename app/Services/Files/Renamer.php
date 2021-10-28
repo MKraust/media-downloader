@@ -59,10 +59,11 @@ class Renamer {
         $extension = count($parts) > 1 ? array_pop($parts) : null;
         $fileNameWithoutExtension = implode('.', $parts);
 
-        $newFileName = str_replace('_', ' ', $fileNameWithoutExtension);
+        $newFileName = preg_replace('/(?<=_)\d+(?=_\[)/', '', $fileNameWithoutExtension);
+        $newFileName = str_replace('_', ' ', $newFileName);
         $newFileName = preg_replace('/\[[^]]*]/', '', $newFileName);
         $newFileName = preg_replace('/TV(-\d+)?/', '', $newFileName);
-        $newFileName = str_replace('  ', ' ', $newFileName);
+        $newFileName = preg_replace('/ +/', ' ', $newFileName);
 
         $episode = $episodeIndex;
         $episodePatterns = [
@@ -88,7 +89,7 @@ class Renamer {
 
         if ($season === null) {
             $season = 1;
-            preg_match('/(?<=TV-)\d+/', $fileName, $seasonMatches);
+            preg_match('/((?<=TV-)\d+)|((?<=_)\d+(?=_\[))/', $fileName, $seasonMatches);
             if (count($seasonMatches) > 0) {
                 $season = (int)$seasonMatches[0];
             }
