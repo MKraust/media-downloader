@@ -131,7 +131,7 @@ class MediaPageParser
         if (count($matches) > 0) {
             $seriesCount = (int)array_map('trim', explode('-', $matches[0]))[1];
         } else {
-            preg_match('/\d+ из \d+/u', $series, $matches);
+            preg_match('/\d+ из \d+/ui', $series, $matches);
             $seriesCount = (int)array_map('trim', explode('из', $matches[0]))[1];
         }
 

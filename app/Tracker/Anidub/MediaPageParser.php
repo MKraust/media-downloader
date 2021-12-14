@@ -62,7 +62,7 @@ class MediaPageParser extends TitleParser
     }
 
     private function getContentTypeByFullTitle(string $title): string {
-        return preg_match('/\d+ из \d+/u', $title)
+        return preg_match('/\d+ из \d+/ui', $title)
             ? Torrent::TYPE_ANIME
             : Torrent::TYPE_MOVIE;
     }
