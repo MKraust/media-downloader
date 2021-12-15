@@ -83,7 +83,7 @@ class Renamer {
             preg_match($pattern, $fileName, $episodeMatches);
             if (count($episodeMatches) > 0) {
                 $episode = (int)$episodeMatches[0];
-                if ($pattern === $episodePatterns[0] || $pattern === $episodePatterns[1]) {
+                if ($pattern === $episodePatterns[0]) {
                     $season = 0;
                     break;
                 }
