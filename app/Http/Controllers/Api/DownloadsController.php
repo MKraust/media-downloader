@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Torrent;
+use App\Models\Torrent;
 use App\Http\Requests;
 use App\Services;
 
@@ -35,6 +35,8 @@ class DownloadsController extends Controller
     }
 
     public function finishDownload(Requests\Torrent\FinishDownload $request) {
-        $this->_filesRenamer->normalizeFileNames($request->path);
+        $torrentId = str_replace('id:', '', $request->name);
+        $torrent = Torrent::find($torrentId);
+        $this->_filesRenamer->normalizeFileNames($request->path, $torrent);
     }
 }

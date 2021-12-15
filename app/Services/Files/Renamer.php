@@ -2,6 +2,7 @@
 
 namespace App\Services\Files;
 
+use App\Models\Torrent;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
@@ -24,10 +25,15 @@ class Renamer {
         return array_map(fn(array $fileData) => new RenamedFile($fileData['from'], $fileData['to']), $filesData);
     }
 
-    public function normalizeFileNames(string $path): void {
+    public function normalizeFileNames(string $path, ?Torrent $torrent = null): void {
         if (mb_strpos($path, '/Anime') === false || !is_dir($path)) {
             exit;
         }
+
+        // Тут берем сезон из торрента
+        // Если же его нет, то null потом перетрется сезоном из названия файла
+        $season = $torrent->season;
+        $season = $season !== null && $season[0] > 0 ? $season[0] : null;
 
         $files = scandir($path.'/');
         if ($files === false) {
@@ -44,7 +50,7 @@ class Renamer {
         Log::info("Files to rename: \n" . implode("\n", $files));
 
         foreach ($files as $index => $file) {
-            $newFileName = $this->normalizeFileName($file, $index + 1);
+            $newFileName = $this->normalizeFileName($file, $index + 1, $season);
             rename("{$path}/{$file}", "{$path}/{$newFileName}");
             $log[] = new RenamedFile($file, $newFileName);
             usleep(100);
@@ -54,7 +60,7 @@ class Renamer {
         $this->_saveRenamedFilesLog($path, $log);
     }
 
-    public function normalizeFileName(string $fileName, int $episodeIndex = 1): string {
+    public function normalizeFileName(string $fileName, int $episodeIndex = 1, int $season = null): string {
         $parts = explode('.', $fileName);
         $extension = count($parts) > 1 ? array_pop($parts) : null;
         $fileNameWithoutExtension = implode('.', $parts);
@@ -68,17 +74,16 @@ class Renamer {
         $episode = $episodeIndex;
         $episodePatterns = [
             '~(?<=\[)\d+(?=\.\d+\])~',
+            '~(?<=\[)\d+(?=_OVA])~',
             '~(?<=\[)\d+(?=\])~',
             '~(?<=\[)\d+(?=_of_\d+\])~',
-            '~(?<=\[)\d+(?=_OVA])~',
         ];
 
-        $season = null;
         foreach ($episodePatterns as $pattern) {
             preg_match($pattern, $fileName, $episodeMatches);
             if (count($episodeMatches) > 0) {
                 $episode = (int)$episodeMatches[0];
-                if ($pattern === $episodePatterns[0]) {
+                if ($pattern === $episodePatterns[0] || $pattern === $episodePatterns[1]) {
                     $season = 0;
                     break;
                 }
