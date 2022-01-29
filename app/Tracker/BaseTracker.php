@@ -77,7 +77,12 @@ abstract class BaseTracker
         $this->_updateMediaWithData($media, $preparedData);
         $this->_refreshTorrentsWithData($media, $preparedData['torrents'] ?? collect());
 
-        $media->load(['torrents']);
+        $media->load([
+            'torrents' => function ($query) {
+                $query->where('is_old', false);
+            },
+        ]);
+
         return $media;
     }
 
@@ -94,21 +99,22 @@ abstract class BaseTracker
 
     final protected function _refreshTorrentsWithData(App\Models\Media $media, Collection $torrentsData) {
         $existingTorrents = App\Models\Torrent::where('media_id', $media->id)->get();
-
         $torrents = collect();
+
         foreach ($torrentsData as $torrentData) {
             $existingTorrent = $existingTorrents->first(function (App\Models\Torrent $torrent) use ($torrentData) {
                 return $this->_isTorrentMatchParsedData($torrent, $torrentData);
             });
 
             $torrent = $existingTorrent ?? new App\Models\Torrent(['media_id' => $media->id]);
-//            try {
-                $this->_updateTorrentWithData($torrent, $media, $torrentData);
-//            } catch (\Throwable $e) {
-//                dd([$torrentData, $torrent, $existingTorrent]);
-//            }
+            $this->_updateTorrentWithData($torrent, $media, $torrentData);
             $torrents->push($torrent);
         }
+
+        $existingTorrents->diff($torrents)->each(function (App\Models\Torrent $torrent) {
+            $torrent->is_old = true;
+            $torrent->save();
+        });
     }
 
     protected function _isTorrentMatchParsedData(App\Models\Torrent $torrent, array $torrentData): bool {
