@@ -52,50 +52,17 @@ class Client
 
         $newDownloads = $downloads->filter(fn(TorrentDownload $download) => !$existingDownloads->contains('hash', $download->hash));
         $newDownloads->each(function (TorrentDownload $download) {
-            TorrentDownload::updateOrCreate(['hash' => $download->hash], $download->toArray());
-
-            if ($download->torrent->content_type !== Torrent::TYPE_ANIME) {
-                return;
-            }
-
-            $files = $this->_getDownloadFiles($download->hash);
-            if (count($files) === 0) {
-                return;
-            }
-
-            $directoryName = explode('/', $files[0]['name'])[0];
-            $contentPath = self::BASE_SAVE_PATH . "/Anime/{$directoryName}";
-            $existingFiles = collect($this->_filesRenamer->getRenamedFiles($contentPath));
-            if ($existingFiles->count() > 0) {
-                Log::info("Existing files for download {$download->hash}: " . implode("\n\t", $existingFiles->map->from()->toArray()));
-            } else {
-                Log::info("No existing files for download {$download->hash}");
-            }
-
-            $notNeededFileIds = [];
-            foreach ($files as $index => $file) {
-                $fileName = explode('/', $file['name'])[1];
-                if ($existingFiles->contains(fn(Files\RenamedFile $renamedFile) => $renamedFile->from() === $fileName)) {
-                    $notNeededFileIds[] = $index;
-                }
-            }
-
-            if (count($notNeededFileIds) > 0) {
-                $excludedFileNames = array_map(fn($id) => $files[$id]['name'],$notNeededFileIds);
-                Log::info("Excluding files from download {$download->hash}: " . implode("\n\t", $excludedFileNames));
-                $this->_setFilesPriority($download->hash, $notNeededFileIds, self::FILE_PRIORITY_DO_NOT_DOWNLOAD);
-            } else {
-                Log::info("No files to exclude from download {$download->hash}");
-            }
+            $this->_excludeFilesFromDownload($download);
         });
 
         $removedDownloads = $existingDownloads->filter(fn(TorrentDownload $download) => !$downloads->contains('hash', $download->hash));
         $removedDownloads->each(function (TorrentDownload $download) {
             if (!$download->is_deleted) {
+                $download->is_finished = true;
+                $download->save();
+
                 $this->_telegram->notifyAboutFinishedDownload($download);
             }
-
-            $download->delete();
         });
     }
 
@@ -188,6 +155,44 @@ class Client
                 return 'Serials';
             case Torrent::TYPE_MOVIE:
                 return 'Movies';
+        }
+    }
+
+    private function _excludeFilesFromDownload(TorrentDownload $download): void {
+        TorrentDownload::updateOrCreate(['hash' => $download->hash], $download->toArray());
+
+        if ($download->torrent->content_type !== Torrent::TYPE_ANIME) {
+            return;
+        }
+
+        $files = $this->_getDownloadFiles($download->hash);
+        if (count($files) === 0) {
+            return;
+        }
+
+        $directoryName = explode('/', $files[0]['name'])[0];
+        $contentPath = self::BASE_SAVE_PATH . "/Anime/{$directoryName}";
+        $existingFiles = collect($this->_filesRenamer->getRenamedFiles($contentPath));
+        if ($existingFiles->count() > 0) {
+            Log::info("Existing files for download {$download->hash}: " . implode("\n\t", $existingFiles->map->from()->toArray()));
+        } else {
+            Log::info("No existing files for download {$download->hash}");
+        }
+
+        $notNeededFileIds = [];
+        foreach ($files as $index => $file) {
+            $fileName = explode('/', $file['name'])[1];
+            if ($existingFiles->contains(fn(Files\RenamedFile $renamedFile) => $renamedFile->from() === $fileName)) {
+                $notNeededFileIds[] = $index;
+            }
+        }
+
+        if (count($notNeededFileIds) > 0) {
+            $excludedFileNames = array_map(fn($id) => $files[$id]['name'],$notNeededFileIds);
+            Log::info("Excluding files from download {$download->hash}: " . implode("\n\t", $excludedFileNames));
+            $this->_setFilesPriority($download->hash, $notNeededFileIds, self::FILE_PRIORITY_DO_NOT_DOWNLOAD);
+        } else {
+            Log::info("No files to exclude from download {$download->hash}");
         }
     }
 }
