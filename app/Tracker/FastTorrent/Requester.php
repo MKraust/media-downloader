@@ -2,16 +2,16 @@
 
 namespace App\Tracker\FastTorrent;
 
-use App\Services\Http\ProxyRequester;
+use App\Services\Http;
 
 class Requester
 {
     public const BASE_URL = 'http://fast-torrent.ru';
 
-    private ProxyRequester $_httpRequester;
+    private Http\Requester $_httpRequester;
 
     public function __construct() {
-        $this->_httpRequester = app()->make(ProxyRequester::class);
+        $this->_httpRequester = app()->make(config('http.requesters.fast_torrent'));
     }
 
     public function loadTorrentFile(string $url): string {

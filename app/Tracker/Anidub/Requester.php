@@ -2,18 +2,17 @@
 
 namespace App\Tracker\Anidub;
 
-use App\Services\Http\ProxyRequester;
+use App\Services\Http;
 use GuzzleHttp;
 
 class Requester
 {
     public const BASE_URL = 'https://tr.anidub.com';
 
-    /** @var ProxyRequester */
-    private $_httpRequester;
+    private Http\Requester $_httpRequester;
 
     public function __construct() {
-        $this->_httpRequester = app()->make(ProxyRequester::class);
+        $this->_httpRequester = app()->make(config('http.requesters.anidub'));
     }
 
     public function search(string $searchQuery, int $offset): string {
@@ -53,8 +52,8 @@ class Requester
 
     private function getCookies(): GuzzleHttp\Cookie\CookieJar {
         $parameters = [
-            'login_name'     => 'Kraust',
-            'login_password' => '80578057Qw',
+            'login_name'     => env('ANIDUB_USERNAME'),
+            'login_password' => env('ANIDUB_PASSWORD'),
             'login'          => 'submit'
         ];
 

@@ -3,7 +3,7 @@
 
 namespace App\Tracker\Animedia;
 
-use App\Services\Http\ProxyRequester;
+use App\Services\Http;
 use GuzzleHttp;
 
 class Requester
@@ -12,11 +12,10 @@ class Requester
 
     private const MEDIA_PER_PAGE = 40;
 
-    /** @var ProxyRequester */
-    private $_httpRequester;
+    private Http\Requester $_httpRequester;
 
     public function __construct() {
-        $this->_httpRequester = app()->make(ProxyRequester::class);
+        $this->_httpRequester = app()->make(config('http.requesters.animedia'));
     }
 
     public function search(string $searchQuery, int $offset): string {
