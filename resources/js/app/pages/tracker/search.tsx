@@ -32,7 +32,7 @@ const TrackerSearchPage = () => {
   }
 
   const fetchSearchResults = async () => {
-    if (!searchQuery) {
+    if (!searchQuery || isLoading || lastQuery === searchQuery) {
       return
     }
 
@@ -65,7 +65,6 @@ const TrackerSearchPage = () => {
           placeholder="Поиск"
           disabled={isLoading}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onBlur={() => fetchSearchResults()}
           onKeyUp={(e) => {
             if (e.key === Key.Enter) {
               fetchSearchResults()

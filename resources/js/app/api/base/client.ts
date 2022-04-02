@@ -30,13 +30,13 @@ export class HttpClient {
     this.instance = axios
   }
 
-  private mergeRequestParams(params1: AxiosRequestConfig): AxiosRequestConfig {
+  private mergeRequestParams(params: AxiosRequestConfig): AxiosRequestConfig {
     return {
       ...this.instance.defaults,
-      ...params1,
+      ...params,
       headers: {
-        ...(this.instance.defaults.headers || {}),
-        ...(params1.headers || {}),
+        ...(this.instance.defaults.headers.common || {}),
+        ...(params.headers || {}),
       },
     }
   }
