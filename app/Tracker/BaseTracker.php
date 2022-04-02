@@ -78,9 +78,7 @@ abstract class BaseTracker
         $this->_refreshTorrentsWithData($media, $preparedData['torrents'] ?? collect());
 
         $media->load([
-            'torrents' => function ($query) {
-                $query->where('is_old', false);
-            },
+            'torrents',
         ]);
 
         return $media;

@@ -9,12 +9,9 @@
     <script>
         const BASE_URL = '/';
     </script>
-{{--    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">--}}
 </head>
 <body>
-    <div id="app">
-        <app></app>
-    </div>
+    <div id="root"></div>
 
     <script src="{{ mix('/js/main.js') }}"></script>
 </body>
