@@ -1,0 +1,13 @@
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.aside-menu-item-image {
+    height: 20px;
+    align-self: center;
+    margin-right: 0.5rem;
+    width: 2rem;
+    object-fit: contain;
+}
