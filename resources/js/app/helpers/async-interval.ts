@@ -1,8 +1,8 @@
 class AsyncInterval {
 
-  private callback: () => Promise<void> = async () => {}
+  private readonly callback: () => Promise<void> = async () => {}
 
-  private interval = 1000
+  private readonly interval: number = 1000
 
   private isRunning = false
 
@@ -29,8 +29,8 @@ class AsyncInterval {
   }
 }
 
-export const runAsyncInterval = (callback: () => Promise<void>, interval: number) => {
-  const asyncInterval = new AsyncInterval(callback, interval)
+export const runAsyncInterval = (...args: ConstructorParameters<typeof AsyncInterval>) => {
+  const asyncInterval = new AsyncInterval(...args)
   asyncInterval.start()
 
   return asyncInterval

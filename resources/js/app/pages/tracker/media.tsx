@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { orderBy } from 'lodash'
 
 import { PageTitle } from '@metronic'
-import { Preloader, TorrentCard, Alert, Icon, EmptyState } from '@/components'
+import { Preloader, TorrentCard, Icon, EmptyState } from '@/components'
 import { With, confirm, notifySuccess } from '@/helpers'
 import { IMedia, ITorrent, useApi } from '@/api'
 

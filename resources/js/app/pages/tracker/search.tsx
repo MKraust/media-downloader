@@ -4,7 +4,7 @@ import { FormControl } from 'react-bootstrap'
 import { Key } from 'w3c-keys'
 
 import { useTrackers } from '@/contexts'
-import { Alert, MediaCardsList, Preloader } from '@/components'
+import { EmptyState, MediaCardsList, Preloader } from '@/components'
 import { PageTitle } from '@metronic'
 import { IMedia, useApi } from '@/api'
 
@@ -85,22 +85,17 @@ const TrackerSearchPage = () => {
     const sentryLink = 'https://sentry.io/organizations/personal-purposes/issues/?project=5284009'
 
     return renderContent((
-      <Alert
-        variant="danger"
-        icon="exclamation-triangle"
-        title="Произошла ошибка"
-        text={<>Подробности в <strong><a href={sentryLink} className="text-danger text-hover-danger">Sentry</a></strong></>}
-      />
+      <EmptyState variant="danger" icon="exclamation-triangle">
+        Произошла ошибка. Подробности в <strong><a href={sentryLink}>Sentry</a></strong>
+      </EmptyState>
     ))
   }
 
   if (isLastSearchEmpty) {
     return renderContent((
-      <Alert
-        variant="primary"
-        icon="exclamation-circle"
-        text={<>По запросу <strong>{lastQuery}</strong> ничего не найдено</>}
-      />
+      <EmptyState variant="danger" icon="exclamation-triangle">
+        По запросу <strong>{lastQuery}</strong> ничего не найдено
+      </EmptyState>
     ))
   }
 

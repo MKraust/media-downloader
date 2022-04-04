@@ -1,31 +1,19 @@
-import { ReactNode, useEffect, useState } from 'react'
-import { Alert } from 'react-bootstrap'
+import { ReactNode, useEffect } from 'react'
 
 import { PageTitle } from '@metronic'
-import { IMedia, useApi } from '@/api'
 import { EmptyState, Preloader } from '@/components'
 import { MediaCardsList } from '@/components/media-cards-list'
-
-const useFavorites = () => {
-  const api = useApi()
-  const [isLoadingFavorites, setLoadingFavorites] = useState(false)
-  const [favorites, setFavorites] = useState<IMedia[]>(() => [])
-
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      setLoadingFavorites(true)
-      setFavorites(await api.loadFavorites())
-      setLoadingFavorites(false)
-    }
-
-    fetchFavorites()
-  }, [])
-
-  return { isLoadingFavorites, favorites }
-}
+import { useDispatch, useSelector } from '@/store'
+import { loadFavorites, selectFavorites, selectIsLoadingFavorites } from '@/store/favorites'
 
 export const FavoritesPage = () => {
-  const { isLoadingFavorites, favorites } = useFavorites()
+  const dispatch = useDispatch()
+  const isLoadingFavorites = useSelector(selectIsLoadingFavorites)
+  const favorites = useSelector(selectFavorites)
+
+  useEffect(() => {
+    dispatch(loadFavorites())
+  }, [])
 
   const renderContent = (content: ReactNode) => (
     <>

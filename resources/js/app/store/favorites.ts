@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { createApi, IMedia } from '@/api'
-import { Dispatch, RootState } from '@/store/index'
+import { RootState, ThunkAction } from '@/store'
 
 const { api } = createApi()
 
@@ -24,8 +24,15 @@ export const favoritesSlice = createSlice({
 const { setLoading, setList } = favoritesSlice.actions
 
 export const selectIsLoadingFavorites = (state: RootState) => state.favorites.isLoading
+export const selectFavorites = (state: RootState) => state.favorites.list
 
-export const loadFavorites = () => async (dispatch: Dispatch) => {
+export const loadFavorites = (): ThunkAction => async (dispatch, getState) => {
+  const { favorites: { isLoading } } = getState()
+
+  if (isLoading) {
+    return
+  }
+
   dispatch(setLoading(true))
   dispatch(setList(await api.loadFavorites()))
   dispatch(setLoading(false))

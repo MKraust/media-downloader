@@ -1,5 +1,5 @@
 import { Api } from './base/client'
-import { HandleErrorDecorator, ServiceHandleError } from './base/error-handler'
+import { ServiceHandleError } from './base/error-handler'
 import { IDownload, IMedia, IStorageDrive, ITorrent, ITracker } from './models'
 
 import { With } from '@/helpers'

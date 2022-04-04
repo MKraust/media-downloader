@@ -5,7 +5,7 @@ import { ApiService } from './service'
 
 export * from './models'
 
-const BASE_URL = 'http://media.mkraust.ru/api/'
+const BASE_URL = `${location.protocol}//${location.host}/api`
 
 export const createApi = (authProvider?: AuthProvider) => {
   return {

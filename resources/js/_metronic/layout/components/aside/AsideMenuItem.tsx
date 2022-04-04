@@ -2,8 +2,8 @@ import React from 'react'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router'
+
 import { checkIsActive, KTSVG } from '../../../helpers'
-import { useLayout } from '../../core'
 
 export type AsideMenuItemProps = {
   to: string
@@ -27,21 +27,21 @@ const AsideMenuItem: React.FC<AsideMenuItemProps> = ({
   const isActive = checkIsActive(pathname, to)
 
   return (
-    <div className='menu-item'>
+    <div className="menu-item">
       <Link className={clsx('menu-link without-sub', { active: isActive })} to={to}>
         {hasBullet && (
-          <span className='menu-bullet'>
-            <span className='bullet bullet-dot' />
+          <span className="menu-bullet">
+            <span className="bullet bullet-dot" />
           </span>
         )}
         {icon && (
-          <span className='menu-icon'>
-            <KTSVG path={icon} className='svg-icon-2' />
+          <span className="menu-icon">
+            <KTSVG path={icon} className="svg-icon-2" />
           </span>
         )}
         {fontIcon && <i className={clsx('bi fs-3', fontIcon)} />}
-        {image && <img className='aside-menu-item-image' src={image} alt='' />}
-        <span className='menu-title'>{title}</span>
+        {image && <img className="aside-menu-item-image" src={image} alt="" />}
+        <span className="menu-title">{title}</span>
       </Link>
       {children}
     </div>

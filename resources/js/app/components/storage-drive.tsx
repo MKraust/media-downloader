@@ -1,8 +1,7 @@
 import { FC, useMemo } from 'react'
-import { ProgressBar } from 'react-bootstrap'
 
 import { IStorageDrive } from '@/api'
-import { humanizeBytes, minMaxWidth } from '@/helpers'
+import { humanizeBytes } from '@/helpers'
 import { Icon } from '@/components/icon'
 
 const formatSize = (val: number) => humanizeBytes(val, 1)
