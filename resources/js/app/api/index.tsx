@@ -5,11 +5,12 @@ import { ApiService } from './service'
 
 export * from './models'
 
-const BASE_URL = `${location.protocol}//${location.host}/api`
+const BASE_URL = window.__sharedData.apiHost || `${location.protocol}//${location.host}`
+const BASE_API_URL = `${BASE_URL}/api`
 
 export const createApi = (authProvider?: AuthProvider) => {
   return {
-    api: createService(ApiService, BASE_URL, authProvider),
+    api: createService(ApiService, BASE_API_URL, authProvider),
   }
 }
 

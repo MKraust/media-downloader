@@ -1,4 +1,4 @@
-class AsyncInterval {
+export class AsyncInterval {
 
   private readonly callback: () => Promise<void> = async () => {}
 
@@ -12,6 +12,10 @@ class AsyncInterval {
   }
 
   public start() {
+    if (this.isRunning) {
+      return
+    }
+
     this.isRunning = true
     this.runAsyncInterval()
   }

@@ -4,11 +4,19 @@ import type { TypedUseSelectorHook } from 'react-redux'
 import type { AnyAction } from 'redux'
 import type { ThunkAction as BaseThunkAction } from 'redux-thunk'
 
-import favoritesReducer from '@/store/favorites'
+import favoritesReducer from './favorites'
+import trackersReducer from './trackers'
+import downloadsReducer from './downloads'
+import mediaReducer from './media'
+import searchReducer from './search'
 
 export const store = configureStore({
   reducer: {
+    trackers: trackersReducer,
     favorites: favoritesReducer,
+    downloads: downloadsReducer,
+    media: mediaReducer,
+    search: searchReducer,
   },
 })
 

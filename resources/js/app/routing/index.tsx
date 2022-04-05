@@ -1,11 +1,11 @@
-import { FC, lazy, useEffect, useState } from 'react'
+import { FC, lazy, useEffect } from 'react'
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 
 import { App } from '@/app'
 import { MasterLayout, AsideMenuItem, AsideMenuGroup } from '@metronic'
 import { FavoritesPage } from '@/pages/favorites'
-import { ITracker, useApi } from '@/api'
-import { TrackersProvider } from '@/contexts'
+import { useDispatch, useSelector } from '@/store'
+import { loadTrackers, selectTrackers } from '@/store/trackers'
 
 const DashboardPage = lazy(() => import('@/pages/dashboard'))
 const TrackerSearchPage = lazy(() => import('@/pages/tracker/search'))
@@ -14,19 +14,13 @@ const DownloadsPage = lazy(() => import('@/pages/downloads'))
 
 const { APP_URL } = process.env
 
-const useTrackers = () => {
-  const api = useApi()
-  const [trackers, setTrackers] = useState<ITracker[]>(() => [])
+const AppRoutes: FC = () => {
+  const trackers = useSelector(selectTrackers)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    api.loadTrackers().then((trackers) => setTrackers(trackers))
+    dispatch(loadTrackers())
   }, [])
-
-  return trackers
-}
-
-const AppRoutes: FC = () => {
-  const trackers = useTrackers()
 
   const menuItems = (
     <>
@@ -47,24 +41,22 @@ const AppRoutes: FC = () => {
   )
 
   return (
-    <TrackersProvider>
-      <BrowserRouter basename={APP_URL}>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<Navigate to="/dashboard" />} />
-            <Route element={<MasterLayout menu={menuItems} />}>
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="favorites" element={<FavoritesPage />} />
-              <Route path="downloads" element={<DownloadsPage />} />
-              <Route path=":trackerId">
-                <Route index element={<TrackerSearchPage />} />
-                <Route path={':id'} element={<TrackerMediaPage />} />
-              </Route>
+    <BrowserRouter basename={APP_URL}>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<Navigate to="/dashboard" />} />
+          <Route element={<MasterLayout menu={menuItems} />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="favorites" element={<FavoritesPage />} />
+            <Route path="downloads" element={<DownloadsPage />} />
+            <Route path=":trackerId">
+              <Route index element={<TrackerSearchPage />} />
+              <Route path={':id'} element={<TrackerMediaPage />} />
             </Route>
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </TrackersProvider>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

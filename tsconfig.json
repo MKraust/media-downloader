@@ -16,7 +16,8 @@
         "allowJs": true,
         "jsx": "react-jsx",
         "types": [
-            "node"
+            "node",
+            "./resources/js/main"
         ],
         "baseUrl": "./",
         "paths": {

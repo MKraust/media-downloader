@@ -6,39 +6,10 @@ import { orderBy } from 'lodash'
 
 import { PageTitle } from '@metronic'
 import { Preloader, TorrentCard, Icon, EmptyState } from '@/components'
-import { With, confirm, notifySuccess } from '@/helpers'
-import { IMedia, ITorrent, useApi } from '@/api'
-
-const useMedia = () => {
-  const { id } = useParams()
-  const api = useApi()
-  const [isLoading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
-  const [media, setMedia] = useState<With<IMedia, 'torrents'> | null>(null)
-
-  const fetchMedia = async () => {
-    if (!id || isLoading) {
-      return
-    }
-
-    setError(false)
-
-    try {
-      setLoading(true)
-      setMedia(await api.loadMedia(id))
-    } catch (e) {
-      setError(true)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchMedia()
-  }, [])
-
-  return { isLoading, media, error }
-}
+import { confirm, notifySuccess } from '@/helpers'
+import { ITorrent, useApi } from '@/api'
+import { useDispatch, useSelector } from '@/store'
+import { loadMedia, selectError, selectIsLoadingMedia, selectMedia } from '@/store/media'
 
 const useSort = () => {
   const [sortBy, setSortBy] = useState('size_int')
@@ -58,7 +29,20 @@ const useSort = () => {
 
 const TrackerMediaPage = () => {
   const api = useApi()
-  const { isLoading, media, error } = useMedia()
+  const dispatch = useDispatch()
+
+  const { id } = useParams()
+
+  const isLoading = useSelector(selectIsLoadingMedia)
+  const media = useSelector(selectMedia)
+  const error = useSelector(selectError)
+
+  useEffect(() => {
+    if (id && id !== media?.id) {
+      dispatch(loadMedia(id))
+    }
+  }, [])
+
   const { switchSortingOrder, sortBy, setSortBy, sortingOrder, sortingOrderIcon } = useSort()
   const isSomeSeriesTorrents = media ? media.torrents.some((torrent) => torrent.content_type === 'series') : false
   const [isTogglingFavorite, setTogglingFavorite] = useState(false)

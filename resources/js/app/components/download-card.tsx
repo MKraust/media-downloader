@@ -2,10 +2,12 @@ import { Button, Card, FormCheck, ProgressBar } from 'react-bootstrap'
 import { CSSProperties, FC, useMemo, useState } from 'react'
 import clsx from 'clsx'
 
-import { IDownload, useApi } from '@/api'
-import { useTrackers } from '@/contexts'
+import { IDownload } from '@/api'
 import { humanizeBytes, humanizeEstimate, minMaxWidth } from '@/helpers'
-import { Icon } from '@/components/icon'
+import { Icon, IconProps } from '@/components/icon'
+import { useDispatch, useSelector } from '@/store'
+import { selectTrackerById } from '@/store/trackers'
+import { pauseDownload, resumeDownload } from '@/store/downloads'
 
 const progressStatuses: IDownload['state_original'][] = ['downloading', 'uploading', 'metaDL', 'checkingDL', 'checkingUP']
 
@@ -18,21 +20,23 @@ export const DownloadCard: FC<DownloadCardProps> = ({ download, onDelete }) => {
   const {
     media,
     torrent,
-    hash,
     progress,
     state_original: stateOriginal,
     download_speed_in_bytes_per_second: downloadSpeedInBytesPerSecond,
     estimate_in_seconds: estimateInSeconds,
   } = download
 
-  const trackers = useTrackers()
-  const api = useApi()
+  const dispatch = useDispatch()
+
+  const tracker = useSelector(selectTrackerById(media.tracker_id))
+
   const [isChangingState, setChangingState] = useState(false)
   const isMovie = useMemo(() => torrent.content_type === 'movie', [torrent.content_type])
   const isInProgress = useMemo(() => progressStatuses.includes(stateOriginal), [stateOriginal])
   const progressPercent = useMemo(() => Number(progress) * 100, [progress])
   const speed = useMemo(() => humanizeBytes(downloadSpeedInBytesPerSecond, 1) + '/c', [downloadSpeedInBytesPerSecond])
   const estimate = useMemo(() => humanizeEstimate(estimateInSeconds), [estimateInSeconds])
+  const isActive = useMemo(() => !['error', 'pausedUP', 'pausedDL'].includes(stateOriginal), [stateOriginal])
   const statusColor = useMemo(() => {
     switch (stateOriginal) {
       case 'error':
@@ -47,23 +51,17 @@ export const DownloadCard: FC<DownloadCardProps> = ({ download, onDelete }) => {
     }
   }, [stateOriginal])
 
-  const isActive = useMemo(() => !['error', 'pausedUP', 'pausedDL'].includes(stateOriginal), [stateOriginal])
-
   const setActive = async (val: boolean) => {
     setChangingState(true)
 
-    download.state_original = 'pausedDL'
-
     if (val) {
-      await api.resumeDownload(hash)
+      await dispatch(resumeDownload(download.hash))
     } else {
-      await api.pauseDownload(hash)
+      await dispatch(pauseDownload(download.hash))
     }
 
     setChangingState(false)
   }
-
-  const tracker = trackers.find((tracker) => tracker.id === media.tracker_id)
 
   const renderSwitch = () => (
     <FormCheck
@@ -92,23 +90,23 @@ export const DownloadCard: FC<DownloadCardProps> = ({ download, onDelete }) => {
     </div>
   )
 
-  const renderAttributes = () => {
+  const renderAttribute = (value: string, icon: IconProps['name']) => {
     const iconSize = 3
 
     return (
-      <>
-        <div className="d-flex align-items-center gap-2">
-          <Icon name="forward" size={iconSize} style="duo" className="text-primary" />
-          <span>{ speed }</span>
-        </div>
-
-        <div className="d-flex align-items-center gap-2">
-          <Icon name="stopwatch" size={iconSize} style="duo" className="text-primary" />
-          <span>{ estimate }</span>
-        </div>
-      </>
+      <div className="d-flex align-items-center gap-2">
+        <Icon name={icon} size={iconSize} style="duo" className="text-primary" />
+        <span className="text-nowrap">{ speed }</span>
+      </div>
     )
   }
+
+  const renderAttributes = () => (
+    <>
+      {renderAttribute(speed, 'forward')}
+      {renderAttribute(estimate, 'stopwatch')}
+    </>
+  )
 
   return (
     <Card className="bg-white p-4 shadow-sm">

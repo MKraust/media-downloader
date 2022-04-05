@@ -7,7 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Torrents</title>
     <script>
-        const BASE_URL = '/';
+        @php
+            $sharedData = [
+                'apiHost' => env('API_HOST'),
+            ]
+        @endphp
+
+        window.__sharedData = {!! json_encode($sharedData) !!}
     </script>
 </head>
 <body>

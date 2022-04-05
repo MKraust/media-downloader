@@ -15,5 +15,5 @@ const webpackConfig = require('./webpack.config');
 
 mix.js('resources/js/main.tsx', 'public/js')
   .version()
-  .sourceMaps()
+  .sourceMaps(false)
   .webpackConfig(webpackConfig);

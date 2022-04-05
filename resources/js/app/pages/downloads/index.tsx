@@ -1,42 +1,28 @@
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo } from 'react'
 import { orderBy } from 'lodash'
 
 import { PageTitle } from '@metronic'
 import { DownloadCard, EmptyState } from '@/components'
-import { IDownload, useApi } from '@/api'
-import { confirm, runAsyncInterval } from '@/helpers'
+import { useDispatch, useSelector } from '@/store'
+import { deleteDownload, selectDownloads, startWatchingDownloads, stopWatchingDownloads } from '@/store/downloads'
+import { IDownload } from '@/api'
 
-const useDownloads = () => {
-  const api = useApi()
-  const [downloads, setDownloads] = useState<IDownload[]>(() => [])
-
-  const refreshDownloads = async () => {
-    setDownloads(await api.loadDownloads())
-  }
+const DownloadsPage = () => {
+  const dispatch = useDispatch()
+  const downloads = useSelector(selectDownloads)
+  const sortedDownloads = useMemo(() => {
+    return orderBy(downloads, ['media.tracker_id', 'media.title', 'torrent.name'], ['asc'])
+  }, [downloads])
 
   useEffect(() => {
-    const asyncInterval = runAsyncInterval(refreshDownloads, 1000)
+    dispatch(startWatchingDownloads())
 
     return () => {
-      asyncInterval.stop()
+      dispatch(stopWatchingDownloads())
     }
   }, [])
 
-  const handleDelete = async ({ torrent, media, hash }: IDownload) => {
-    const downloadName = media.title + (torrent.content_type !== 'movie' ? ` ${torrent.name}` : '')
-
-    if (await confirm('Удалить загрузку?', downloadName)) {
-      await api.deleteDownload(hash)
-      setDownloads(downloads.filter((download) => download.hash !== hash))
-    }
-  }
-
-  return { downloads, handleDelete }
-}
-
-const DownloadsPage = () => {
-  const { downloads, handleDelete } = useDownloads()
-  const sortedDownloads = useMemo(() => orderBy(downloads, ['media.tracker_id', 'media.title', 'torrent.name'], ['asc']), [downloads])
+  const handleDelete = (download: IDownload) => dispatch(deleteDownload(download))
 
   const renderContent = (content: ReactNode) => (
     <>
