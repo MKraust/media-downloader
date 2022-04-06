@@ -15,7 +15,7 @@ import {
   selectLastSearchQuery,
 } from '@/store/search'
 
-const TrackerSearchPage = () => {
+const SearchPage = () => {
   const { trackerId } = useParams()
   const dispatch = useDispatch()
 
@@ -93,4 +93,4 @@ const TrackerSearchPage = () => {
   return renderContent(<MediaCardsList mediaList={searchResults} />)
 }
 
-export default TrackerSearchPage
+export default SearchPage

@@ -27,7 +27,7 @@ const useSort = () => {
   }
 }
 
-const TrackerMediaPage = () => {
+const MediaPage = () => {
   const api = useApi()
   const dispatch = useDispatch()
 
@@ -179,4 +179,4 @@ const TrackerMediaPage = () => {
   )
 }
 
-export default TrackerMediaPage
+export default MediaPage

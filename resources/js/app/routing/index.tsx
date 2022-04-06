@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from '@/store'
 import { loadTrackers, selectTrackers } from '@/store/trackers'
 
 const DashboardPage = lazy(() => import('@/pages/dashboard'))
-const TrackerSearchPage = lazy(() => import('@/pages/tracker/search'))
-const TrackerMediaPage = lazy(() => import('@/pages/tracker/media'))
+const SearchPage = lazy(() => import('@/pages/search'))
+const MediaPage = lazy(() => import('@/pages/media'))
 const DownloadsPage = lazy(() => import('@/pages/downloads'))
 
 const { APP_URL } = process.env
@@ -49,8 +49,8 @@ const AppRoutes: FC = () => {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="favorites" element={<FavoritesPage />} />
             <Route path="downloads" element={<DownloadsPage />} />
-            <Route path="search/:trackerId" element={<TrackerSearchPage />} />
-            <Route path="media/:mediaId" element={<TrackerMediaPage />} />
+            <Route path="search/:trackerId" element={<SearchPage />} />
+            <Route path="media/:mediaId" element={<MediaPage />} />
           </Route>
         </Route>
       </Routes>
