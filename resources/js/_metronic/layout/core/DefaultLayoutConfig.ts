@@ -77,7 +77,7 @@ export const DefaultLayoutConfig: ILayout = {
   pageTitle: {
     display: true,
     breadCrumbs: true,
-    description: false,
+    description: true,
     layout: 'default',
     direction: 'row',
     responsive: true,

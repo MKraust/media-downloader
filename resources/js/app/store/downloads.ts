@@ -39,13 +39,19 @@ export const loadDownloads = (): ThunkAction => async (dispatch) => {
 }
 
 export const startWatchingDownloads = (): ThunkAction => (dispatch) => {
+  if (downloadsWatcher?.isRunning()) {
+    return
+  }
+
   downloadsWatcher = runAsyncInterval(async () => {
     dispatch(loadDownloads())
   }, 1000)
 }
 
 export const stopWatchingDownloads = (): ThunkAction => () => {
-  downloadsWatcher.stop()
+  if (downloadsWatcher) {
+    downloadsWatcher.stop()
+  }
 }
 
 export const deleteDownload = ({ hash, media, torrent }: IDownload): ThunkAction => async (dispatch, getState) => {

@@ -4,30 +4,34 @@ export class AsyncInterval {
 
   private readonly interval: number = 1000
 
-  private isRunning = false
+  private _isRunning = false
 
   constructor(callback: () => Promise<void>, interval: number) {
     this.callback = callback
     this.interval = interval
   }
 
+  public isRunning() {
+    return this.isRunning
+  }
+
   public start() {
-    if (this.isRunning) {
+    if (this._isRunning) {
       return
     }
 
-    this.isRunning = true
+    this._isRunning = true
     this.runAsyncInterval()
   }
 
   public stop() {
-    this.isRunning = false
+    this._isRunning = false
   }
 
   private async runAsyncInterval() {
     await this.callback()
 
-    if (this.isRunning) {
+    if (this._isRunning) {
       setTimeout(() => this.runAsyncInterval(), this.interval)
     }
   }

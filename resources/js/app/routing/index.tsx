@@ -32,7 +32,7 @@ const AppRoutes: FC = () => {
       {trackers.map((tracker) => (
         <AsideMenuItem
           key={tracker.id}
-          to={`/${tracker.id}`}
+          to={`/search/${tracker.id}`}
           title={tracker.title}
           image={tracker.icon}
         />
@@ -49,10 +49,8 @@ const AppRoutes: FC = () => {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="favorites" element={<FavoritesPage />} />
             <Route path="downloads" element={<DownloadsPage />} />
-            <Route path=":trackerId">
-              <Route index element={<TrackerSearchPage />} />
-              <Route path={':id'} element={<TrackerMediaPage />} />
-            </Route>
+            <Route path="search/:trackerId" element={<TrackerSearchPage />} />
+            <Route path="media/:mediaId" element={<TrackerMediaPage />} />
           </Route>
         </Route>
       </Routes>

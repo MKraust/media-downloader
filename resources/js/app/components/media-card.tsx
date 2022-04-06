@@ -16,12 +16,12 @@ export const MediaCard: FC<MediaCardProps> = ({ media, className }) => {
       {media.series_count && (
         <div className="ribbon-label bg-danger" style={{ top: '24px' }}>{media.series_count}</div>
       )}
-      <Link to={`/${media.tracker_id}/${media.id}`}>
+      <Link to={`/media/${media.id}`}>
         <Card.Img src={media.poster} style={{ width: '100%' }} alt={media.title} />
       </Link>
       <Card.Body className="d-flex flex-column justify-content-center" style={{ padding: '1.5rem' }}>
         <Card.Title className="text-center mb-0">
-          <Link to={`/${media.tracker_id}/${media.id}`} className="hoverable">
+          <Link to={`/media/${media.id}`} className="hoverable">
             {media.title}
           </Link>
         </Card.Title>

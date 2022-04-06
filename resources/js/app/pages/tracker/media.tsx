@@ -4,7 +4,7 @@ import { Button, Card, Col, FormSelect, Row } from 'react-bootstrap'
 import clsx from 'clsx'
 import { orderBy } from 'lodash'
 
-import { PageTitle } from '@metronic'
+import { PageDescription, PageTitle } from '@metronic'
 import { Preloader, TorrentCard, Icon, EmptyState } from '@/components'
 import { confirm, notifySuccess } from '@/helpers'
 import { ITorrent, useApi } from '@/api'
@@ -31,15 +31,15 @@ const TrackerMediaPage = () => {
   const api = useApi()
   const dispatch = useDispatch()
 
-  const { id } = useParams()
+  const { mediaId } = useParams()
 
   const isLoading = useSelector(selectIsLoadingMedia)
   const media = useSelector(selectMedia)
   const error = useSelector(selectError)
 
   useEffect(() => {
-    if (id && id !== media?.id) {
-      dispatch(loadMedia(id))
+    if (mediaId && mediaId !== media?.id) {
+      dispatch(loadMedia(mediaId))
     }
   }, [])
 
@@ -121,6 +121,9 @@ const TrackerMediaPage = () => {
   return (
     <>
       <PageTitle>{media.title}</PageTitle>
+      {media.original_title && (
+        <PageDescription>{media.original_title}</PageDescription>
+      )}
       <Row>
         <Col md={4} className="mb-4">
           <div className="card ribbon ribbon-start mb-4">
