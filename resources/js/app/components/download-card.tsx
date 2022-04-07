@@ -5,7 +5,6 @@ import clsx from 'clsx'
 import { IDownload } from '@/api'
 import { humanizeBytes, humanizeEstimate, minMaxWidth } from '@/helpers'
 import { Icon, IconProps } from '@/components/icon'
-import { useDispatch, useSelector } from '@/store'
 import { selectTrackerById } from '@/store/trackers'
 import { pauseDownload, resumeDownload } from '@/store/downloads'
 
@@ -26,9 +25,7 @@ export const DownloadCard: FC<DownloadCardProps> = ({ download, onDelete }) => {
     estimate_in_seconds: estimateInSeconds,
   } = download
 
-  const dispatch = useDispatch()
-
-  const tracker = useSelector(selectTrackerById(media.tracker_id))
+  const tracker = selectTrackerById(media.tracker_id)
 
   const [isChangingState, setChangingState] = useState(false)
   const isMovie = useMemo(() => torrent.content_type === 'movie', [torrent.content_type])
@@ -55,9 +52,9 @@ export const DownloadCard: FC<DownloadCardProps> = ({ download, onDelete }) => {
     setChangingState(true)
 
     if (val) {
-      await dispatch(resumeDownload(download.hash))
+      await resumeDownload(download.hash)
     } else {
-      await dispatch(pauseDownload(download.hash))
+      await pauseDownload(download.hash)
     }
 
     setChangingState(false)

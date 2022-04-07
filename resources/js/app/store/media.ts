@@ -1,24 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit'
-
-import type { RootState, ThunkAction } from '@/store/index'
 import { createApi, IMedia } from '@/api'
 import { With } from '@/helpers'
+import { createDynamicSlice, Payload } from '@/store/helpers'
+import { injectReducer, store } from '@/store'
 
-const { api } = createApi()
+const storeKey = 'media'
 
-export const mediaSlice = createSlice({
-  name: 'media',
+const { slice, getState, useSlice: useMedia } = createDynamicSlice(store, {
+  name: storeKey,
   initialState: {
-    item: null as With<IMedia, 'torrents'> | null,
+    media: null as With<IMedia, 'torrents'> | null,
     isLoading: false,
     error: false,
   },
   reducers: {
-    setIsLoading(state, { payload }) {
+    setIsLoading(state, { payload }: Payload<boolean>) {
       state.isLoading = payload
     },
-    setItem(state, { payload }) {
-      state.item = payload
+    setItem(state, { payload }: Payload<With<IMedia, 'torrents'> | null>) {
+      state.media = payload
     },
     setError(state, { payload }) {
       state.error = payload
@@ -26,14 +25,14 @@ export const mediaSlice = createSlice({
   },
 })
 
-const { setIsLoading, setItem, setError } = mediaSlice.actions
+const { api } = createApi()
+const { dispatch } = store
+const { setIsLoading, setItem, setError } = slice.actions
 
-export const selectMedia = (state: RootState) => state.media.item
-export const selectIsLoadingMedia = (state: RootState) => state.media.isLoading
-export const selectError = (state: RootState) => state.media.error
+export { useMedia }
 
-export const loadMedia = (id: IMedia['id']): ThunkAction => async (dispatch, getState) => {
-  const { media: { isLoading } } = getState()
+export const loadMedia = async (id: IMedia['id']) => {
+  const { isLoading } = getState()
 
   if (isLoading) {
     return
@@ -52,4 +51,4 @@ export const loadMedia = (id: IMedia['id']): ThunkAction => async (dispatch, get
   }
 }
 
-export default mediaSlice.reducer
+injectReducer(storeKey, slice.reducer)

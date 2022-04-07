@@ -1,23 +1,15 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { Card, Col, Row } from 'react-bootstrap'
 
 import { PageTitle } from '@metronic'
 import { Preloader, StorageDrive } from '@/components'
-import { IStorageDrive, useApi } from '@/api'
+import { loadStorageDrives, useStorageDrives } from '@/store/storage-drives'
 
 const DashboardPage = () => {
-  const api = useApi()
-  const [isLoading, setLoading] = useState(false)
-  const [drives, setDrives] = useState<IStorageDrive[]>(() => [])
-
-  const fetchDrives = async () => {
-    setLoading(true)
-    setDrives(await api.loadStorageDrives())
-    setLoading(false)
-  }
+  const { isLoading, drives } = useStorageDrives()
 
   useEffect(() => {
-    fetchDrives()
+    loadStorageDrives()
   }, [])
 
   const renderContent = (content: ReactNode) => (

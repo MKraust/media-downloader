@@ -1,30 +1,32 @@
-import { createApi, IMedia } from '@/api'
+import { createApi, IStorageDrive } from '@/api'
 import { injectReducer, store } from '@/store'
 import { createDynamicSlice, Payload } from '@/store/helpers'
 
-const storeKey = 'favorites'
+const storeKey = 'storageDrives'
 
-const { slice, getState, useSlice: useFavorites } = createDynamicSlice(store, {
+const { slice, getState, useSlice: useStorageDrives } = createDynamicSlice(store, {
   name: storeKey,
   initialState: {
-    favorites: [] as IMedia[],
+    drives: [] as IStorageDrive[],
     isLoading: false,
   },
   reducers: {
     setLoading(state, { payload }: Payload<boolean>) {
       state.isLoading = payload
     },
-    setFavorites(state, { payload }: Payload<IMedia[]>) {
-      state.favorites = payload
+    setList(state, { payload }: Payload<IStorageDrive[]>) {
+      state.drives = payload
     },
   },
 })
 
 const { api } = createApi()
 const { dispatch } = store
-const { setFavorites, setLoading } = slice.actions
+const { setLoading, setList } = slice.actions
 
-const loadFavorites = async () => {
+export { useStorageDrives }
+
+export const loadStorageDrives = async () => {
   const { isLoading } = getState()
 
   if (isLoading) {
@@ -32,14 +34,8 @@ const loadFavorites = async () => {
   }
 
   dispatch(setLoading(true))
-  const favorites = await api.loadFavorites()
-  dispatch(setFavorites(favorites))
+  dispatch(setList(await api.loadStorageDrives()))
   dispatch(setLoading(false))
 }
 
 injectReducer(storeKey, slice.reducer)
-
-export {
-  useFavorites,
-  loadFavorites,
-}

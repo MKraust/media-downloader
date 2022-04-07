@@ -1,34 +1,35 @@
-import { createSlice } from '@reduxjs/toolkit'
-
 import { createApi, ITracker } from '@/api'
-import { RootState, ThunkAction } from '@/store'
+import { injectReducer, store } from '@/store'
+import { createDynamicSlice, Payload } from '@/store/helpers'
 
-const { api } = createApi()
+const storeKey = 'trackers'
 
-export const trackersSlice = createSlice({
-  name: 'trackers',
+const { slice, getState, useSlice: useTrackers } = createDynamicSlice(store, {
+  name: storeKey,
   initialState: {
-    list: [] as ITracker[],
+    trackers: [] as ITracker[],
     isLoading: false,
   },
   reducers: {
-    setLoading(state, { payload }) {
+    setLoading(state, { payload }: Payload<boolean>) {
       state.isLoading = payload
     },
-    setList(state, { payload }) {
-      state.list = payload
+    setList(state, { payload }: Payload<ITracker[]>) {
+      state.trackers = payload
     },
   },
 })
 
-const { setLoading, setList } = trackersSlice.actions
+const { api } = createApi()
+const { dispatch } = store
+const { setLoading, setList } = slice.actions
 
-export const selectIsLoadingTrackers = (state: RootState) => state.trackers.isLoading
-export const selectTrackers = (state: RootState) => state.trackers.list
-export const selectTrackerById = (id?: ITracker['id']) => (state: RootState) => state.trackers.list.find((i) => i.id === id)
+export { useTrackers }
 
-export const loadTrackers = (): ThunkAction => async (dispatch, getState) => {
-  const { trackers: { isLoading } } = getState()
+export const selectTrackerById = (id?: ITracker['id']) => getState().trackers.find((i) => i.id === id)
+
+export const loadTrackers = async () => {
+  const { isLoading } = getState()
 
   if (isLoading) {
     return
@@ -39,4 +40,4 @@ export const loadTrackers = (): ThunkAction => async (dispatch, getState) => {
   dispatch(setLoading(false))
 }
 
-export default trackersSlice.reducer
+injectReducer(storeKey, slice.reducer)

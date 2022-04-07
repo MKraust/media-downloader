@@ -5,31 +5,20 @@ import { Key } from 'w3c-keys'
 
 import { EmptyState, MediaCardsList, Preloader } from '@/components'
 import { PageTitle } from '@metronic'
-import { useDispatch, useSelector } from '@/store'
 import { selectTrackerById } from '@/store/trackers'
-import {
-  searchMedia,
-  selectError, selectFoundMedia,
-  selectIsLastSearchEmpty,
-  selectIsLoadingSearchResults,
-  selectLastSearchQuery,
-} from '@/store/search'
+import { searchMedia, useSearch } from '@/store/search'
 
 const SearchPage = () => {
   const { trackerId } = useParams()
-  const dispatch = useDispatch()
 
-  const currentTracker = useSelector(selectTrackerById(trackerId))
-  const isLoading = useSelector(selectIsLoadingSearchResults(trackerId))
-  const error = useSelector(selectError(trackerId))
-  const isLastSearchEmpty = useSelector(selectIsLastSearchEmpty(trackerId))
-  const lastQuery = useSelector(selectLastSearchQuery(trackerId))
-  const searchResults = useSelector(selectFoundMedia(trackerId))
+  const { isLoading, error, lastSearchIsEmpty, lastSearchQuery, items } = useSearch(trackerId)
 
   const [searchQuery, setSearchQuery] = useState('')
 
+  const currentTracker = selectTrackerById(trackerId)
+
   useEffect(() => {
-    setSearchQuery(lastQuery)
+    setSearchQuery(lastSearchQuery)
   }, [trackerId])
 
   if (!currentTracker) {
@@ -43,7 +32,7 @@ const SearchPage = () => {
 
   const handleSearch = () => {
     if (trackerId) {
-      dispatch(searchMedia(trackerId, searchQuery))
+      searchMedia(trackerId, searchQuery)
     }
   }
 
@@ -82,15 +71,15 @@ const SearchPage = () => {
     ))
   }
 
-  if (isLastSearchEmpty) {
+  if (lastSearchIsEmpty) {
     return renderContent((
       <EmptyState variant="danger" icon="exclamation-triangle">
-        По запросу <strong>{lastQuery}</strong> ничего не найдено
+        По запросу <strong>{lastSearchQuery}</strong> ничего не найдено
       </EmptyState>
     ))
   }
 
-  return renderContent(<MediaCardsList mediaList={searchResults} />)
+  return renderContent(<MediaCardsList mediaList={items} />)
 }
 
 export default SearchPage

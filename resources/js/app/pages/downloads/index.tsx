@@ -2,27 +2,30 @@ import { ReactNode, useEffect, useMemo } from 'react'
 import { orderBy } from 'lodash'
 
 import { PageTitle } from '@metronic'
-import { DownloadCard, EmptyState } from '@/components'
-import { useDispatch, useSelector } from '@/store'
-import { deleteDownload, selectDownloads, startWatchingDownloads, stopWatchingDownloads } from '@/store/downloads'
 import { IDownload } from '@/api'
+import { DownloadCard, EmptyState } from '@/components'
+import {
+  deleteDownload,
+  startWatchingDownloads,
+  stopWatchingDownloads,
+  useDownloads,
+} from '@/store/downloads'
 
 const DownloadsPage = () => {
-  const dispatch = useDispatch()
-  const downloads = useSelector(selectDownloads)
+  const { downloads } = useDownloads()
   const sortedDownloads = useMemo(() => {
     return orderBy(downloads, ['media.tracker_id', 'media.title', 'torrent.name'], ['asc'])
   }, [downloads])
 
   useEffect(() => {
-    dispatch(startWatchingDownloads())
+    startWatchingDownloads()
 
     return () => {
-      dispatch(stopWatchingDownloads())
+      stopWatchingDownloads()
     }
   }, [])
 
-  const handleDelete = (download: IDownload) => dispatch(deleteDownload(download))
+  const handleDelete = (download: IDownload) => deleteDownload(download)
 
   const renderContent = (content: ReactNode) => (
     <>

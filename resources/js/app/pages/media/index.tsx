@@ -8,8 +8,7 @@ import { PageDescription, PageTitle } from '@metronic'
 import { Preloader, TorrentCard, Icon, EmptyState } from '@/components'
 import { confirm, notifySuccess } from '@/helpers'
 import { ITorrent, useApi } from '@/api'
-import { useDispatch, useSelector } from '@/store'
-import { loadMedia, selectError, selectIsLoadingMedia, selectMedia } from '@/store/media'
+import { loadMedia, useMedia } from '@/store/media'
 
 const useSort = () => {
   const [sortBy, setSortBy] = useState('size_int')
@@ -29,17 +28,12 @@ const useSort = () => {
 
 const MediaPage = () => {
   const api = useApi()
-  const dispatch = useDispatch()
-
   const { mediaId } = useParams()
-
-  const isLoading = useSelector(selectIsLoadingMedia)
-  const media = useSelector(selectMedia)
-  const error = useSelector(selectError)
+  const { media, isLoading, error } = useMedia()
 
   useEffect(() => {
     if (mediaId && mediaId !== media?.id) {
-      dispatch(loadMedia(mediaId))
+      loadMedia(mediaId)
     }
   }, [])
 

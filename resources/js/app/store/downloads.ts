@@ -1,79 +1,83 @@
-import { createSlice } from '@reduxjs/toolkit'
-
+import { createDynamicSlice, Payload } from '@/store/helpers'
 import { createApi, IDownload } from '@/api'
-import type { RootState, ThunkAction } from '@/store/index'
 import { AsyncInterval, confirm, runAsyncInterval } from '@/helpers'
-
-const { api } = createApi()
+import { injectReducer, store } from '@/store'
 
 let downloadsWatcher: AsyncInterval
 
-export const downloadsSlice = createSlice({
-  name: 'downloads',
+const storeKey = 'downloads'
+
+const { slice, useSlice: useDownloads, getState } = createDynamicSlice(store, {
+  name: storeKey,
   initialState: {
-    list: [] as IDownload[],
+    downloads: [] as IDownload[],
   },
   reducers: {
-    setList(state, { payload }) {
-      state.list = payload
+    setList(state, { payload }: Payload<IDownload[]>) {
+      state.downloads = payload
     },
-    setDownloadOriginalState(state, { payload }: { payload: { hash: IDownload['hash']; originalState: IDownload['state_original'] } }) {
+    setDownloadOriginalState(state, { payload }: Payload<{
+      hash: IDownload['hash']
+      originalState: IDownload['state_original']
+    }>) {
       const { hash, originalState } = payload
-      const downloadIdx = state.list.findIndex((i) => i.hash === hash)
+      const downloadIdx = state.downloads.findIndex((i) => i.hash === hash)
       if (!downloadIdx) {
         return
       }
 
-      const download = state.list[downloadIdx]
-      state.list[downloadIdx] = { ...download, state_original: originalState }
+      const download = state.downloads[downloadIdx]
+      state.downloads[downloadIdx] = { ...download, state_original: originalState }
     },
   },
 })
 
-const { setList, setDownloadOriginalState } = downloadsSlice.actions
+const { api } = createApi()
+const { dispatch } = store
+const { setList, setDownloadOriginalState } = slice.actions
 
-export const selectDownloads = (state: RootState) => state.downloads.list
+export { useDownloads }
 
-export const loadDownloads = (): ThunkAction => async (dispatch) => {
+export const loadDownloads = async () => {
   dispatch(setList(await api.loadDownloads()))
 }
 
-export const startWatchingDownloads = (): ThunkAction => (dispatch) => {
+export const startWatchingDownloads = () => {
   if (downloadsWatcher?.isRunning()) {
     return
   }
 
   downloadsWatcher = runAsyncInterval(async () => {
-    dispatch(loadDownloads())
+    await loadDownloads()
   }, 1000)
 }
 
-export const stopWatchingDownloads = (): ThunkAction => () => {
+export const stopWatchingDownloads = () => {
   if (downloadsWatcher) {
     downloadsWatcher.stop()
   }
 }
 
-export const deleteDownload = ({ hash, media, torrent }: IDownload): ThunkAction => async (dispatch, getState) => {
-  const { downloads: { list } } = getState()
+export const deleteDownload = async ({ hash, media, torrent }: IDownload) => {
+  const { downloads } = getState()
   const downloadName = media.title + (torrent.content_type !== 'movie' ? ` ${torrent.name}` : '')
 
   if (await confirm('Удалить загрузку?', downloadName)) {
     await api.deleteDownload(hash)
-    const filteredList = list.filter((download) => download.hash !== hash)
+    const filteredList = downloads.filter((download) => download.hash !== hash)
 
     dispatch(setList(filteredList))
   }
 }
 
-export const pauseDownload = (hash: IDownload['hash']): ThunkAction => async (dispatch) => {
+export const pauseDownload = async (hash: IDownload['hash']) => {
   dispatch(setDownloadOriginalState({ hash, originalState: 'pausedDL' }))
   await api.pauseDownload(hash)
 }
 
-export const resumeDownload = (hash: IDownload['hash']): ThunkAction => async (dispatch) => {
+export const resumeDownload = async (hash: IDownload['hash']) => {
   dispatch(setDownloadOriginalState({ hash, originalState: 'pausedDL' }))
   await api.resumeDownload(hash)
 }
 
-export default downloadsSlice.reducer
+injectReducer(storeKey, slice.reducer)

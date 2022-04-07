@@ -3,16 +3,13 @@ import { ReactNode, useEffect } from 'react'
 import { PageTitle } from '@metronic'
 import { EmptyState, Preloader } from '@/components'
 import { MediaCardsList } from '@/components/media-cards-list'
-import { useDispatch, useSelector } from '@/store'
-import { loadFavorites, selectFavorites, selectIsLoadingFavorites } from '@/store/favorites'
+import { loadFavorites, useFavorites } from '@/store/favorites'
 
 export const FavoritesPage = () => {
-  const dispatch = useDispatch()
-  const isLoadingFavorites = useSelector(selectIsLoadingFavorites)
-  const favorites = useSelector(selectFavorites)
+  const { isLoading, favorites } = useFavorites()
 
   useEffect(() => {
-    dispatch(loadFavorites())
+    loadFavorites()
   }, [])
 
   const renderContent = (content: ReactNode) => (
@@ -22,7 +19,7 @@ export const FavoritesPage = () => {
     </>
   )
 
-  if (isLoadingFavorites) {
+  if (isLoading) {
     return renderContent(<Preloader />)
   }
 

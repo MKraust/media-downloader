@@ -4,8 +4,7 @@ import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import { App } from '@/app'
 import { MasterLayout, AsideMenuItem, AsideMenuGroup } from '@metronic'
 import { FavoritesPage } from '@/pages/favorites'
-import { useDispatch, useSelector } from '@/store'
-import { loadTrackers, selectTrackers } from '@/store/trackers'
+import { loadTrackers, useTrackers } from '@/store/trackers'
 
 const DashboardPage = lazy(() => import('@/pages/dashboard'))
 const SearchPage = lazy(() => import('@/pages/search'))
@@ -15,11 +14,10 @@ const DownloadsPage = lazy(() => import('@/pages/downloads'))
 const { APP_URL } = process.env
 
 const AppRoutes: FC = () => {
-  const trackers = useSelector(selectTrackers)
-  const dispatch = useDispatch()
+  const { trackers } = useTrackers()
 
   useEffect(() => {
-    dispatch(loadTrackers())
+    loadTrackers()
   }, [])
 
   const menuItems = (
