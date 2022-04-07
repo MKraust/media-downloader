@@ -1,14 +1,13 @@
 import { useParams } from 'react-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button, Card, Col, FormSelect, Row } from 'react-bootstrap'
 import clsx from 'clsx'
 import { orderBy } from 'lodash'
 
 import { PageDescription, PageTitle } from '@metronic'
 import { Preloader, TorrentCard, Icon, EmptyState } from '@/components'
-import { confirm, notifySuccess } from '@/helpers'
-import { ITorrent, useApi } from '@/api'
-import { loadMedia, useMedia } from '@/store/media'
+import { useApi } from '@/api'
+import { loadMedia, toggleMediaIsFavorite, useMedia } from '@/store/media'
 
 const useSort = () => {
   const [sortBy, setSortBy] = useState('size_int')
@@ -40,6 +39,13 @@ const MediaPage = () => {
   const { switchSortingOrder, sortBy, setSortBy, sortingOrder, sortingOrderIcon } = useSort()
   const isSomeSeriesTorrents = media ? media.torrents.some((torrent) => torrent.content_type === 'series') : false
   const [isTogglingFavorite, setTogglingFavorite] = useState(false)
+  const sortedTorrents = useMemo(() => {
+    if (!media) return []
+    if (sortBy === 'size_int') return orderBy(media.torrents, ['size_int'], [sortingOrder])
+    if (sortBy === 'season') return orderBy(media.torrents, ['season', 0], [sortingOrder])
+
+    return media.torrents
+  }, [sortBy, media?.torrents, sortingOrder])
 
   if (isLoading) {
     return (
@@ -74,41 +80,16 @@ const MediaPage = () => {
     )
   }
 
-  const sortedTorrents = (() => {
-    if (sortBy === 'size_int') {
-      return orderBy(media.torrents, ['size_int'], [sortingOrder])
-    }
-
-    if (sortBy === 'season') {
-      return orderBy(media.torrents, ['season', 0], [sortingOrder])
-    }
-
-    return media.torrents
-  })()
-
   const openMediaPageInTracker = () => {
     window.open(media.url)
   }
 
-  const toggleFavorite = async () => {
+  const handleToggleFavorite = async () => {
     try {
       setTogglingFavorite(true)
-      if (media.is_favorite) {
-        await api.removeFromFavorites(media.id)
-        media.is_favorite = false
-      } else {
-        await api.addToFavorites(media.id)
-        media.is_favorite = true
-      }
+      await toggleMediaIsFavorite()
     } finally {
       setTogglingFavorite(false)
-    }
-  }
-
-  const handleDownload = async (torrent: ITorrent) => {
-    if (await confirm('Скачать?', torrent.name)) {
-      await api.startDownload(torrent.id)
-      notifySuccess(torrent.name, 'Загрузка началась')
     }
   }
 
@@ -134,7 +115,7 @@ const MediaPage = () => {
               variant={media.is_favorite ? 'warning' : 'info'}
               className={clsx('w-100 btn-icon', isTogglingFavorite && 'spinner spinner-white spinner-right')}
               disabled={isTogglingFavorite}
-              onClick={toggleFavorite}
+              onClick={handleToggleFavorite}
             >
               <Icon name="star" size="2" style={media.is_favorite ? 'solid' : 'light'} />
             </Button>
@@ -164,7 +145,7 @@ const MediaPage = () => {
           </div>
           {sortedTorrents.map((torrent) => (
             <div key={torrent.id} className="mb-3">
-              <TorrentCard value={torrent} onClick={() => handleDownload(torrent)} />
+              <TorrentCard value={torrent} />
             </div>
           ))}
         </Col>

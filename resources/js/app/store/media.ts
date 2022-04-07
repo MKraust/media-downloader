@@ -19,15 +19,20 @@ const { slice, getState, useSlice: useMedia } = createDynamicSlice(store, {
     setItem(state, { payload }: Payload<With<IMedia, 'torrents'> | null>) {
       state.media = payload
     },
-    setError(state, { payload }) {
+    setError(state, { payload }: Payload<boolean>) {
       state.error = payload
+    },
+    setIsFavorite(state, { payload }: Payload<boolean>) {
+      if (state.media) {
+        state.media.is_favorite = payload
+      }
     },
   },
 })
 
 const { api } = createApi()
 const { dispatch } = store
-const { setIsLoading, setItem, setError } = slice.actions
+const { setIsLoading, setItem, setError, setIsFavorite } = slice.actions
 
 export { useMedia }
 
@@ -48,6 +53,22 @@ export const loadMedia = async (id: IMedia['id']) => {
     dispatch(setError(true))
   } finally {
     dispatch(setIsLoading(false))
+  }
+}
+
+export const toggleMediaIsFavorite = async () => {
+  const { media } = getState()
+
+  if (!media) {
+    return
+  }
+
+  if (media.is_favorite) {
+    await api.removeFromFavorites(media.id)
+    dispatch(setIsFavorite(false))
+  } else {
+    await api.addToFavorites(media.id)
+    dispatch(setIsFavorite(true))
   }
 }
 

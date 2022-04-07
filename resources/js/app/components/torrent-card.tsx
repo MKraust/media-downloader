@@ -1,16 +1,25 @@
 import { Badge, Card } from 'react-bootstrap'
-import { FC, MouseEventHandler } from 'react'
+import { FC } from 'react'
 
-import { ITorrent } from '@/api'
+import { ITorrent, useApi } from '@/api'
 import { Icon, IconProps } from '@/components/icon'
+import { confirm, notifySuccess } from '@/helpers'
 
 export interface TorrentProps {
   value: ITorrent
-  onClick?: MouseEventHandler
 }
 
-export const TorrentCard: FC<TorrentProps> = ({ value, onClick }) => {
-  const { name, voice_acting: voiceActing, quality, size, downloads } = value
+export const TorrentCard: FC<TorrentProps> = ({ value }) => {
+  const { id, name, voice_acting: voiceActing, quality, size, downloads } = value
+
+  const api = useApi()
+
+  const handleDownload = async () => {
+    if (await confirm('Скачать?', name)) {
+      await api.startDownload(id)
+      notifySuccess(name, 'Загрузка началась')
+    }
+  }
 
   const renderAttrBadge = (icon: IconProps['name'], value: string | number) => (
     <Badge bg="primary" className="d-inline-flex align-items-center gap-2">
@@ -19,7 +28,7 @@ export const TorrentCard: FC<TorrentProps> = ({ value, onClick }) => {
   )
 
   return (
-    <Card className="bg-white shadow-xs" onClick={onClick}>
+    <Card className="bg-white shadow-xs" onClick={() => handleDownload()}>
       <div className="card-body px-8 py-6">
         <div className="d-flex justify-content-between align-items-center">
           <Card.Title className="mb-1">
