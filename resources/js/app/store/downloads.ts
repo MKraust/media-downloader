@@ -1,6 +1,9 @@
-import { createDynamicSlice, Payload } from '@/store/helpers'
+import { AsyncInterval, runAsyncInterval } from '@mkraust/async-interval'
+import { createDynamicSlice } from '@mkraust/redux-dynamic'
+import type { Payload } from '@mkraust/redux-dynamic'
+
 import { createApi, IDownload } from '@/api'
-import { AsyncInterval, confirm, runAsyncInterval } from '@/helpers'
+import { confirm } from '@/helpers'
 import { injectReducer, store } from '@/store'
 
 let downloadsWatcher: AsyncInterval

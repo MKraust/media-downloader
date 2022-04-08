@@ -1,20 +1,7 @@
 {
     "$schema": "https://json.schemastore.org/tsconfig",
+    "extends": "@mkraust/tsconfig/base.json",
     "compilerOptions": {
-        "target": "esnext",
-        "strict": true,
-        "module": "esnext",
-        "lib": ["es2016", "dom"],
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "useDefineForClassFields": false,
-        "resolveJsonModule": true,
-        "skipLibCheck": true,
-        "allowJs": true,
-        "jsx": "react-jsx",
         "types": [
             "node",
             "./resources/js/main"

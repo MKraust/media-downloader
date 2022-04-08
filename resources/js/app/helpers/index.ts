@@ -1,7 +1,5 @@
-export * from './types'
 export * from './popup'
 export * from './notifications'
-export * from './async-interval'
 
 export const humanizeBytes = (bytes: number, fractionDigits: number) => {
   const thresh = 1024

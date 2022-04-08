@@ -1,6 +1,7 @@
 import { createContext, FC, useContext } from 'react'
+import { createService } from '@mkraust/api-base'
+import type { AuthProvider } from '@mkraust/api-base'
 
-import { AuthProvider, createService } from './base/api-wrapper'
 import { ApiService } from './service'
 
 export * from './models'

@@ -1,6 +1,8 @@
+import { createDynamicSlice } from '@mkraust/redux-dynamic'
+import type { Payload } from '@mkraust/redux-dynamic'
+
 import { createApi, IMedia, ITracker } from '@/api'
 import { injectReducer, store } from '@/store'
-import { createDynamicSlice, Payload } from '@/store/helpers'
 
 interface TrackerState {
   items: IMedia[]

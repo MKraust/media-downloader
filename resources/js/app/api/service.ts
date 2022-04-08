@@ -1,8 +1,8 @@
-import { Api } from './base/client'
-import { ServiceHandleError } from './base/error-handler'
-import { IDownload, IMedia, IStorageDrive, ITorrent, ITracker } from './models'
+import { Api } from '@mkraust/api-base'
+import type { With } from '@mkraust/types'
 
-import { With } from '@/helpers'
+import { ServiceHandleError } from './helpers'
+import { IDownload, IMedia, IStorageDrive, ITorrent, ITracker } from './models'
 
 export class ApiService extends Api {
 

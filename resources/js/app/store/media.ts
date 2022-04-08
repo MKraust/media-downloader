@@ -1,6 +1,8 @@
+import type { With } from '@mkraust/types'
+import { createDynamicSlice } from '@mkraust/redux-dynamic'
+import type { Payload } from '@mkraust/redux-dynamic'
+
 import { createApi, IMedia } from '@/api'
-import { With } from '@/helpers'
-import { createDynamicSlice, Payload } from '@/store/helpers'
 import { injectReducer, store } from '@/store'
 
 const storeKey = 'media'
