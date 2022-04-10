@@ -2,7 +2,7 @@ import { Api } from '@mkraust/api-base'
 import type { With } from '@mkraust/types'
 
 import { ServiceHandleError } from './helpers'
-import { IDownload, IMedia, IStorageDrive, ITorrent, ITracker } from './models'
+import { IDownload, IFinishedDownload, IMedia, IStorageDrive, ITorrent, ITracker } from './models'
 
 export class ApiService extends Api {
 
@@ -79,6 +79,21 @@ export class ApiService extends Api {
 
   async loadStorageDrives(): Promise<IStorageDrive[]> {
     const { data } = await this.http.get('/info/storage')
+
+    return data
+  }
+
+  @ServiceHandleError(() => [])
+  async loadFinishedDownloads(): Promise<IFinishedDownload[]> {
+    const { data } = await this.http.get('/download/finished/list')
+
+    return data
+  }
+
+  async deleteFinishedDownload(id: IFinishedDownload['id']): Promise<IFinishedDownload> {
+    const { data } = await this.http.post('/download/finished/delete', {
+      body: { id },
+    })
 
     return data
   }

@@ -1,6 +1,7 @@
 export * from './popup'
 export * from './notifications'
 export * from './types'
+export * from './datetime'
 
 export const humanizeBytes = (bytes: number, fractionDigits: number) => {
   const thresh = 1024

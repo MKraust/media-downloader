@@ -76,6 +76,10 @@ class DownloadsController extends Controller
 
         $download = FinishedDownload::find($request->id);
         $this->_files->deleteRecursively($download->path);
+        $download->is_deleted = true;
+        $download->save();
+
+        $download->load('torrent.media');
 
         return $download;
     }

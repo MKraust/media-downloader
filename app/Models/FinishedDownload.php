@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\File;
  * @property \DateTime $finished_at
  * @property string $path
  * @property array $meta
+ * @property boolean $is_deleted
  * @property-read Torrent $torrent
+ * @property-read boolean $exists
  */
 class FinishedDownload extends Model
 {
@@ -20,10 +22,6 @@ class FinishedDownload extends Model
     protected $casts = [
         'finished_at' => 'datetime',
         'meta'        => 'array',
-    ];
-
-    protected $appends = [
-        'exists',
     ];
 
     public function torrent() {

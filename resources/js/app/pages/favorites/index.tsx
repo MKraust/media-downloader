@@ -5,7 +5,7 @@ import { EmptyState, Preloader } from '@/components'
 import { MediaCardsList } from '@/components/media-cards-list'
 import { loadFavorites, useFavorites } from '@/store/favorites'
 
-export const FavoritesPage = () => {
+const FavoritesPage = () => {
   const { isLoading, favorites } = useFavorites()
 
   useEffect(() => {
@@ -33,3 +33,5 @@ export const FavoritesPage = () => {
 
   return renderContent(<MediaCardsList mediaList={favorites} />)
 }
+
+export default FavoritesPage

@@ -1,3 +1,5 @@
+import { With } from '@mkraust/types'
+
 export interface ITracker {
   id: string
   title: string
@@ -31,6 +33,7 @@ export interface ITorrent {
   created_at: string
   updated_at: string
   media_id: IMedia['id']
+  media?: IMedia
 }
 
 export interface IDownload {
@@ -43,6 +46,26 @@ export interface IDownload {
   progress: string
   media: IMedia
   torrent: ITorrent
+}
+
+export interface IRenameLog {
+  from: string
+  to: string
+}
+
+export interface IFinishedDownloadMeta {
+  files: string[]
+  rename_log: IRenameLog[]
+}
+
+export interface IFinishedDownload {
+  id: number
+  torrent: With<ITorrent, 'media'>
+  finished_at: string
+  path: string
+  exists: boolean
+  meta: IFinishedDownloadMeta
+  is_deleted: boolean
 }
 
 export interface IStorageDrive {
