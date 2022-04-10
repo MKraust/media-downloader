@@ -71,7 +71,7 @@ class DownloadsController extends Controller
 
     public function deleteFinishedDownload(Request $request) {
         $request->validate([
-            'id' => 'required|exists:finished_downloads',
+            'id' => 'required|integer|exists:App\Models\FinishedDownload',
         ]);
 
         $download = FinishedDownload::find($request->id);
