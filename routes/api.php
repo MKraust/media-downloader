@@ -23,3 +23,5 @@ Route::get('/download/finish', 'DownloadsController@finishDownload');
 
 Route::get('/download/finished/list', 'DownloadsController@getFinishedDownloads');
 Route::post('/download/finished/delete', 'DownloadsController@deleteFinishedDownload');
+Route::post('/download/finished/revert-renaming', 'DownloadsController@revertDownloadFilesRenaming');
+Route::post('/download/finished/rename', 'DownloadsController@renameDownloadFiles');

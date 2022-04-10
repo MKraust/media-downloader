@@ -25,15 +25,19 @@ class Renamer {
         return array_map(fn(array $fileData) => new RenamedFile($fileData['from'], $fileData['to']), $filesData);
     }
 
-    public function normalizeFileNames(string $path, ?Torrent $torrent = null): array {
-        if (!str_contains($path, '/Anime') || !is_dir($path)) {
-            exit;
+    public function revertFileNames(string $path, array $renameLogs): array {
+        $newRenameLog = [];
+        foreach ($renameLogs as $log) {
+            $newRenameLog[] = $this->_renameFile($path, $log['to'], $log['from']);
         }
 
-        // Тут берем сезон из торрента
-        // Если же его нет, то null потом перетрется сезоном из названия файла
-        $season = $torrent->season;
-        $season = $season !== null && $season[0] > 0 ? $season[0] : null;
+        return $newRenameLog;
+    }
+
+    public function normalizeFileNames(string $path, ?Torrent $torrent = null): array {
+        if (!str_contains($path, '/Anime') || !is_dir($path)) {
+            return [];
+        }
 
         $files = scandir($path.'/');
         if ($files === false) {
@@ -49,18 +53,41 @@ class Renamer {
         });
         Log::info("Files to rename: \n" . implode("\n", $files));
 
+        // Тут берем сезон из торрента
+        // Если же его нет, то null потом перетрется сезоном из названия файла
+        $season = $torrent->season;
+        $season = $season !== null && $season[0] > 0 ? $season[0] : null;
         foreach ($files as $index => $file) {
             $newFileName = $this->normalizeFileName($file, $index + 1, $season);
-            rename("{$path}/{$file}", "{$path}/{$newFileName}");
-            $log[] = new RenamedFile($file, $newFileName);
+            $log[] = $this->_renameFile($path, $file, $newFileName);
             usleep(100);
         }
 
         return array_merge($alreadyRenamedFiles->toArray(), $log);
     }
 
-    public function normalizeFileName(string $fileName, int $episodeIndex = 1, int $season = null): string {
-        $parts = explode('.', $fileName);
+    public function renameFilesWithTitle(Torrent $torrent, string $title, string $path, array $fileNames): array {
+        $season = $torrent->season;
+        $season = $season !== null && $season[0] > 0 ? $season[0] : null;
+        $log = [];
+        foreach ($fileNames as $index => $fileName) {
+            $info = $this->_getInfoFromFileName($fileName, $index + 1, $season);
+            $newFileName = $this->_getFileName($title, $info['episode'], $info['season'], $info['extension']);
+
+            $log[] = $this->_renameFile($path, $fileName, $newFileName);
+            usleep(100);
+        }
+
+        return $log;
+    }
+
+    private function _getFileName(string $title, string $episode, string $season, string $extension): string {
+        $newFileName = "{$title} - s{$season}e{$episode}" . ($extension ? ".{$extension}" : '');
+        return trim(preg_replace('/\s+/', ' ', $newFileName));
+    }
+
+    private function _getInfoFromFileName(string $initialFileName, int $startIndex = 1, int $season = null): array {
+        $parts = explode('.', $initialFileName);
         $extension = count($parts) > 1 ? array_pop($parts) : null;
         $fileNameWithoutExtension = implode('.', $parts);
 
@@ -70,7 +97,7 @@ class Renamer {
         $newFileName = preg_replace('/TV(-\d+)?/', '', $newFileName);
         $newFileName = preg_replace('/ +/', ' ', $newFileName);
 
-        $episode = $episodeIndex;
+        $episode = $startIndex;
         $episodePatterns = [
             '~(?<=\[)\d+(?=\.\d+\])~',
             '~(?<=\[)\d+(?=_OVA])~',
@@ -79,7 +106,7 @@ class Renamer {
         ];
 
         foreach ($episodePatterns as $pattern) {
-            preg_match($pattern, $fileName, $episodeMatches);
+            preg_match($pattern, $initialFileName, $episodeMatches);
             if (count($episodeMatches) > 0) {
                 $episode = (int)$episodeMatches[0];
                 if ($pattern === $episodePatterns[0]) {
@@ -93,7 +120,7 @@ class Renamer {
 
         if ($season === null) {
             $season = 1;
-            preg_match('/((?<=TV-)\d+)|((?<=_)\d+(?=_\[))/', $fileName, $seasonMatches);
+            preg_match('/((?<=TV-)\d+)|((?<=_)\d+(?=_\[))/', $initialFileName, $seasonMatches);
             if (count($seasonMatches) > 0) {
                 $season = (int)$seasonMatches[0];
             }
@@ -109,9 +136,17 @@ class Renamer {
             $episode = "0{$episode}";
         }
 
-        $newFileName = "{$newFileName} - s{$season}e{$episode}" . ($extension ? ".{$extension}" : '');
+        return [
+            'title' => $newFileName,
+            'episode' => $episode,
+            'season' => $season,
+            'extension' => $extension,
+        ];
+    }
 
-        return trim(preg_replace('/\s+/', ' ', $newFileName));
+    public function normalizeFileName(string $fileName, int $episodeIndex = 1, int $season = null): string {
+        $info = $this->_getInfoFromFileName($fileName, $episodeIndex, $season);
+        return $this->_getFileName($info['title'], $info['episode'], $info['season'], $info['extension']);
     }
 
     private function _getRenamedFilesLogPath(string $path): string {
@@ -125,5 +160,10 @@ class Renamer {
         $logJson = json_encode($files, JSON_PRETTY_PRINT);
         $logPath = $this->_getRenamedFilesLogPath($path);
         file_put_contents($logPath, $logJson);
+    }
+
+    private function _renameFile(string $path, string $from, string $to): RenamedFile {
+        File::move("{$path}/{$from}", "{$path}/{$to}");
+        return new RenamedFile($from, $to);
     }
 }

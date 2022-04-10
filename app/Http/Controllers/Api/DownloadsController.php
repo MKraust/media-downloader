@@ -79,7 +79,37 @@ class DownloadsController extends Controller
         $download->is_deleted = true;
         $download->save();
 
-        $download->load('torrent.media');
+        return $download;
+    }
+
+    public function revertDownloadFilesRenaming(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:App\Models\FinishedDownload',
+        ]);
+
+        $download = FinishedDownload::find($request->id);
+        $meta = $download->meta;
+        $meta['rename_log'] = $this->_filesRenamer->revertFileNames($download->path, $meta['rename_log']);
+        $download->meta = $meta;
+        $download->save();
+
+        return $download;
+    }
+
+    public function renameDownloadFiles(Request $request) {
+        $request->validate([
+            'id' => 'required|integer|exists:App\Models\FinishedDownload',
+            'title' => 'required|string|min:1',
+        ]);
+
+        $download = FinishedDownload::find($request->id);
+
+        $meta = $download->meta;
+        $this->_filesRenamer->revertFileNames($download->path, $meta['rename_log']);
+        $meta['rename_log'] = $this->_filesRenamer->renameFilesWithTitle($download->torrent, $request->title, $download->path, $meta['files']);
+
+        $download->meta = $meta;
+        $download->save();
 
         return $download;
     }

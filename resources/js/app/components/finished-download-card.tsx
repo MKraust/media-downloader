@@ -29,8 +29,28 @@ export const FinishedDownloadCard: FC<FinishedDownloadCardProps> = ({ download }
     }
   }
 
+  const renderTitle = () => (
+    <div className="d-flex flex-column fs-5 text-truncate">
+      <span className="text-wrap">{media.title}</span>
+      <span className="text-truncate text-muted fs-6">{torrent.name}</span>
+    </div>
+  )
+
+  const renderTrackerIcon = () => tracker && (
+    <div className="symbol symbol-40px symbol-light">
+      <span className="symbol-label">
+        <img src={tracker.icon} className="h-75 w-75 alight-self-center" alt="" />
+      </span>
+    </div>
+  )
+
   const renderExpandedContent = () => (
-    <div className="d-flex flex-column gap-2">
+    <div className="d-flex flex-column gap-3">
+      <div className="d-flex gap-2">
+        <Button size="sm" variant="light-primary">
+          Восстановить названия
+        </Button>
+      </div>
       <div className="text-wrap">{path}</div>
       <Table size="sm" responsive hover>
         <tbody>
@@ -60,21 +80,12 @@ export const FinishedDownloadCard: FC<FinishedDownloadCardProps> = ({ download }
     <Card className="p-4">
       <div className="d-flex flex-column gap-4">
         <div className="d-flex gap-3">
-          {tracker && (
-            <div className="symbol symbol-40px symbol-light">
-            <span className="symbol-label">
-              <img src={tracker.icon} className="h-75 w-75 alight-self-center" alt="" />
-            </span>
-            </div>
-          )}
+          {renderTrackerIcon()}
 
           <div className="d-flex flex-column gap-4 flex-grow-1">
             <div className="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
               <div className="d-flex flex-column flex-grow-1">
-                <div className="d-flex flex-column fs-5 text-truncate">
-                  <span className="text-wrap">{media.title}</span>
-                  <span className="text-truncate text-muted fs-6">{torrent.name}</span>
-                </div>
+                {renderTitle()}
               </div>
 
               <div className="d-flex justify-content-between text-muted fs-6">

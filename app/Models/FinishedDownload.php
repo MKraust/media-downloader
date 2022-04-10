@@ -24,6 +24,10 @@ class FinishedDownload extends Model
         'meta'        => 'array',
     ];
 
+    protected $with = [
+        'torrent.media',
+    ];
+
     public function torrent() {
         return $this->belongsTo(Torrent::class);
     }
