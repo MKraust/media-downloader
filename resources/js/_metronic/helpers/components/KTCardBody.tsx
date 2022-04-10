@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { FC } from 'react'
+import { FC, PropsWithChildren } from 'react'
 
 type Props = {
   className?: string
@@ -7,7 +7,7 @@ type Props = {
   height?: number
 }
 
-const KTCardBody: FC<Props> = props => {
+const KTCardBody: FC<PropsWithChildren<Props>> = (props) => {
   const { className, scroll, height, children } = props
   return (
     <div
@@ -17,7 +17,7 @@ const KTCardBody: FC<Props> = props => {
         {
           'card-scroll': scroll,
         },
-        height && `h-${height}px`
+        height && `h-${height}px`,
       )}
     >
       {children}

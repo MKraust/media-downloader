@@ -8,11 +8,11 @@ import React, {
   Dispatch,
 } from 'react'
 
-const MetronicSplashScreenContext = createContext<Dispatch<SetStateAction<number>> | undefined>(
-  undefined
-)
+import { PropsWithOnlyChildren } from '@/helpers'
 
-const MetronicSplashScreenProvider: FC = ({ children }) => {
+const MetronicSplashScreenContext = createContext<Dispatch<SetStateAction<number>> | undefined>(undefined)
+
+const MetronicSplashScreenProvider: FC<PropsWithOnlyChildren> = ({ children }) => {
   const [count, setCount] = useState(0)
   const visible = count > 0
 
@@ -58,14 +58,14 @@ const LayoutSplashScreen: FC<{visible?: boolean}> = ({ visible = true }) => {
     }
 
     if (setCount) {
-      setCount(prev => {
+      setCount((prev) => {
         return prev + 1
       })
     }
 
     return () => {
       if (setCount) {
-        setCount(prev => {
+        setCount((prev) => {
           return prev - 1
         })
       }

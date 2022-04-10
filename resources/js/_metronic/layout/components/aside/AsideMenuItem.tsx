@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router'
@@ -14,7 +14,7 @@ export type AsideMenuItemProps = {
   hasBullet?: boolean
 }
 
-const AsideMenuItem: React.FC<AsideMenuItemProps> = ({
+const AsideMenuItem: React.FC<PropsWithChildren<AsideMenuItemProps>> = ({
   children,
   to,
   title,

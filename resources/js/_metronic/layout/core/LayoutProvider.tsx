@@ -1,4 +1,5 @@
 import { FC, createContext, useContext, useState, useEffect } from 'react'
+
 import { DefaultLayoutConfig } from './DefaultLayoutConfig'
 import {
   getEmptyCssClasses,
@@ -12,6 +13,8 @@ import {
   ILayoutCSSClasses,
   ILayoutHTMLAttributes,
 } from './LayoutModels'
+
+import { PropsWithOnlyChildren } from '@/helpers'
 
 export interface LayoutContextModel {
   config: ILayout
@@ -43,7 +46,7 @@ const disableSplashScreen = () => {
   }
 }
 
-const LayoutProvider: FC = ({ children }) => {
+const LayoutProvider: FC<PropsWithOnlyChildren> = ({ children }) => {
   const [config, setConfig] = useState(LayoutSetup.config)
   const [classes, setClasses] = useState(LayoutSetup.classes)
   const [attributes, setAttributes] = useState(LayoutSetup.attributes)
@@ -51,7 +54,7 @@ const LayoutProvider: FC = ({ children }) => {
   const setLayout = (_themeConfig: Partial<ILayout>) => {
     enableSplashScreen()
     const bodyClasses = Array.from(document.body.classList)
-    bodyClasses.forEach(cl => document.body.classList.remove(cl))
+    bodyClasses.forEach((cl) => document.body.classList.remove(cl))
     LayoutSetup.updatePartialConfig(_themeConfig)
     setConfig(Object.assign({}, LayoutSetup.config))
     setClasses(LayoutSetup.classes)

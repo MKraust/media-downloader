@@ -4,6 +4,8 @@ import type { AuthProvider } from '@mkraust/api-base'
 
 import { ApiService } from './service'
 
+import { PropsWithOnlyChildren } from '@/helpers'
+
 export * from './models'
 
 const BASE_URL = window.__sharedData.apiHost || `${location.protocol}//${location.host}`
@@ -17,7 +19,7 @@ export const createApi = (authProvider?: AuthProvider) => {
 
 const ApiContext = createContext<ReturnType<typeof createApi>>(createApi())
 
-const ApiProvider: FC = ({ children }) => {
+const ApiProvider: FC<PropsWithOnlyChildren> = ({ children }) => {
   const value = createApi()
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>

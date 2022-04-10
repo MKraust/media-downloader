@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import clsx from 'clsx'
 import { useLocation } from 'react-router'
+
 import { checkIsActive, KTSVG } from '../../../helpers'
 import { useLayout } from '../../core'
 
@@ -12,7 +13,7 @@ export type AsideMenuItemWithSubProps = {
   hasBullet?: boolean
 }
 
-const AsideMenuItemWithSub: React.FC<AsideMenuItemWithSubProps> = ({
+const AsideMenuItemWithSub: React.FC<PropsWithChildren<AsideMenuItemWithSubProps>> = ({
   children,
   to,
   title,
@@ -28,22 +29,22 @@ const AsideMenuItemWithSub: React.FC<AsideMenuItemWithSubProps> = ({
   return (
     <div
       className={clsx('menu-item', { 'here show': isActive }, 'menu-accordion')}
-      data-kt-menu-trigger='click'
+      data-kt-menu-trigger="click"
     >
-      <span className='menu-link'>
+      <span className="menu-link">
         {hasBullet && (
-          <span className='menu-bullet'>
-            <span className='bullet bullet-dot'></span>
+          <span className="menu-bullet">
+            <span className="bullet bullet-dot"></span>
           </span>
         )}
         {icon && aside.menuIcon === 'svg' && (
-          <span className='menu-icon'>
-            <KTSVG path={icon} className='svg-icon-2' />
+          <span className="menu-icon">
+            <KTSVG path={icon} className="svg-icon-2" />
           </span>
         )}
         {fontIcon && aside.menuIcon === 'font' && <i className={clsx('bi fs-3', fontIcon)}></i>}
-        <span className='menu-title'>{title}</span>
-        <span className='menu-arrow'></span>
+        <span className="menu-title">{title}</span>
+        <span className="menu-arrow"></span>
       </span>
       <div className={clsx('menu-sub menu-sub-accordion', { 'menu-active-bg': isActive })}>
         {children}

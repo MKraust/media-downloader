@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, PropsWithChildren } from 'react'
 import clsx from 'clsx'
 
 // Wrapper on html card:
@@ -19,7 +19,7 @@ type Props = {
   utilityPX?: number
 }
 
-const KTCard: FC<Props> = props => {
+const KTCard: FC<PropsWithChildren<Props>> = (props) => {
   const {
     className,
     shadow,
@@ -50,7 +50,7 @@ const KTCard: FC<Props> = props => {
         utilityP && `p-${utilityP}`,
         utilityPX && `px-${utilityPX}`,
         utilityPY && `py-${utilityPY}`,
-        rounded && `card-${rounded}`
+        rounded && `card-${rounded}`,
       )}
     >
       {children}

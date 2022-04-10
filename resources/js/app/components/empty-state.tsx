@@ -2,8 +2,9 @@ import type { Variant } from 'react-bootstrap/types'
 import { FC } from 'react'
 
 import { Icon, IconProps } from '@/components/icon'
+import { PropsWithOnlyChildren } from '@/helpers'
 
-export interface EmptyStateProps {
+export interface EmptyStateProps extends PropsWithOnlyChildren {
   icon: string
   iconStyle?: IconProps['style']
   variant?: Variant
