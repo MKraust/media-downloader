@@ -25,8 +25,8 @@ class Renamer {
         return array_map(fn(array $fileData) => new RenamedFile($fileData['from'], $fileData['to']), $filesData);
     }
 
-    public function normalizeFileNames(string $path, ?Torrent $torrent = null): void {
-        if (mb_strpos($path, '/Anime') === false || !is_dir($path)) {
+    public function normalizeFileNames(string $path, ?Torrent $torrent = null): array {
+        if (!str_contains($path, '/Anime') || !is_dir($path)) {
             exit;
         }
 
@@ -56,8 +56,7 @@ class Renamer {
             usleep(100);
         }
 
-        $log = array_merge($alreadyRenamedFiles->toArray(), $log);
-        $this->_saveRenamedFilesLog($path, $log);
+        return array_merge($alreadyRenamedFiles->toArray(), $log);
     }
 
     public function normalizeFileName(string $fileName, int $episodeIndex = 1, int $season = null): string {

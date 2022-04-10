@@ -22,3 +22,4 @@ Route::post('/download/resume', 'DownloadsController@resumeDownload');
 Route::get('/download/finish', 'DownloadsController@finishDownload');
 
 Route::get('/download/finished/list', 'DownloadsController@getFinishedDownloads');
+Route::post('/download/finished/delete', 'DownloadsController@deleteFinishedDownload');

@@ -8,6 +8,7 @@ use App\Torrent;
 use App\Http\Requests;
 use App\Services;
 use App\Telegram;
+use Illuminate\Http\Request;
 
 class DownloadsController extends Controller
 {
@@ -20,11 +21,13 @@ class DownloadsController extends Controller
     public function __construct(
         Torrent\Client $torrentClient,
         Services\Files\Renamer $filesRenamer,
-        Telegram\Client $telegram
+        Telegram\Client $telegram,
+        Services\Files\Service $files
     ) {
         $this->_torrentClient = $torrentClient;
         $this->_filesRenamer = $filesRenamer;
         $this->_telegram = $telegram;
+        $this->_files = $files;
     }
 
     public function getDownloads() {
@@ -51,13 +54,29 @@ class DownloadsController extends Controller
         $finishedDownload->torrent_id = $torrentId;
         $finishedDownload->finished_at = now();
         $finishedDownload->path = $request->path;
+        $finishedDownload->meta = [
+            'files'      => $this->_files->getFilesByPath($request->path),
+            'rename_log' => $this->_filesRenamer->normalizeFileNames($request->path, $torrent),
+        ];
         $finishedDownload->save();
 
-        $this->_filesRenamer->normalizeFileNames($request->path, $torrent);
         $this->_telegram->notifyAboutFinishedDownload($torrent);
     }
 
     public function getFinishedDownloads() {
-        return FinishedDownload::orderBy('finished_at', 'desc')->get();
+        return FinishedDownload::with(['torrent.media'])
+            ->orderBy('finished_at', 'desc')
+            ->get();
+    }
+
+    public function deleteFinishedDownload(Request $request) {
+        $request->validate([
+            'id' => 'required|exists:finished_downloads',
+        ]);
+
+        $download = FinishedDownload::find($request->id);
+        $this->_files->deleteRecursively($download->path);
+
+        return $download;
     }
 }
