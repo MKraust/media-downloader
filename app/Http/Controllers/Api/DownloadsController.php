@@ -20,7 +20,7 @@ class DownloadsController extends Controller
     public function __construct(
         Torrent\Client $torrentClient,
         Services\Files\Renamer $filesRenamer,
-        Telegram\Client $telegram,
+        Telegram\Client $telegram
     ) {
         $this->_torrentClient = $torrentClient;
         $this->_filesRenamer = $filesRenamer;

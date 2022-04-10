@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent;
 /**
  * @property string $hash
  * @property bool $is_deleted
- * @property bool $is_finished
  */
 class TorrentDownload extends Model
 {
