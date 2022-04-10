@@ -15,8 +15,8 @@ class Client
         $this->_httpRequester = $requester;
     }
 
-    public function notifyAboutFinishedDownload(TorrentDownload $download): void {
-        $this->_sendMessageToChannel('Загрузка завершена', $this->getDownloadName($download));
+    public function notifyAboutFinishedDownload(Torrent $torrent): void {
+        $this->_sendMessageToChannel('Загрузка завершена', $this->getDownloadName($torrent));
     }
 
     public function notifyAboutNewEpisodes(Collection $mediaTitles): void {
@@ -32,13 +32,13 @@ class Client
         ]);
     }
 
-    private function getDownloadName(TorrentDownload $download): string {
-        $mediaTitle = $download->torrent->media->title;
-        if ($download->torrent->content_type === Torrent::TYPE_MOVIE) {
+    private function getDownloadName(Torrent $torrent): string {
+        $mediaTitle = $torrent->media->title;
+        if ($torrent->content_type === Torrent::TYPE_MOVIE) {
             return $mediaTitle;
         }
 
-        return "{$mediaTitle} / {$download->torrent->name}";
+        return "{$mediaTitle} / {$torrent->name}";
     }
 
     private function getBotKey(): string {

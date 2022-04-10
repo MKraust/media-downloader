@@ -28,6 +28,6 @@ class TorrentDownload extends Model
     }
 
     public function scopeActive(Eloquent\Builder $query): Eloquent\Builder {
-        return $query->where('is_deleted', 0)->where('is_finished', 0);
+        return $query->where('is_deleted', false);
     }
 }
