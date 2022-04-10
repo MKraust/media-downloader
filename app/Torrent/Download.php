@@ -3,11 +3,9 @@
 
 namespace App\Torrent;
 
-
 use App\Models\Media;
 use App\Models\Torrent;
 use App\Models\TorrentDownload;
-use Carbon\Carbon;
 
 class Download implements \JsonSerializable {
 
@@ -25,9 +23,7 @@ class Download implements \JsonSerializable {
 
     private $_progress;
 
-    private $_addedOn;
-
-    public function __construct(string $hash, string $originalName, int $downloadSpeedInBytesPerSecond, int $estimateInSeconds, int $sizeInBytes, string $stateOriginal, float $progress, int $addedOn) {
+    public function __construct(string $hash, string $originalName, int $downloadSpeedInBytesPerSecond, int $estimateInSeconds, int $sizeInBytes, string $stateOriginal, float $progress) {
         $this->_hash = $hash;
         $this->_originalName = $originalName;
         $this->_downloadSpeedInBytesPerSecond = $downloadSpeedInBytesPerSecond;
@@ -35,7 +31,6 @@ class Download implements \JsonSerializable {
         $this->_sizeInBytes = $sizeInBytes;
         $this->_stateOriginal = $stateOriginal;
         $this->_progress = $progress;
-        $this->_addedOn = $addedOn;
     }
 
     public static function createFromRemoteData(array $data): self {
@@ -46,8 +41,7 @@ class Download implements \JsonSerializable {
             $data['eta'],
             $data['size'],
             $data['state'],
-            $data['progress'],
-            $data['added_on']
+            $data['progress']
         );
     }
 
@@ -66,10 +60,6 @@ class Download implements \JsonSerializable {
         return $this->_progress;
     }
 
-    private function addedOn(): \DateTime {
-        return Carbon::createFromTimestamp($this->_addedOn);
-    }
-
     public function jsonSerialize(): array {
         return [
             'hash'                               => $this->_hash,
@@ -79,7 +69,6 @@ class Download implements \JsonSerializable {
             'size_in_bytes'                      => $this->_sizeInBytes,
             'state_original'                     => $this->_stateOriginal,
             'progress'                           => (string)$this->_progress,
-            'added_on'                           => $this->addedOn(),
             'media'                              => $this->_getMedia(),
             'torrent'                            => $this->_getTorrent(),
         ];
