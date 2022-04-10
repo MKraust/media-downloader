@@ -6,7 +6,6 @@ import { orderBy } from 'lodash'
 
 import { PageDescription, PageTitle } from '@metronic'
 import { Preloader, TorrentCard, Icon, EmptyState } from '@/components'
-import { useApi } from '@/api'
 import { loadMedia, toggleMediaIsFavorite, useMedia } from '@/store/media'
 
 const useSort = () => {
@@ -26,7 +25,6 @@ const useSort = () => {
 }
 
 const MediaPage = () => {
-  const api = useApi()
   const { mediaId } = useParams()
   const { media, isLoading, error } = useMedia()
 

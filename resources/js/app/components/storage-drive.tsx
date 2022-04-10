@@ -11,11 +11,8 @@ export interface StorageDriveProps {
 }
 
 export const StorageDrive: FC<StorageDriveProps> = ({ value }) => {
-  const { name, total, used, available, usage_percent: usagePercent } = value
-
-  const formattedTotal = useMemo(() => formatSize(total), [total])
+  const { name, available, usage_percent: usagePercent } = value
   const formattedAvailable = useMemo(() => formatSize(available), [available])
-  const formattedUsed = useMemo(() => formatSize(used), [used])
 
   const variant = useMemo(() => {
     if (usagePercent >= 85) {
