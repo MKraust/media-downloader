@@ -93,7 +93,7 @@ export const DownloadCard: FC<DownloadCardProps> = ({ download, onDelete }) => {
     return (
       <div className="d-flex align-items-center gap-2">
         <Icon name={icon} size={iconSize} style="duo" className="text-primary" />
-        <span className="text-nowrap">{ speed }</span>
+        <span className="text-nowrap">{ value }</span>
       </div>
     )
   }
