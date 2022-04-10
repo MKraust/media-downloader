@@ -11,8 +11,16 @@ class TitleParser {
         return $trimmedTitleParts[0];
     }
 
-    public function parseOriginalTitle(string $fullTitle): string {
+    public function parseOriginalTitle(string $fullTitle): ?string {
         $titleParts = explode('/ ', $fullTitle); // @todo fix this as in titles may be slashes
+
+        // return null if no slash was found
+        // example: Инуяша: Замок в зазеркалье Inuyasha: Kagami no Naka no Mugenjo [Movie-2]
+        // https://tr.anidub.com/anime_movie/3270-inuyasha-zamok-v-zazerkale-inuyasha-kagami-no-naka-no-mugenjo-movie-22002dvd-5.html
+        if (count($titleParts) < 2) {
+            return null;
+        }
+
         $trimmedTitleParts = array_map('trim', $titleParts);
 
         return trim(preg_replace('/\[.+]/u', '', $trimmedTitleParts[1]));
