@@ -1,11 +1,16 @@
 import { FC, useState } from 'react'
-import { Button, Card, Spinner, Table } from 'react-bootstrap'
+import { Button, Card, FormControl, FormGroup, FormLabel, InputGroup, Spinner, Stack, Table } from 'react-bootstrap'
+import { Key } from 'w3c-keys'
 
-import { IFinishedDownload } from '@/api'
+import { ContentType, IFinishedDownload } from '@/api'
 import { selectTrackerById } from '@/store/trackers'
 import { confirm, humanizeDatetime } from '@/helpers'
 import { Icon } from '@/components/icon'
-import { deleteFinishedDownload } from '@/store/downloads-history'
+import {
+  deleteFinishedDownload,
+  renameFinishedDownloadFiles,
+  revertFinishedDownloadFileNames,
+} from '@/store/downloads-history'
 
 export interface FinishedDownloadCardProps {
   download: IFinishedDownload
@@ -13,14 +18,18 @@ export interface FinishedDownloadCardProps {
 
 export const FinishedDownloadCard: FC<FinishedDownloadCardProps> = ({ download }) => {
   const { id, torrent, finished_at: finishedAt, path, is_deleted: isDeleted, meta } = download
-  const { media } = torrent
+  const { media, content_type: contentType } = torrent
   const { rename_log: renameLog } = meta
 
   const [isExpanded, setIsExpanded] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isReverting, setIsReverting] = useState(false)
+  const [newTitle, setNewTitle] = useState('')
+  const [isRenaming, setIsRenaming] = useState(false)
 
   const tracker = selectTrackerById(media.tracker_id)
   const toggleExpand = () => setIsExpanded(!isExpanded)
+
   const handleDelete = async () => {
     if (await confirm('Вы уверены?', `Удалить загруженные файлы «${media.title}» (${torrent.name})?`)) {
       setIsDeleting(true)
@@ -29,11 +38,28 @@ export const FinishedDownloadCard: FC<FinishedDownloadCardProps> = ({ download }
     }
   }
 
+  const handleRevertRenaming = async () => {
+    if (await confirm('Вы уверены?', 'Вернуть исходные названия файлов?')) {
+      setIsReverting(true)
+      await revertFinishedDownloadFileNames(id)
+      setIsReverting(false)
+    }
+  }
+
+  const handleRename = async () => {
+    if (newTitle && await confirm('Вы уверены?', `Переименовать файлы загрузки в «${newTitle}»?`)) {
+      setIsRenaming(true)
+      await renameFinishedDownloadFiles(id, newTitle)
+      setNewTitle('')
+      setIsRenaming(false)
+    }
+  }
+
   const renderTitle = () => (
-    <div className="d-flex flex-column fs-5 text-truncate">
+    <Stack className="fs-5 text-truncate">
       <span className="text-wrap">{media.title}</span>
       <span className="text-truncate text-muted fs-6">{torrent.name}</span>
-    </div>
+    </Stack>
   )
 
   const renderTrackerIcon = () => tracker && (
@@ -45,74 +71,101 @@ export const FinishedDownloadCard: FC<FinishedDownloadCardProps> = ({ download }
   )
 
   const renderExpandedContent = () => (
-    <div className="d-flex flex-column gap-3">
-      <div className="d-flex gap-2">
-        <Button size="sm" variant="light-primary">
-          Восстановить названия
-        </Button>
-      </div>
-      <div className="text-wrap">{path}</div>
-      <Table size="sm" responsive hover>
-        <tbody>
-        {renameLog.map((log) => (
-          <tr key={log.from}>
-            <td className="text-wrap">{log.from}</td>
-            <td className="text-wrap">{log.to}</td>
-          </tr>
-        ))}
-        </tbody>
-      </Table>
-    </div>
+    <Stack gap={3}>
+      {contentType !== ContentType.movie && (
+        <>
+          <FormGroup>
+            <FormLabel>Переименование файлов</FormLabel>
+            <InputGroup size="sm" className="input-group-solid">
+              <FormControl
+                value={newTitle}
+                placeholder="Новое название"
+                onChange={(e) => setNewTitle(e.target.value)}
+                onKeyUp={(e) => e.key === Key.Enter && handleRename()}
+              />
+              <Button size="sm" variant="active-color-primary" className="btn-bg-light" disabled={isRenaming} onClick={handleRename}>
+                Переименовать
+              </Button>
+            </InputGroup>
+          </FormGroup>
+
+          {renameLog.length > 0 && (
+            <Button size="sm" variant="active-color-primary" className="btn-bg-light" disabled={isReverting} onClick={handleRevertRenaming}>
+              Восстановить названия { isReverting && <Spinner size="sm" animation="border" />}
+            </Button>
+          )}
+        </>
+      )}
+
+      <FormGroup>
+        <FormLabel>Путь</FormLabel>
+        <div className="text-wrap">
+          {path}
+        </div>
+      </FormGroup>
+
+      <FormGroup>
+        <FormLabel>Переименованные файлы</FormLabel>
+        <Table size="sm" responsive hover>
+          <tbody>
+          {renameLog.map((log) => (
+            <tr key={log.from}>
+              <td className="text-wrap">{log.from}</td>
+              <td className="text-wrap">{log.to}</td>
+            </tr>
+          ))}
+          </tbody>
+        </Table>
+      </FormGroup>
+    </Stack>
   )
 
   const renderButtons = () => !isDeleted && (
-    <div className="d-flex gap-2">
+    <Stack direction="horizontal" gap={2}>
       <Button size="sm" variant="light-info" className="btn-icon" onClick={toggleExpand}>
         <Icon name={isExpanded ? 'chevron-up' : 'chevron-down'} />
       </Button>
-      <Button size="sm" variant="light-danger" className="btn-icon" onClick={handleDelete}>
+      <Button size="sm" disabled={isDeleting} variant="light-danger" className="btn-icon" onClick={handleDelete}>
         {isDeleting ? <Spinner size="sm" animation="border" /> : <Icon name="trash-alt" />}
       </Button>
-    </div>
+    </Stack>
   )
 
   return (
     <Card className="p-4">
-      <div className="d-flex flex-column gap-4">
-        <div className="d-flex gap-3">
+      <Stack gap={4}>
+        <Stack direction="horizontal" gap={3} className="align-items-start">
           {renderTrackerIcon()}
 
-          <div className="d-flex flex-column gap-4 flex-grow-1">
-            <div className="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
-              <div className="d-flex flex-column flex-grow-1">
-                {renderTitle()}
-              </div>
+          <Stack gap={4} className="flex-grow-1">
+            <Stack gap={3} className="flex-lg-row align-items-lg-center">
+              {renderTitle()}
 
-              <div className="d-flex justify-content-between text-muted fs-6">
+              <Stack direction="horizontal" className="justify-content-between text-muted fs-6">
                 {humanizeDatetime(finishedAt)}
                 <div className="d-lg-none">
                   {renderButtons()}
                 </div>
-              </div>
+              </Stack>
 
               <div className="d-none d-lg-block">
                 {renderButtons()}
               </div>
-            </div>
+            </Stack>
 
             {isExpanded && (
               <div className="d-none d-lg-block">
                 {renderExpandedContent()}
               </div>
             )}
-          </div>
-        </div>
+          </Stack>
+        </Stack>
         {isExpanded && (
           <div className="d-block d-lg-none">
             {renderExpandedContent()}
           </div>
         )}
-      </div>
+      </Stack>
     </Card>
   )
 }

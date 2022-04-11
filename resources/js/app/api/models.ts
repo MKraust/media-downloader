@@ -1,4 +1,10 @@
-import { With } from '@mkraust/types'
+import type { With } from '@mkraust/types'
+
+export enum ContentType {
+  movie = 'movie',
+  anime = 'anime',
+  series = 'series',
+}
 
 export interface ITracker {
   id: string
@@ -23,7 +29,7 @@ export interface ITorrent {
   id: number
   name: string
   url: string
-  content_type: string
+  content_type: ContentType
   voice_acting?: string
   quality?: string
   size?: string

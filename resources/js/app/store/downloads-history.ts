@@ -47,10 +47,22 @@ const deleteFinishedDownload = async (id: IFinishedDownload['id']) => {
   dispatch(replaceDownload(updatedDownload))
 }
 
+const revertFinishedDownloadFileNames = async (id: IFinishedDownload['id']) => {
+  const updatedDownload = await api.revertFinishedDownloadFileNames(id)
+  dispatch(replaceDownload(updatedDownload))
+}
+
+const renameFinishedDownloadFiles = async (id: IFinishedDownload['id'], title: string) => {
+  const updatedDownload = await api.renameFinishedDownloadFiles(id, title)
+  dispatch(replaceDownload(updatedDownload))
+}
+
 injectReducer(storeKey, slice.reducer)
 
 export {
   useDownloadsHistory,
   loadFinishedDownloads,
   deleteFinishedDownload,
+  revertFinishedDownloadFileNames,
+  renameFinishedDownloadFiles,
 }

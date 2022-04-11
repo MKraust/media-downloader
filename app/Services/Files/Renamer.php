@@ -25,13 +25,10 @@ class Renamer {
         return array_map(fn(array $fileData) => new RenamedFile($fileData['from'], $fileData['to']), $filesData);
     }
 
-    public function revertFileNames(string $path, array $renameLogs): array {
-        $newRenameLog = [];
+    public function revertFileNames(string $path, array $renameLogs): void {
         foreach ($renameLogs as $log) {
-            $newRenameLog[] = $this->_renameFile($path, $log['to'], $log['from']);
+            $this->_renameFile($path, $log['from'], $log['from']);
         }
-
-        return $newRenameLog;
     }
 
     public function normalizeFileNames(string $path, ?Torrent $torrent = null): array {

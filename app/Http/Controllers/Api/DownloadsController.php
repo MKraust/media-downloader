@@ -89,7 +89,8 @@ class DownloadsController extends Controller
 
         $download = FinishedDownload::find($request->id);
         $meta = $download->meta;
-        $meta['rename_log'] = $this->_filesRenamer->revertFileNames($download->path, $meta['rename_log']);
+        $this->_filesRenamer->revertFileNames($download->path, $meta['rename_log']);
+        $meta['rename_log'] = [];
         $download->meta = $meta;
         $download->save();
 
