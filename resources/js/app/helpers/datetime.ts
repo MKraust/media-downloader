@@ -1,4 +1,5 @@
 import moment, { MomentInput } from 'moment'
+import 'moment/locale/ru'
 
 moment.locale('ru')
 

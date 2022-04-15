@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useMemo } from 'react'
-import { orderBy } from 'lodash'
+import orderBy from 'lodash/orderBy'
 
 import { PageTitle } from '@metronic'
 import { IDownload } from '@/api'

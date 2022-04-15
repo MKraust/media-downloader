@@ -2,7 +2,7 @@ import { useParams } from 'react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { Button, Card, Col, FormSelect, Row } from 'react-bootstrap'
 import clsx from 'clsx'
-import { orderBy } from 'lodash'
+import orderBy from 'lodash/orderBy'
 
 import { PageDescription, PageTitle } from '@metronic'
 import { Preloader, TorrentCard, Icon, EmptyState } from '@/components'
