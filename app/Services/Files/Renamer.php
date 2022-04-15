@@ -27,7 +27,7 @@ class Renamer {
 
     public function revertFileNames(string $path, array $renameLogs): void {
         foreach ($renameLogs as $log) {
-            $this->_renameFile($path, $log['from'], $log['from']);
+            $this->_renameFile($path, $log['to'], $log['from']);
         }
     }
 
