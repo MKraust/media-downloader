@@ -52,8 +52,8 @@ const revertFinishedDownloadFileNames = async (id: IFinishedDownload['id']) => {
   dispatch(replaceDownload(updatedDownload))
 }
 
-const renameFinishedDownloadFiles = async (id: IFinishedDownload['id'], title: string) => {
-  const updatedDownload = await api.renameFinishedDownloadFiles(id, title)
+const renameFinishedDownloadFiles = async (id: IFinishedDownload['id'], title: string, season?: string) => {
+  const updatedDownload = await api.renameFinishedDownloadFiles(id, title, season)
   dispatch(replaceDownload(updatedDownload))
 }
 

@@ -101,13 +101,20 @@ class DownloadsController extends Controller
         $request->validate([
             'id' => 'required|integer|exists:App\Models\FinishedDownload',
             'title' => 'required|string|min:1',
+            'season' => 'int|min:0'
         ]);
 
         $download = FinishedDownload::find($request->id);
 
         $meta = $download->meta;
         $this->_filesRenamer->revertFileNames($download->path, $meta['rename_log']);
-        $meta['rename_log'] = $this->_filesRenamer->renameFilesWithTitle($download->torrent, $request->title, $download->path, $meta['files']);
+        $meta['rename_log'] = $this->_filesRenamer->renameFilesWithTitle(
+            $download->torrent,
+            $download->path,
+            $meta['files'],
+            $request->title,
+            $request->season
+        );
 
         $download->meta = $meta;
         $download->save();

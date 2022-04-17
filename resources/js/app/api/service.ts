@@ -106,9 +106,9 @@ export class ApiService extends Api {
     return data
   }
 
-  async renameFinishedDownloadFiles(id: IFinishedDownload['id'], title: string): Promise<IFinishedDownload> {
+  async renameFinishedDownloadFiles(id: IFinishedDownload['id'], title: string, season?: string): Promise<IFinishedDownload> {
     const { data } = await this.http.post('/download/finished/rename', {
-      body: { id, title },
+      body: { id, title, season },
     })
 
     return data

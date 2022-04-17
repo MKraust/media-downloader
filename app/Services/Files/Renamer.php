@@ -63,12 +63,12 @@ class Renamer {
         return array_merge($alreadyRenamedFiles->toArray(), $log);
     }
 
-    public function renameFilesWithTitle(Torrent $torrent, string $title, string $path, array $fileNames): array {
-        $season = $torrent->season;
-        $season = $season !== null && $season[0] > 0 ? $season[0] : null;
+    public function renameFilesWithTitle(Torrent $torrent, string $path, array $fileNames, string $title, ?int $season = null): array {
+        $preparedSeason = $season ?? $torrent->season;
+        $preparedSeason = $preparedSeason !== null && $preparedSeason[0] > 0 ? $preparedSeason[0] : null;
         $log = [];
         foreach ($fileNames as $index => $fileName) {
-            $info = $this->_getInfoFromFileName($fileName, $index + 1, $season);
+            $info = $this->_getInfoFromFileName($fileName, $index + 1, $preparedSeason);
             $newFileName = $this->_getFileName($title, $info['episode'], $info['season'], $info['extension']);
 
             $log[] = $this->_renameFile($path, $fileName, $newFileName);

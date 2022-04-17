@@ -25,6 +25,7 @@ export const FinishedDownloadCard: FC<FinishedDownloadCardProps> = ({ download }
   const [isDeleting, setIsDeleting] = useState(false)
   const [isReverting, setIsReverting] = useState(false)
   const [newTitle, setNewTitle] = useState('')
+  const [newSeason, setNewSeason] = useState('')
   const [isRenaming, setIsRenaming] = useState(false)
 
   const tracker = selectTrackerById(media.tracker_id)
@@ -49,7 +50,7 @@ export const FinishedDownloadCard: FC<FinishedDownloadCardProps> = ({ download }
   const handleRename = async () => {
     if (newTitle && await confirm('Вы уверены?', `Переименовать файлы загрузки в «${newTitle}»?`)) {
       setIsRenaming(true)
-      await renameFinishedDownloadFiles(id, newTitle)
+      await renameFinishedDownloadFiles(id, newTitle, newSeason || undefined)
       setNewTitle('')
       setIsRenaming(false)
     }
@@ -79,9 +80,14 @@ export const FinishedDownloadCard: FC<FinishedDownloadCardProps> = ({ download }
             <InputGroup size="sm" className="input-group-solid">
               <FormControl
                 value={newTitle}
-                placeholder="Новое название"
+                placeholder="Название"
                 onChange={(e) => setNewTitle(e.target.value)}
-                onKeyUp={(e) => e.key === Key.Enter && handleRename()}
+              />
+              <FormControl
+                value={newSeason}
+                placeholder="Сезон"
+                type="number"
+                onChange={(e) => setNewSeason(e.target.value)}
               />
               <Button size="sm" variant="active-color-primary" className="btn-bg-light" disabled={isRenaming} onClick={handleRename}>
                 Переименовать
