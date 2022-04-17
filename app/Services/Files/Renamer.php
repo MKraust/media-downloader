@@ -64,8 +64,8 @@ class Renamer {
     }
 
     public function renameFilesWithTitle(Torrent $torrent, string $path, array $fileNames, string $title, ?int $season = null): array {
-        $preparedSeason = $season ?? $torrent->season;
-        $preparedSeason = $preparedSeason !== null && $preparedSeason[0] > 0 ? $preparedSeason[0] : null;
+        $torrentSeason = $torrent->season;
+        $preparedSeason = $season ?? ($torrentSeason !== null && $torrentSeason[0] > 0 ? $torrentSeason[0] : null);
         $log = [];
         foreach ($fileNames as $index => $fileName) {
             $info = $this->_getInfoFromFileName($fileName, $index + 1, $preparedSeason);
