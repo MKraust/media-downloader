@@ -2,7 +2,7 @@ import { AsyncInterval, runAsyncInterval } from '@mkraust/async-interval'
 import { createDynamicSlice } from '@mkraust/redux-dynamic'
 import type { Payload } from '@mkraust/redux-dynamic'
 
-import { createApi, IDownload } from '@/api'
+import { createApi, IDownload, ITorrent } from '@/api'
 import { confirm } from '@/helpers'
 import { injectReducer, store } from '@/store'
 
@@ -60,6 +60,8 @@ export const stopWatchingDownloads = () => {
     downloadsWatcher.stop()
   }
 }
+
+export const startDownload = (id: ITorrent['id']) => api.startDownload(id)
 
 export const deleteDownload = async ({ hash, media, torrent }: IDownload) => {
   const { downloads } = getState()

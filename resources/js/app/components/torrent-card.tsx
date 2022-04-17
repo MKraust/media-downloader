@@ -1,9 +1,10 @@
 import { Badge, Card } from 'react-bootstrap'
 import { FC } from 'react'
 
-import { ITorrent, useApi } from '@/api'
+import { ITorrent } from '@/api'
 import { Icon, IconProps } from '@/components/icon'
 import { confirm, notifySuccess } from '@/helpers'
+import { startDownload } from '@/store/downloads'
 
 export interface TorrentProps {
   value: ITorrent
@@ -12,11 +13,9 @@ export interface TorrentProps {
 export const TorrentCard: FC<TorrentProps> = ({ value }) => {
   const { id, name, voice_acting: voiceActing, quality, size, downloads } = value
 
-  const api = useApi()
-
   const handleDownload = async () => {
     if (await confirm('Скачать?', name)) {
-      await api.startDownload(id)
+      await startDownload(id)
       notifySuccess(name, 'Загрузка началась')
     }
   }
