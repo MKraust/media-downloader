@@ -123,6 +123,14 @@ class Renamer {
             }
         }
 
+        if ($season < 10) {
+            $season = "0{$season}";
+        }
+
+        if ($episode < 10) {
+            $episode = "0{$episode}";
+        }
+
         return [
             'title' => $newFileName,
             'episode' => $episode,
